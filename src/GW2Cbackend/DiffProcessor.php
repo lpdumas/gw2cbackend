@@ -49,6 +49,7 @@ class DiffProcessor {
             
             // the remaining elements are the added markers
             foreach($this->modification[$markerType] as $id => $marker) {
+
                 $result = array("status" => self::STATUS_ADDED, "marker" => $marker, "marker-reference" => null);
                 $this->changes[$markerType][] = $result;
             }
@@ -73,7 +74,7 @@ class DiffProcessor {
         // if the marker has been found
         if($marker != null) {
 
-            $id = array_search($markerReference["id"], $this->modification[$markerType]);
+            $id = array_search($markerReference, $this->modification[$markerType]);
         
             // if the coordinates are the same
             if($markerReference["lat"] == $marker["lat"] && $markerReference["lng"] == $marker["lng"]) {
