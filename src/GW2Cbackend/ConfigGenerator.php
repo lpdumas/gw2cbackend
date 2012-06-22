@@ -51,17 +51,19 @@ class ConfigGenerator {
                             $this->reference[$markerType] = array_values($this->reference[$markerType]);
                             break;
                     }
+                    
+                    // we remove the items so there is only the remainings items with the "STATUS_ADDED" status
+                    $id = array_search($change, $this->changes[$markerType]);
+                    unset($this->changes[$markerType][$id]);
+                    $this->changes[$markerType] = array_values($this->changes[$markerType]);
                 }
             }
         }
-        
-        foreach($this->changes as $markerType => $markerTypeCollection) {
 
+        // the remainings items are the "STATUS_ADDED" one
+        foreach($this->changes as $markerType => $markerTypeCollection) {
             foreach($markerTypeCollection as $change) {
-                
-                if($change["status"] == DiffProcessor::STATUS_ADDED) {
-                    $this->reference[$markerType][] = $change["marker"];
-                }
+                $this->reference[$markerType][] = $change["marker"];
             }            
         }
     }
@@ -176,6 +178,7 @@ class ConfigGenerator {
         $file = fopen($pathOutput, "w+");
         
         if($minimized) {
+            // we remove all the spaces
             $outputString = preg_replace("#[\t\n ]#", "",$this->output);
         }
         else {
