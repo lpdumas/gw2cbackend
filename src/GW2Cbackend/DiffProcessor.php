@@ -130,5 +130,3 @@ class DiffProcessor {
         return null;        
     }
 }
-
-?>
