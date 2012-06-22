@@ -22,12 +22,20 @@ $jsonReference = json_decode($jsonStringReference, true);
 
 
 // we 'diff' the two versions
-$diffProcessor = new GW2CBackend\DiffProcessor($json, $jsonReference);
-$changes = $diffProcessor->process();
+$diff = new GW2CBackend\DiffProcessor($json, $jsonReference);
+$changes = $diff->process();
 
-var_dump($changes); // test the changes
+//var_dump($changes); // test the changes
 
 // we render the diff version thanks to the map
 // ------ nothing for now
+
+
+// the second part of the script is executed when an administrator validates or not the modification. Let say he does validate.
+$filepath = __DIR__.'/output/config.js';
+$minimized = false;
+$generator = new GW2CBackend\ConfigGenerator($jsonReference, $changes);
+$generator->generate();
+$generator->save($filepath, $minimized);
 
 ?>
