@@ -36,10 +36,10 @@ class ConfigGenerator {
             
             foreach($markerTypeCollection as $markerID => $marker) {
 
-                $change = $this->getMarkerInChangesByID($marker["id"]);
+                $change = $this->getMarkerInChangesByID($marker["id"], $markerType);
 
                 if($change != null) {
-                    
+
                     switch($change["status"]) {
                         case DiffProcessor::STATUS_MODIFIED_COORDINATES:
                         case DiffProcessor::STATUS_MODIFIED_DATA:
@@ -53,7 +53,17 @@ class ConfigGenerator {
                     }
                 }
             }
-        }        
+        }
+        
+        foreach($this->changes as $markerType => $markerTypeCollection) {
+
+            foreach($markerTypeCollection as $change) {
+                
+                if($change["status"] == DiffProcessor::STATUS_ADDED) {
+                    $this->reference[$markerType][] = $change["marker"];
+                }
+            }            
+        }
     }
     
     protected function generateMarkersOutput() {
@@ -176,20 +186,17 @@ class ConfigGenerator {
         fclose($file);
     }
     
-    protected function getMarkerInChangesByID($markerID) {
-        
-        foreach($this->changes as $markerTypeCollection) {
-            
-            foreach($markerTypeCollection as $change) {
+    protected function getMarkerInChangesByID($markerID, $markerType) {
 
-                if((array_key_exists("marker", $change) && $change["marker"]["id"] == $markerID) || 
-                    (array_key_exists("marker-reference", $change) && $change["marker-reference"]["id"] == $markerID)) {
+        foreach($this->changes[$markerType] as $change) {
 
-                    return $change;
-                }
+            if((array_key_exists("marker", $change) && $change["marker"]["id"] == $markerID) || 
+                (array_key_exists("marker-reference", $change) && $change["marker-reference"]["id"] == $markerID)) {
+
+                return $change;
             }
         }
-        
+
         return null;
     }
 }
