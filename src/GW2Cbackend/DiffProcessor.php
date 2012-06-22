@@ -39,6 +39,7 @@ class DiffProcessor {
             $this->changes[$markerType] = array();
             foreach($markerTypeCollection as $id => $marker) {
 
+
                 $result = $this->searchForMarker($marker, $markerType);
                 
                 if($result["status"] != self::STATUS_OK) {
@@ -68,7 +69,7 @@ class DiffProcessor {
         $result = array("status" => null, "marker" => null, "marker-reference" => $markerReference);
         
         $marker = self::getMarkerById($markerReference["id"], $this->modification[$markerType]);
-        
+
         // if the marker has been found
         if($marker != null) {
 
@@ -98,15 +99,15 @@ class DiffProcessor {
                     $result["marker"] = $marker;
                 }
             }
+            
+            // we remove the marker from the array so we can know which markers have been added
+            unset($this->modification[$markerType][$id]);
+            $this->modification[$markerType] = array_values($this->modification[$markerType]);
         }
         else { // if the marker has been removed
             $result["status"] = self::STATUS_REMOVED;
         }
-        
-        
-        // we remove the marker from the array so we can know which markers have been added
-        unset($this->modification[$markerType][$id]);
-        $this->modification[$markerType] = array_values($this->modification[$markerType]);
+
         
         return $result;
     }
@@ -118,7 +119,7 @@ class DiffProcessor {
      * @param $collection a collection containing markers
      */
     static public function getMarkerById($id, $collection) {
-        
+
         foreach($collection as $item) {
             if($item["id"] == $id) {
                 return $item;
