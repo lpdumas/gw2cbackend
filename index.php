@@ -13,7 +13,7 @@ $jsonString = file_get_contents('test.json');
 $json = json_decode($jsonString, true);
 
 // then we check the validity of the JSON object regarding the format we want
-$markerList = array("hearts"); // replace it with an input from the database
+$markerTypeList = array("hearts"); // todo: replace it with an input from the database
 $validator = new GW2CBackend\InputValidator($json, $markerTypeList);
 $isValid = $validator->validate();
 
@@ -27,8 +27,6 @@ if($isValid === true) {
     // we 'diff' the two versions
     $differ = new GW2CBackend\DiffProcessor($json, $jsonReference);
     $changes = $differ->process();
-
-    //var_dump($changes); // test the changes
 
     // we render the diff version thanks to the map
     // ------ nothing for now
