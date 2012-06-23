@@ -119,8 +119,6 @@ class ConfigGenerator {
     
     protected function generateAreasOutput() {
         
-        // TODO : generate this from a config place (file, database, whatever)
-        
         $outputString = "Areas = [".PHP_EOL;
         
         foreach($this->areas as $a) {
