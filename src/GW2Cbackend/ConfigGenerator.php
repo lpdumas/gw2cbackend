@@ -202,4 +202,8 @@ class ConfigGenerator {
 
         return null;
     }
+    
+    public function getReference() {
+        return $this->reference;
+    }
 }

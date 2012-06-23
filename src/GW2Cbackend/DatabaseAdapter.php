@@ -16,7 +16,16 @@ class DatabaseAdapter {
             $this->handleError($e);
         }
     }
-    
+
+    public function updateReference($reference) {
+        
+        $lastReferenceUpdate = date('Y-m-d H:i:s');
+        $this->pdo->exec("UPDATE options SET `value` = '".$lastReferenceUpdate."' WHERE id = 'last-reference-update'");
+        
+        $jsonReference = json_encode($reference);
+        $this->pdo->exec("UPDATE options SET `value` = '".$jsonReference."' WHERE id = 'reference'");
+    }
+
     public function retrieveAll() {
         $this->retrieveOptions();
         $this->retrieveResources();

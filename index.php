@@ -33,16 +33,25 @@ if($isValid === true) {
     $differ = new GW2CBackend\DiffProcessor($json, $jsonReference);
     $changes = $differ->process();
 
-    // we render the diff version thanks to the map
-    // ------ nothing for now
+    if($differ->hasNoChange()) {
+        echo "No change detected from this modification.";
+    }
+    else {
+        
+        echo "Changes have been detected.";
+        
+        // we render the diff version thanks to the map
+        // ------ nothing for now
 
 
-    // the second part of the script is executed when an administrator validates or not the modification. Let say he does validate.
-    $filepath = __DIR__.$options["output-filepath"];
-    $minimized = (boolean) $options["output-minimization"];
-    $generator = new GW2CBackend\ConfigGenerator($jsonReference, $changes);
-    $generator->generate();
-    $generator->save($filepath, $minimized);
+        // the second part of the script is executed when an administrator validates or not the modification. Let say he does validate.
+        $filepath = __DIR__.$options["output-filepath"];
+        $minimized = (boolean) $options["output-minimization"];
+        $generator = new GW2CBackend\ConfigGenerator($jsonReference, $changes);
+        $generator->generate();
+        $generator->save($filepath, $minimized);
+        $pdo->updateReference($generator->getReference());
+    }
 }
 else {
     echo "The file format in invalid.";
