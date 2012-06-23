@@ -81,7 +81,9 @@ class DiffProcessor {
             if($markerReference["lat"]."" == $marker["lat"]."" && $markerReference["lng"]."" == $marker["lng"]."") {
 
                 // if the data are the same
-                if($markerReference["title"] == $marker["title"] && $markerReference["desc"] == $marker["desc"]) {
+                if($markerReference["title"] == $marker["title"] && $markerReference["desc"] == $marker["desc"] &&
+                    $markerReference["area"] == $marker["area"]
+                ) {
                     $result["status"] = self::STATUS_OK;
                 }
                 else { // if the data have changed
@@ -91,7 +93,9 @@ class DiffProcessor {
             }
             else { // if the coordinantes changed
                 // if the data are the same
-                if($markerReference["title"] == $marker["title"] && $markerReference["desc"] == $marker["desc"]) {
+                if($markerReference["title"] == $marker["title"] && $markerReference["desc"] == $marker["desc"] &&
+                    $markerReference["area"] == $marker["area"] 
+                ) {
                     $result["status"] = self::STATUS_MODIFIED_COORDINATES;
                     $result["marker"] = $marker;
                 }

@@ -19,7 +19,7 @@ $pdo->connect($host, $port, $database, $user, $pword);
 $pdo->retrieveAll();
 
 // then we check the validity of the JSON object regarding the format we want
-$validator = new GW2CBackend\InputValidator($json, $pdo->getData("resources"));
+$validator = new GW2CBackend\InputValidator($json, $pdo->getData("resources"), $pdo->getData("areas-list"));
 $isValid = $validator->validate();
 
 if($isValid === true) {
@@ -47,7 +47,8 @@ if($isValid === true) {
         // the second part of the script is executed when an administrator validates or not the modification. Let say he does validate.
         $filepath = __DIR__.$options["output-filepath"];
         $minimized = (boolean) $options["output-minimization"];
-        $generator = new GW2CBackend\ConfigGenerator($jsonReference, $changes);
+        $generator = new GW2CBackend\ConfigGenerator($jsonReference, $changes, $pdo->getData("resources"), 
+                                                     $options["resources-path"], $pdo->getData("areas-list"));
         $generator->generate();
         $generator->save($filepath, $minimized);
         $pdo->updateReference($generator->getReference());

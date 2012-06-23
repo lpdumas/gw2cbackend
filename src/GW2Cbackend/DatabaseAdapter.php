@@ -54,7 +54,9 @@ class DatabaseAdapter {
         $result = $this->pdo->query("SELECT * FROM areas_list");
         $result->setFetchMode(\PDO::FETCH_ASSOC);
         
-        $this->data["areas-list"] = $result->fetchAll();
+        foreach($result->fetchAll() as $row) {
+            $this->data["areas-list"][$row["id"]] = $row;
+        }
     }
     
     public function retrieveFirstModification() {
