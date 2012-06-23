@@ -18,11 +18,8 @@ $pdo = new GW2CBackend\DatabaseAdapter();
 $pdo->connect($host, $port, $database, $user, $pword);
 $pdo->retrieveAll();
 
-var_dump($pdo->getData());
-
 // then we check the validity of the JSON object regarding the format we want
-$markerTypeList = array("hearts"); // todo: replace it with an input from the database
-$validator = new GW2CBackend\InputValidator($json, $markerTypeList);
+$validator = new GW2CBackend\InputValidator($json, $pdo->getData("resources"));
 $isValid = $validator->validate();
 
 if($isValid === true) {

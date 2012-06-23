@@ -9,7 +9,12 @@ class InputValidator {
 
     public function __construct($input, $markerTypeList) {
         $this->input = $input;
-        $this->markerTypeList = $markerTypeList;
+
+        // make easier the validation
+        $this->markerTypeList = array();
+        foreach($markerTypeList as $resource) {
+            $this->markerTypeList[] = $resource["id"];
+        }
     }
 
     public function validate() {
