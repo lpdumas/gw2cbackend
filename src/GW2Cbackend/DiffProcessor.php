@@ -74,10 +74,11 @@ class DiffProcessor {
         // if the marker has been found
         if($marker != null) {
 
-            $id = array_search($markerReference, $this->modification[$markerType]);
+            $id = array_search($marker, $this->modification[$markerType]);
         
             // if the coordinates are the same
-            if($markerReference["lat"] == $marker["lat"] && $markerReference["lng"] == $marker["lng"]) {
+            // because of PHP stores float numbers, we can't compare them efficiently so we transtype the float to strings
+            if($markerReference["lat"]."" == $marker["lat"]."" && $markerReference["lng"]."" == $marker["lng"]."") {
 
                 // if the data are the same
                 if($markerReference["title"] == $marker["title"] && $markerReference["desc"] == $marker["desc"]) {
@@ -89,7 +90,6 @@ class DiffProcessor {
                 }
             }
             else { // if the coordinantes changed
-
                 // if the data are the same
                 if($markerReference["title"] == $marker["title"] && $markerReference["desc"] == $marker["desc"]) {
                     $result["status"] = self::STATUS_MODIFIED_COORDINATES;
@@ -100,7 +100,7 @@ class DiffProcessor {
                     $result["marker"] = $marker;
                 }
             }
-            
+
             // we remove the marker from the array so we can know which markers have been added
             unset($this->modification[$markerType][$id]);
             $this->modification[$markerType] = array_values($this->modification[$markerType]);
@@ -128,5 +128,16 @@ class DiffProcessor {
         }
         
         return null;        
+    }
+    
+    public function hasNoChange() {
+        
+        foreach($this->changes as $markerTypeChanges) {
+            if(!empty($markerTypeChanges)) {
+                return false;
+            }
+        }
+        
+        return true;
     }
 }
