@@ -38,8 +38,8 @@ if($isValid === true) {
 
 
     // the second part of the script is executed when an administrator validates or not the modification. Let say he does validate.
-    $filepath = __DIR__.'/output/config.js';
-    $minimized = false;
+    $filepath = __DIR__.$options["output-filepath"];
+    $minimized = (boolean) $options["output-minimization"];
     $generator = new GW2CBackend\ConfigGenerator($jsonReference, $changes);
     $generator->generate();
     $generator->save($filepath, $minimized);
