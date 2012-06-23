@@ -1,6 +1,7 @@
 <?php
 
 require_once 'lib/Symfony/ClassLoader/UniversalClassLoader.php';
+require_once 'db-config.php';
 
 use Symfony\Component\ClassLoader\UniversalClassLoader;
 
@@ -11,6 +12,13 @@ $loader->register();
 // first we receive the JSON string and we transform it to a PHP array
 $jsonString = file_get_contents('test.json');
 $json = json_decode($jsonString, true);
+
+// we open a connection to the database
+$pdo = new GW2CBackend\DatabaseAdapter();
+$pdo->connect($host, $port, $database, $user, $pword);
+$pdo->retrieveAll();
+
+var_dump($pdo->getData());
 
 // then we check the validity of the JSON object regarding the format we want
 $markerTypeList = array("hearts"); // todo: replace it with an input from the database
