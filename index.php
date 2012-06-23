@@ -26,8 +26,8 @@ if($isValid === true) {
 
     // the third step is getting the current version of the map
     // for now it comes from a test file
-    $jsonStringReference = file_get_contents('test-reference.json');
-    $jsonReference = json_decode($jsonStringReference, true);
+    $options = $pdo->getData("options");
+    $jsonReference = json_decode($options["reference"], true);
 
     // we 'diff' the two versions
     $differ = new GW2CBackend\DiffProcessor($json, $jsonReference);

@@ -27,8 +27,11 @@ class DatabaseAdapter {
     public function retrieveOptions() {
         $result = $this->pdo->query("SELECT * FROM options");
         $result->setFetchMode(\PDO::FETCH_ASSOC);
-        
-        $this->data["options"] = $result->fetchAll();
+
+        foreach($result->fetchAll() as $row) {
+            
+            $this->data["options"][$row["id"]] = $row["value"];
+        }
     }
     
     public function retrieveResources() {
