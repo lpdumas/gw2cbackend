@@ -1,0 +1,3 @@
+[submodule "read"]
+	path = read
+	url = git://github.com/lpdumas/gw2cartographers.git
