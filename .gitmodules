@@ -1,0 +1,3 @@
+[submodule "gw2cread"]
+	path = gw2cread
+	url = git://github.com/lpdumas/gw2cartographers.git
