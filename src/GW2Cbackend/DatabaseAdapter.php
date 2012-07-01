@@ -5,10 +5,12 @@ namespace GW2CBackend;
 class DatabaseAdapter {
 
     protected $pdo;
-    
-    protected $data;
+    protected $data = array();
 
     public function connect($host, $port, $database, $user, $pword) {
+        
+        if($this->pdo instanceof \PDO) return;
+        
         try {
             $this->pdo = new \PDO('mysql:host='.$host.';port='.$port.';dbname='.$database, $user, $pword);
         }
@@ -17,10 +19,30 @@ class DatabaseAdapter {
         }
     }
     
+    public function addModification($json) {
+        
+        $date = date('Y-m-d H:i:s');
+        
+        if(!array_key_exists("current-reference", $this->data)) {
+            $this->retrieveCurrentReference();
+        }
+
+        $idReference = $this->data["current-reference"]["id"];
+
+        $q = "INSERT INTO modification_list (date_added, value, id_reference_at_submission) 
+                         VALUES ('".$date."', '".$json."', '".$idReference."')";
+
+        $this->pdo->exec($q);
+    }
+    
     public function addReference($reference, $maxMarkerID, $idModification) {
         
         $date = date('Y-m-d H:i:s');
         $jsonReference = json_encode($reference);
+        
+        if(!array_key_exists("current-reference", $this->data)) {
+            $this->retrieveCurrentReference();
+        }
 
         $q = "INSERT INTO reference_list (value, date_added, id_merged_modification, max_marker_id) 
                          VALUES ('".$jsonReference."', '".$date."', '".$idModification."', '".$maxMarkerID."')";

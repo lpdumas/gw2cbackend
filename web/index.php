@@ -1,29 +1,59 @@
 <?php
 
 require_once __DIR__.'/../vendor/autoload.php';
-//require_once __DIR__.'/../lib/Symfony/ClassLoader/UniversalClassLoader.php';
 require_once __DIR__.'/../db-config.php';
 
-$pdo = new GW2CBackend\DatabaseAdapter();
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+
 $app = new Silex\Application();
 
-$app->get('/hello/{name}', function ($name) use ($app) {
-    return 'Hello '.$app->escape($name);
+// we register the services
+$app->register(new GW2CBackend\DatabaseServiceProvider(), array(
+    'database.host'     => $host,
+    'database.port'     => $port,
+    'database.dbname'   => $database,
+    'database.user'     => $user,
+    'database.password' => $pword,
+));
+
+$app->get('/', function() use($app) {
+
+    return "Welcome on the backend of Guild Wars 2 Cartographers.";
+
 });
+
+// dirty test form to submit JSON
+$app->get('/test-form', function() {
+   
+   $jsonString = file_get_contents(__DIR__.'/../test.json');
+   
+   $display = '<html>
+                    <head><title>Test form to submit JSON</title></head>
+                    <body>
+                        <form method="post" action="submit-modification">
+                            <textarea cols="100" rows="50" name="json">'.$jsonString.'</textarea>
+                            <input type="submit" value="Send" />
+                        </form>
+                    </body>
+                </html>';
+   
+    return $display;
+});
+
+$app->post('/submit-modification', function(Request $request) use($app) {
+
+    // we mock the submission
+    $jsonString = stripslashes($request->request->get('json'));
+    
+    $app['database']->addModification($jsonString);
+});
+
+
 
 $app->run();
 
 /*
-
-
-
-
-
-// we open a connection to the database
-$pdo = new GW2CBackend\DatabaseAdapter();
-$pdo->connect($host, $port, $database, $user, $pword);
-$pdo->retrieveAll();
-
 // first we receive the JSON string and we transform it to a PHP array
 // we mock the database
 $jsonString = file_get_contents('test.json');
