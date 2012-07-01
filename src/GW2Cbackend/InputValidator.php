@@ -53,7 +53,7 @@ class InputValidator {
                            !array_key_exists("area", $marker) ||
                            !array_key_exists("title", $marker) ||
                            !array_key_exists("desc", $marker) ||
-                           !is_int($marker["id"]) ||!is_float($marker["lat"]) || !is_float($marker["lng"]) ||
+                           !is_int($marker["id"]) || !is_float($marker["lat"]) || !is_float($marker["lng"]) ||
                            !is_int($marker["area"]) || !array_key_exists($marker["area"], $this->areasList) ||
                            !is_string($marker["title"]) || !is_string($marker["desc"])
                         ) {
