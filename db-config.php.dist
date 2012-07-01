@@ -5,3 +5,6 @@ $port = "3306";
 $database = "";
 $user = "";
 $pword = "";
+
+$admin_user = "";
+$admin_pword = "";

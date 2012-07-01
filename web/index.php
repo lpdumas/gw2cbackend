@@ -17,6 +17,11 @@ $app->register(new GW2CBackend\DatabaseServiceProvider(), array(
     'database.password' => $pword,
 ));
 
+$app['admin.username'] = $admin_user;
+$app['admin.password'] = $admin_pword;
+
+$app->register(new Silex\Provider\SessionServiceProvider());
+
 $app->get('/', function() use($app) {
 
     return "Welcome on the backend of Guild Wars 2 Cartographers.";
@@ -49,7 +54,21 @@ $app->post('/submit-modification', function(Request $request) use($app) {
     $app['database']->addModification($jsonString);
 });
 
+$app->get('/login', function() use($app) {
+    $username = $app['request']->server->get('PHP_AUTH_USER', false);
+    $password = $app['request']->server->get('PHP_AUTH_PW');
 
+    if ($app['admin.username'] === $username && $app['admin.password'] === $password) {
+        $app['session']->set('user', array('username' => $username));
+
+        return $app->redirect('/');
+    }
+
+    $response = new Response();
+    $response->headers->set('WWW-Authenticate', sprintf('Basic realm="%s"', 'site_login'));
+    $response->setStatusCode(401, 'Please sign in.');
+    return $response;
+});
 
 $app->run();
 
