@@ -22,6 +22,15 @@ $app['admin.password'] = $admin_pword;
 
 $app->register(new Silex\Provider\SessionServiceProvider());
 
+
+// defines the role checker
+$mustBeLogged = function (Request $request) use ($app) {
+    
+    if (!$app['session']->has('user') || $app['session']->get('user') == null) {
+        return $app->redirect('login');
+    }
+};
+
 $app->get('/', function() use($app) {
 
     return "Welcome on the backend of Guild Wars 2 Cartographers.";
@@ -69,6 +78,22 @@ $app->get('/login', function() use($app) {
     $response->setStatusCode(401, 'Please sign in.');
     return $response;
 });
+
+$app->get('/admin', function() use($app) {
+    
+    $list = $app['database']->retrieveModificationList();
+
+    $display = "<html><head><title>Modification list</title></head><body><ul>";
+    
+    foreach($list as $modif) {
+        $display .= '<li>Preview ID='.$modif['id'].'</li>';        
+    }
+    
+    $display .= "</ul></body></html>";
+    
+    return $display;
+})
+->before($mustBeLogged);
 
 $app->run();
 

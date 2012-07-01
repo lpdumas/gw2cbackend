@@ -59,6 +59,13 @@ class DatabaseAdapter {
         //$this->retrieveReferenceAtSubmission($this->data['first-modification']['reference-at-submission']);
     }
     
+    public function retrieveModificationList() {
+        $result = $this->pdo->query("SELECT * FROM modification_list WHERE is_merged = 0");
+        $result->setFetchMode(\PDO::FETCH_ASSOC);
+        
+        return $result->fetchAll();
+    }
+    
     public function retrieveReferenceAtSubmission($referenceID) {
         $result = $this->pdo->query("SELECT * FROM reference_list WHERE id = ".$referenceID."");
         
