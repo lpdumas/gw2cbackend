@@ -11,7 +11,9 @@ class ConfigGenerator {
     
     protected $resources;
     protected $areas;
-    protected $resourcesPath;    
+    protected $resourcesPath;
+    
+    protected $maxID;
     
     public function __construct($reference, $changes, $resources, $resourcesPath, $areas) {
         
@@ -20,6 +22,7 @@ class ConfigGenerator {
         $this->resources = $resources;
         $this->areas = $areas;
         $this->resourcesPath = $resourcesPath;
+        $this->maxID = 0;
     }
     
     public function generate() {
@@ -31,12 +34,46 @@ class ConfigGenerator {
         $outputString.= $this->generateResourcesOutput();
         $outputString.= $this->generateAreasOutput();
         $outputString.= $this->generateMarkersOutput();
-        
-        
 
         $this->output = $outputString;
     }
     
+    public function setIDToNewMarkers() {
+        
+        $this->maxID = self::getMaximumID($this->reference);
+        
+        foreach($this->changes as $markerType => $markerTypeCollection) {
+            
+            foreach($markerTypeCollection as $changeID => $change) {
+
+                if($change["status"] == DiffProcessor::STATUS_ADDED && $change["marker"]["id"] == -1) {
+                    $this->changes[$markerType][$changeID]["marker"]["id"] = $this->getNewID();
+                }
+            }
+        }
+    }
+    
+    protected function getNewID() {
+
+        return ++$this->maxID;
+    }
+    
+    public function getMaxMarkerID() { return $this->maxID; }
+    
+    static protected function getMaximumID($collection) {
+
+        $maxID = 0;
+
+        foreach($collection as $markerType => $markerTypeCollection) {
+            
+            foreach($markerTypeCollection as $markerID => $marker) {
+                if($marker["id"] > $maxID) $maxID = $marker["id"];
+            }   
+        }
+
+        return $maxID;
+    }    
+
     protected function mergeChanges() {
 
         foreach($this->reference as $markerType => $markerTypeCollection) {

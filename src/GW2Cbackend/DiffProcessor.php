@@ -17,13 +17,17 @@ class DiffProcessor {
     
     protected $changes;
     
-    public function __construct($modification, $reference) {
+    protected $maxReferenceID;
+    
+    public function __construct($modification, $reference, $maxReferenceID) {
 
         $this->modification = $modification;
         $this->modificationDefault = $modification;
         $this->reference = $reference;
         
         $this->changes = array();
+        
+        $this->maxReferenceID = $maxReferenceID;
     }
     
     /**
@@ -39,19 +43,21 @@ class DiffProcessor {
             $this->changes[$markerType] = array();
             foreach($markerTypeCollection as $id => $marker) {
 
-
                 $result = $this->searchForMarker($marker, $markerType);
-                
+
                 if($result["status"] != self::STATUS_OK) {
                     $this->changes[$markerType][] = $result;
                 }
             }
-            
+
             // the remaining elements are the added markers
             foreach($this->modification[$markerType] as $id => $marker) {
 
-                $result = array("status" => self::STATUS_ADDED, "marker" => $marker, "marker-reference" => null);
-                $this->changes[$markerType][] = $result;
+                // protect against eventual errors
+                if($marker["id"] == -1) {
+                    $result = array("status" => self::STATUS_ADDED, "marker" => $marker, "marker-reference" => null);
+                    $this->changes[$markerType][] = $result;
+                }
             }
         }
         
@@ -68,7 +74,7 @@ class DiffProcessor {
     protected function searchForMarker($markerReference, $markerType) {
         
         $result = array("status" => null, "marker" => null, "marker-reference" => $markerReference);
-        
+
         $marker = self::getMarkerById($markerReference["id"], $this->modification[$markerType]);
 
         // if the marker has been found
@@ -110,7 +116,14 @@ class DiffProcessor {
             $this->modification[$markerType] = array_values($this->modification[$markerType]);
         }
         else { // if the marker has been removed
-            $result["status"] = self::STATUS_REMOVED;
+
+            // we must check that the marker is in the range of IDs of the reference at the time of the submission
+            if($markerReference["id"] <= $this->maxReferenceID) {
+                $result["status"] = self::STATUS_REMOVED;
+            }
+            else {
+                $result["status"] = self::STATUS_OK;
+            }
         }
 
         
@@ -130,7 +143,7 @@ class DiffProcessor {
                 return $item;
             }
         }
-        
+
         return null;        
     }
     

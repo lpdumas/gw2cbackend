@@ -16,21 +16,42 @@ class DatabaseAdapter {
             $this->handleError($e);
         }
     }
-
-    public function updateReference($reference) {
+    
+    public function addReference($reference, $maxMarkerID, $idModification) {
         
-        $lastReferenceUpdate = date('Y-m-d H:i:s');
-        $this->pdo->exec("UPDATE options SET `value` = '".$lastReferenceUpdate."' WHERE id = 'last-reference-update'");
-        
+        $date = date('Y-m-d H:i:s');
         $jsonReference = json_encode($reference);
-        $this->pdo->exec("UPDATE options SET `value` = '".$jsonReference."' WHERE id = 'reference'");
+
+        $q = "INSERT INTO reference_list (value, date_added, id_merged_modification, max_marker_id) 
+                         VALUES ('".$jsonReference."', '".$date."', '".$idModification."', '".$maxMarkerID."')";
+
+        $this->pdo->exec($q);
     }
 
     public function retrieveAll() {
         $this->retrieveOptions();
         $this->retrieveResources();
         $this->retrieveAreasList();
+        $this->retrieveCurrentReference();
         $this->retrieveFirstModification();
+        //$this->retrieveReferenceAtSubmission($this->data['first-modification']['reference-at-submission']);
+    }
+    
+    public function retrieveReferenceAtSubmission($referenceID) {
+        $result = $this->pdo->query("SELECT * FROM reference_list WHERE id = ".$referenceID."");
+        
+        $result->setFetchMode(\PDO::FETCH_ASSOC);
+        
+        $this->data["reference-at-submission"] = $result->fetch();
+    }
+    
+    public function retrieveCurrentReference() {
+        
+        $result = $this->pdo->query("SELECT * FROM reference_list ORDER BY date_added DESC LIMIT 0,1");
+        
+        $result->setFetchMode(\PDO::FETCH_ASSOC);
+        
+        $this->data["current-reference"] = $result->fetch();
     }
 
     public function retrieveOptions() {
@@ -60,7 +81,7 @@ class DatabaseAdapter {
     }
     
     public function retrieveFirstModification() {
-        $result = $this->pdo->query("SELECT * FROM modification_list ORDER BY date_added LIMIT 0,1");
+        $result = $this->pdo->query("SELECT * FROM modification_list WHERE is_merged = 0 ORDER BY date_added LIMIT 0,1");
         $result->setFetchMode(\PDO::FETCH_ASSOC);
         
         $this->data["first-modification"] = $result->fetch();
