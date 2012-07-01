@@ -1,5 +1,5 @@
 {
-    "hash": "c11c94814094bdc2d74519a532ebcc03",
+    "hash": "aa3fb13ed2555290e805cedde28979e2",
     "packages": [
         {
             "package": "pimple/pimple",
@@ -22,8 +22,8 @@
         {
             "package": "silex/silex",
             "version": "dev-master",
-            "source-reference": "a282dd088975b8302cf3312a4f51ef34b55f8f1c",
-            "commit-date": "1341136064"
+            "source-reference": "9acfa332f95a2fa72e33f4c6fc8499b721db2705",
+            "commit-date": "1341177334"
         },
         {
             "package": "symfony/event-dispatcher",
@@ -46,8 +46,8 @@
         {
             "package": "symfony/http-foundation",
             "version": "dev-master",
-            "source-reference": "ee1c424f8ee48db84a60f8c5bd8dd3b25706e4e9",
-            "commit-date": "1340989514"
+            "source-reference": "211cba98f1f068f500b8f9f95b7b0036f458739d",
+            "commit-date": "1341177900"
         },
         {
             "package": "symfony/http-kernel",
@@ -58,8 +58,8 @@
         {
             "package": "symfony/http-kernel",
             "version": "dev-master",
-            "source-reference": "3c13c8b8f78d8c0a20b1aeac5e0fb84d840ce365",
-            "commit-date": "1340951895"
+            "source-reference": "a6111c260e33fb03d0068407d6e1a238855d1c86",
+            "commit-date": "1341178091"
         },
         {
             "package": "symfony/routing",
@@ -70,8 +70,20 @@
         {
             "package": "symfony/routing",
             "version": "dev-master",
-            "source-reference": "ed1a7d9118dd1ee332b485f19b920a9e0077022a",
-            "commit-date": "1340625003"
+            "source-reference": "6efe2369ad32ccdb648018f2eac83997d2d9b33b",
+            "commit-date": "1341176956"
+        },
+        {
+            "package": "twig/twig",
+            "version": "dev-master",
+            "alias-pretty-version": "1.8.x-dev",
+            "alias-version": "1.8.9999999.9999999-dev"
+        },
+        {
+            "package": "twig/twig",
+            "version": "dev-master",
+            "source-reference": "73da773aaad0f97f2e967ec8241b8adf7b1e03d2",
+            "commit-date": "1340890758"
         }
     ],
     "packages-dev": null,

@@ -19,8 +19,11 @@ $app->register(new GW2CBackend\DatabaseServiceProvider(), array(
 
 $app['admin.username'] = $admin_user;
 $app['admin.password'] = $admin_pword;
-
 $app->register(new Silex\Provider\SessionServiceProvider());
+
+$app->register(new Silex\Provider\TwigServiceProvider(), array(
+    'twig.path' => __DIR__.'/../src/views',
+));
 
 
 // defines the role checker
@@ -38,21 +41,13 @@ $app->get('/', function() use($app) {
 });
 
 // dirty test form to submit JSON
-$app->get('/test-form', function() {
+$app->get('/test-form', function() use($app) {
    
    $jsonString = file_get_contents(__DIR__.'/../test.json');
    
-   $display = '<html>
-                    <head><title>Test form to submit JSON</title></head>
-                    <body>
-                        <form method="post" action="submit-modification">
-                            <textarea cols="100" rows="50" name="json">'.$jsonString.'</textarea>
-                            <input type="submit" value="Send" />
-                        </form>
-                    </body>
-                </html>';
-   
-    return $display;
+   return $app['twig']->render('test-form.html.twig', array(
+           'jsonString' => $jsonString
+       ));
 });
 
 $app->post('/submit-modification', function(Request $request) use($app) {
@@ -82,16 +77,10 @@ $app->get('/login', function() use($app) {
 $app->get('/admin', function() use($app) {
     
     $list = $app['database']->retrieveModificationList();
-
-    $display = "<html><head><title>Modification list</title></head><body><ul>";
     
-    foreach($list as $modif) {
-        $display .= '<li>Preview ID='.$modif['id'].'</li>';        
-    }
-    
-    $display .= "</ul></body></html>";
-    
-    return $display;
+    return $app['twig']->render('admin.html.twig', array(
+            'modifList' => $list
+        ));
 })
 ->before($mustBeLogged);
 

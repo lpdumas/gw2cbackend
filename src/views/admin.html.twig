@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html>
+<head><title>Administration: modification list</title></head>
+<body>
+    <ul>
+        {% for item in modifList %}
+            <li><a href="#">Preview ID#{{ item.id }}</a></li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
