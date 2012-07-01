@@ -1,2 +1,3 @@
 output/
 db-config.php
+vendor/

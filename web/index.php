@@ -1,13 +1,23 @@
 <?php
 
-require_once 'lib/Symfony/ClassLoader/UniversalClassLoader.php';
-require_once 'db-config.php';
+require_once __DIR__.'/../vendor/autoload.php';
+//require_once __DIR__.'/../lib/Symfony/ClassLoader/UniversalClassLoader.php';
+require_once __DIR__.'/../db-config.php';
 
-use Symfony\Component\ClassLoader\UniversalClassLoader;
+$pdo = new GW2CBackend\DatabaseAdapter();
+$app = new Silex\Application();
 
-$loader = new UniversalClassLoader();
-$loader->registerNamespace('GW2CBackend', __DIR__.'/src');
-$loader->register();
+$app->get('/hello/{name}', function ($name) use ($app) {
+    return 'Hello '.$app->escape($name);
+});
+
+$app->run();
+
+/*
+
+
+
+
 
 // we open a connection to the database
 $pdo = new GW2CBackend\DatabaseAdapter();
@@ -71,5 +81,5 @@ if($isValid === true) {
 else {
     echo "The file format in invalid.";
 }
-
+*/
 ?>
