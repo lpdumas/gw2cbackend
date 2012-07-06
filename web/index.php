@@ -8,6 +8,8 @@ use Symfony\Component\HttpFoundation\Response;
 
 $app = new Silex\Application();
 
+$app['debug'] = true;
+
 // we register the services
 $app->register(new GW2CBackend\DatabaseServiceProvider(), array(
     'database.host'     => $host,
@@ -17,13 +19,25 @@ $app->register(new GW2CBackend\DatabaseServiceProvider(), array(
     'database.password' => $pword,
 ));
 
-$app['admin.username'] = $admin_user;
-$app['admin.password'] = $admin_pword;
 $app->register(new Silex\Provider\SessionServiceProvider());
+$app->register(new Silex\Provider\SecurityServiceProvider());
+$app->register(new Silex\Provider\UrlGeneratorServiceProvider());
 
 $app->register(new Silex\Provider\TwigServiceProvider(), array(
     'twig.path' => __DIR__.'/../src/views',
 ));
+
+// firewall for admin area
+$app['security.firewalls'] = array(
+    'admin' => array(
+        'pattern' => '^/admin/',
+        'form' => array('login_path' => '/login', 'check_path' => '/admin/login_check'),
+        'logout' => array('logout_path' => '/logout'),
+        'users' => array(
+            'admin' => array('ROLE_ADMIN', '5FZ2Z8QIkA7UTZ4BYkoC+GsReLf569mSKDsfods6LYQ8t+a8EW9oaircfMpmaLbPBh4FOBiiFyLfuZmTSUwzZg=='),
+        ),
+    ),
+);
 
 
 // defines the role checker
@@ -58,37 +72,31 @@ $app->post('/submit-modification', function(Request $request) use($app) {
     $app['database']->addModification($jsonString);
 });
 
-$app->get('/login', function() use($app) {
-    $username = $app['request']->server->get('PHP_AUTH_USER', null, false);
-    $password = $app['request']->server->get('PHP_AUTH_PW');
-
-    if ($app['admin.username'] === $username && $app['admin.password'] === $password) {
-        $app['session']->set('user', array('username' => $username));
-
-        return $app->redirect('/admin');
-    }
-
-    $response = new Response();
-    $response->headers->set('WWW-Authenticate', sprintf('Basic realm="%s"', 'site_login'));
-    $response->setStatusCode(401, 'Please sign in.');
-    return $response;
-});
-
-$app->get('/logout', function() use($app) {
-    $app['session']->clear();
+$app->get('/login', function(Request $request) use ($app) {
     
-    return $app->redirect('/');
+    $token = $app['security']->getToken();
+    var_dump($token);
+
+    return $app['twig']->render('login.html', array(
+        'error'         => $app['security.last_error']($request),
+        'last_username' => $app['session']->get('_security.last_username'),
+    ));
 });
 
-$app->get('/admin', function() use($app) {
+$app->get('/admin/', function() use($app) {
     
     $list = $app['database']->retrieveModificationList();
     
     return $app['twig']->render('admin.html.twig', array(
             'modifList' => $list
         ));
-})
-->before($mustBeLogged);
+});
+
+$app->get('/admin/revision/{revID}', function($revID) use($app) {
+
+    return "hoy ".$revID;
+ 
+});
 
 $app->run();
 

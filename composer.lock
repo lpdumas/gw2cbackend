@@ -1,5 +1,5 @@
 {
-    "hash": "aa3fb13ed2555290e805cedde28979e2",
+    "hash": "d4e5d0f525b78ea028981ef2f9ad9ed5",
     "packages": [
         {
             "package": "pimple/pimple",
@@ -72,6 +72,30 @@
             "version": "dev-master",
             "source-reference": "6efe2369ad32ccdb648018f2eac83997d2d9b33b",
             "commit-date": "1341176956"
+        },
+        {
+            "package": "symfony/security",
+            "version": "dev-master",
+            "alias-pretty-version": "2.1.x-dev",
+            "alias-version": "2.1.9999999.9999999-dev"
+        },
+        {
+            "package": "symfony/security",
+            "version": "dev-master",
+            "source-reference": "95445692fd3b2209611c2c5258c0d00ff4be9a15",
+            "commit-date": "1340705165"
+        },
+        {
+            "package": "symfony/twig-bridge",
+            "version": "dev-master",
+            "alias-pretty-version": "2.1.x-dev",
+            "alias-version": "2.1.9999999.9999999-dev"
+        },
+        {
+            "package": "symfony/twig-bridge",
+            "version": "dev-master",
+            "source-reference": "v2.1.0-BETA1",
+            "commit-date": "1339357889"
         },
         {
             "package": "twig/twig",
