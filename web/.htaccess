@@ -1,8 +1,12 @@
 <IfModule mod_rewrite.c>
     RewriteEngine On
     RewriteBase /
+
+    RewriteRule (.+)(assets|tiles)/*(.*) /$2/$3 [R=301,L]
+    
+    RewriteCond $1 !.*\.(css|js|gif|jpe?g|png) [NC]
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
-    RewriteCond $1 !\.(gif|jpe?g|png)$ [NC]
-    RewriteRule ^(.*)$ /index.php?$1 [L]
+    RewriteRule ^(.*)$ /index.php/$1 [L]
+
 </IfModule>
