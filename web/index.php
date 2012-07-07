@@ -86,10 +86,8 @@ $app->get('/admin/revision/{revID}', function($revID) use($app) {
     $app['twig.path'] = __DIR__.'/../gw2cread/';
 
     $app['database']->retrieveOptions();
-    $app['database']->retrieveResources();
     $app['database']->retrieveAreasList();
     $options = $app['database']->getData("options");
-    $resources = $app['database']->getData("resources");
     $areasList = $app['database']->getData("areas-list");
     $filepath = __DIR__.'/..'.$options["output-filepath"];
     $minimized = (boolean) $options["output-minimization"];
@@ -98,13 +96,23 @@ $app->get('/admin/revision/{revID}', function($revID) use($app) {
     $lastRev = $app['database']->retrieveModification($revID);
     $jsonReference = json_decode($lastRev['value'], true);
 
-    $generator = new GW2CBackend\ConfigGenerator($jsonReference, $changes, $resources, 
+    $markerGroups = $app['database']->getMarkerGroups();
+    $markerTypes = $app['database']->getMarkerTypes();
+    
+    foreach($markerTypes as $markerType) {
+        
+        $markerGroups[$markerType['id_marker_group']]['markerTypes'][] = $markerType;
+    }
+
+    // the second part of the script is executed when an administrator validates or not the modification. Let say he does validate.
+    $generator = new GW2CBackend\ConfigGenerator($jsonReference, $changes, $markerGroups, 
                                                  $options["resources-path"], $areasList);
     $output = $generator->generate();
     $generator->save($filepath, $minimized);
     
     // to mock a real config file
-    $output = file_get_contents(__DIR__.'/../gw2cread/assets/javascripts/config.js');
+    //$output = file_get_contents(__DIR__.'/../gw2cread/assets/javascripts/config.js');
+    //$output = file_get_contents(__DIR__.'/../output/config.js');
 
     return $app['twig']->render('index.html', array("js_generated" => $output));
  
@@ -153,12 +161,19 @@ if($isValid === true) {
         // we render the diff version thanks to the map
         // ------ nothing for now
 
+        $markerGroups = $pdo->getMarkerGroups();
+        $markerTypes = $pdo->getMarkerTypes();
+
+        foreach($markerTypes as $markerType) {
+    
+            $markerGroups[$markerType['id_marker_group']]['markerTypes'][] = $markerType;
+        }
 
         // the second part of the script is executed when an administrator validates or not the modification. Let say he does validate.
         $options = $pdo->getData("options");
         $filepath = __DIR__.$options["output-filepath"];
         $minimized = (boolean) $options["output-minimization"];
-        $generator = new GW2CBackend\ConfigGenerator($jsonReference, $changes, $pdo->getData("resources"), 
+        $generator = new GW2CBackend\ConfigGenerator($jsonReference, $changes, $markerGroups, 
                                                      $options["resources-path"], $pdo->getData("areas-list"));
         $generator->setIDToNewMarkers();
         $generator->generate();

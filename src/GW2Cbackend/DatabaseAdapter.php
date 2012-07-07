@@ -138,7 +138,7 @@ class DatabaseAdapter {
     public function retrieveModification($idModification) {
         $result = $this->pdo->query("SELECT * FROM modification_list WHERE id = ".$idModification);
         $result->setFetchMode(\PDO::FETCH_ASSOC);
-        
+
         return $result->fetch();
     }
     

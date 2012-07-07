@@ -29,7 +29,7 @@ class ConfigGenerator {
         
         $outputString = "";
 
-        $this->mergeChanges();
+        //$this->mergeChanges();
         
         $outputString.= $this->generateResourcesOutput();
         $outputString.= $this->generateAreasOutput();
@@ -166,11 +166,20 @@ class ConfigGenerator {
         $outputString.="Resources.Icons = {".PHP_EOL;
 
         foreach($this->markerGroups as $markerGroup) {
+            
+            $outputString.= "\t".$markerGroup['slug'].' : {'.PHP_EOL;
+
             foreach($markerGroup['markerTypes'] as $markerType) {
-                $outputString.="\t".'"'.$markerType['id'].'" : { ';
+                $outputString.="\t\t".'"'.$markerType['id'].'" : { ';
                 $outputString.='"url" : Resources.Paths.icons + "'.$markerType['filename'].'"},'.PHP_EOL;
             }
+            
+            // remove the last comma
+            $outputString = substr($outputString, 0, strlen($outputString) - 2).PHP_EOL."\t".'},'.PHP_EOL;
         }
+
+        // remove the last comma
+        $outputString = substr($outputString, 0, strlen($outputString) - 2).PHP_EOL;
 
         $outputString.="}".PHP_EOL.PHP_EOL;
 
@@ -196,7 +205,7 @@ class ConfigGenerator {
     protected function getAreaSummary($idArea) {
         
         $summary = array("hearts" => 0, "waypoints" => 0, "skillpoints" => 0, "poi" => 0, "dungeons" => 0);
-            
+
         foreach($this->reference as $markerType => $markerTypeCollection) {
             
             foreach($markerTypeCollection as $marker) {
