@@ -20,15 +20,16 @@ $app->register(new GW2CBackend\DatabaseServiceProvider(), array(
 ));
 
 $app->register(new Silex\Provider\SessionServiceProvider());
-$app->register(new Silex\Provider\SecurityServiceProvider());
+//$app->register(new Silex\Provider\SecurityServiceProvider());
 $app->register(new Silex\Provider\UrlGeneratorServiceProvider());
 
 $app->register(new Silex\Provider\TwigServiceProvider(), array(
     'twig.path' => __DIR__.'/../src/views',
+    /*'twig.path' => __DIR__.'/../gw2cread',*/
 ));
 
 // firewall for admin area
-$app['security.firewalls'] = array(
+/*$app['security.firewalls'] = array(
     'admin' => array(
         'pattern' => '^/admin/',
         'form' => array('login_path' => '/login', 'check_path' => '/admin/login_check'),
@@ -37,16 +38,7 @@ $app['security.firewalls'] = array(
             'admin' => array('ROLE_ADMIN', '5FZ2Z8QIkA7UTZ4BYkoC+GsReLf569mSKDsfods6LYQ8t+a8EW9oaircfMpmaLbPBh4FOBiiFyLfuZmTSUwzZg=='),
         ),
     ),
-);
-
-
-// defines the role checker
-$mustBeLogged = function (Request $request) use ($app) {
-    
-    if (!$app['session']->has('user') || $app['session']->get('user') == null) {
-        return $app->redirect('/');
-    }
-};
+);*/
 
 $app->get('/', function() use($app) {
 
@@ -73,9 +65,6 @@ $app->post('/submit-modification', function(Request $request) use($app) {
 });
 
 $app->get('/login', function(Request $request) use ($app) {
-    
-    $token = $app['security']->getToken();
-    var_dump($token);
 
     return $app['twig']->render('login.html', array(
         'error'         => $app['security.last_error']($request),
@@ -93,10 +82,33 @@ $app->get('/admin/', function() use($app) {
 });
 
 $app->get('/admin/revision/{revID}', function($revID) use($app) {
+    
+    $app['twig.path'] = __DIR__.'/../gw2cread/';
 
-    return "hoy ".$revID;
+    $app['database']->retrieveOptions();
+    $app['database']->retrieveResources();
+    $app['database']->retrieveAreasList();
+    $options = $app['database']->getData("options");
+    $resources = $app['database']->getData("resources");
+    $areasList = $app['database']->getData("areas-list");
+    $filepath = __DIR__.'/..'.$options["output-filepath"];
+    $minimized = (boolean) $options["output-minimization"];
+    $changes = array();
+    
+    $lastRev = $app['database']->retrieveModification($revID);
+    $jsonReference = json_decode($lastRev['value'], true);
+
+    $generator = new GW2CBackend\ConfigGenerator($jsonReference, $changes, $resources, 
+                                                 $options["resources-path"], $areasList);
+    $output = $generator->generate();
+    $generator->save($filepath, $minimized);
+    
+    // to mock a real config file
+    $output = file_get_contents(__DIR__.'/../gw2cread/assets/javascripts/config.js');
+
+    return $app['twig']->render('index.html', array("js_generated" => $output));
  
-});
+})->bind('admin_revision');
 
 $app->run();
 

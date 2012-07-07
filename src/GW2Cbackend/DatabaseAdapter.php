@@ -109,6 +109,13 @@ class DatabaseAdapter {
         }
     }
     
+    public function retrieveModification($idModification) {
+        $result = $this->pdo->query("SELECT * FROM modification_list WHERE id = ".$idModification);
+        $result->setFetchMode(\PDO::FETCH_ASSOC);
+        
+        return $result->fetch();
+    }
+    
     public function retrieveFirstModification() {
         $result = $this->pdo->query("SELECT * FROM modification_list WHERE is_merged = 0 ORDER BY date_added LIMIT 0,1");
         $result->setFetchMode(\PDO::FETCH_ASSOC);

@@ -36,6 +36,8 @@ class ConfigGenerator {
         $outputString.= $this->generateMarkersOutput();
 
         $this->output = $outputString;
+        
+        return $this->output;
     }
     
     public function setIDToNewMarkers() {
@@ -219,6 +221,8 @@ class ConfigGenerator {
     }
     
     protected function getMarkerInChangesByID($markerID, $markerType) {
+
+        if(!array_key_exists($markerType, $this->changes)) return null;
 
         foreach($this->changes[$markerType] as $change) {
 
