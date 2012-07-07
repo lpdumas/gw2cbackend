@@ -30,7 +30,7 @@ class DatabaseAdapter {
 
     public function retrieveAll() {
         $this->retrieveOptions();
-        $this->retrieveResources();
+        //$this->retrieveResources();
         $this->retrieveAreasList();
         $this->retrieveCurrentReference();
         $this->retrieveFirstModification();
@@ -64,13 +64,39 @@ class DatabaseAdapter {
         }
     }
     
-    public function retrieveResources() {
+    /*public function retrieveResources() {
         $result = $this->pdo->query("SELECT * FROM resources");
         $result->setFetchMode(\PDO::FETCH_ASSOC);
         
         $this->data["resources"] = $result->fetchAll();
-    }
+    }*/
     
+    public function getMarkerGroups() {
+        $result = $this->pdo->query("SELECT * FROM marker_group");
+        $result->setFetchMode(\PDO::FETCH_ASSOC);
+        
+        $r = array();
+        foreach($result->fetchAll() as $res) {
+            
+            $r[$res['id']] = $res;
+        }
+        
+        $this->data["marker.groups"] = $r;
+        
+        return $r;
+    }
+
+    public function getMarkerTypes() {
+        $result = $this->pdo->query("SELECT * FROM marker_type");
+        $result->setFetchMode(\PDO::FETCH_ASSOC);
+        
+        $r = $result->fetchAll();
+        
+        $this->data["marker.types"] = $r;
+        
+        return $r;
+    }
+
     public function retrieveAreasList() {
         $result = $this->pdo->query("SELECT * FROM areas_list");
         $result->setFetchMode(\PDO::FETCH_ASSOC);
