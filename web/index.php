@@ -89,8 +89,6 @@ $app->get('/admin/revision/{revID}', function($revID) use($app) {
     $app['database']->retrieveAreasList();
     $options = $app['database']->getData("options");
     $areasList = $app['database']->getData("areas-list");
-    $filepath = __DIR__.'/..'.$options["output-filepath"];
-    $minimized = (boolean) $options["output-minimization"];
     $changes = array();
     
     $lastRev = $app['database']->retrieveModification($revID);
@@ -108,9 +106,8 @@ $app->get('/admin/revision/{revID}', function($revID) use($app) {
     $generator = new GW2CBackend\ConfigGenerator($jsonReference, $changes, $markerGroups, 
                                                  $options["resources-path"], $areasList);
     $generator->generate();
-    //$generator->minimize();
+    $generator->minimize();
     $output = $generator->getOutput();
-    //$generator->save($filepath, $minimized);
 
     return $app['twig']->render('index.html', array("js_generated" => $output));
  
