@@ -9,17 +9,17 @@ class ConfigGenerator {
     protected $reference;
     protected $changes;
     
-    protected $resources;
+    protected $markerGroups;
     protected $areas;
     protected $resourcesPath;
     
     protected $maxID;
     
-    public function __construct($reference, $changes, $resources, $resourcesPath, $areas) {
+    public function __construct($reference, $changes, $markerGroups, $resourcesPath, $areas) {
         
         $this->reference = $reference;
         $this->changes = $changes;
-        $this->resources = $resources;
+        $this->markerGroups = $markerGroups;
         $this->areas = $areas;
         $this->resourcesPath = $resourcesPath;
         $this->maxID = 0;
@@ -118,23 +118,42 @@ class ConfigGenerator {
         
         $outputString = "";
         
-        foreach($this->reference as $markerType => $markerTypeCollection) {
-            
-            $outputString.="Markers.".$markerType." = [".PHP_EOL;
-            
-            foreach($markerTypeCollection as $marker) {
-                
-                $outputString.="\t".'{ "id" : '.$marker['id'].', "lat" : '.$marker['lat'].', "lng" : '.$marker['lng'].', ';
-                $outputString.='"area" : '.$marker["area"].', ';
-                $outputString.='"title" : "'.$marker['title'].'", "desc" : "'.$marker["desc"].'"},'.PHP_EOL;
+        foreach($this->markerGroups as $markerGroup) {
+
+            $outputString.= 'Markers.'.$markerGroup['slug'].' = {'.PHP_EOL;
+            $outputString.= "\t".'name : "'.$markerGroup['name'].'",'.PHP_EOL;
+            $outputString.= "\t".'markerGroup : ['.PHP_EOL;
+
+            foreach($markerGroup['markerTypes'] as $markerType) {
+
+                $outputString.= "\t\t".'{'.PHP_EOL;
+                $outputString.= "\t\t\t".'name : "'.$markerType['name'].'",'.PHP_EOL;
+                $outputString.= "\t\t\t".'slug : "'.$markerType['id'].'",'.PHP_EOL;
+                $outputString.= "\t\t\t".'markers : ['.PHP_EOL;
+
+                if(array_key_exists($markerType['id'], $this->reference)) {
+                    
+                    $tab = "\t\t\t\t";
+                    foreach($this->reference[$markerType['id']] as $marker) {
+                        $outputString.= $tab.'{ "id" : '.$marker['id'].', "lat" : '.$marker['lat'].', "lng" : '.$marker['lng'].', ';
+                        $outputString.='"area" : '.$marker["area"].', ';
+                        $outputString.='"title" : "'.$marker['title'].'", "desc" : "'.$marker["desc"].'"},'.PHP_EOL;
+                    }
+
+                    // remove the last comma
+                    $outputString = substr($outputString, 0, strlen($outputString) - 2).PHP_EOL;
+                }
+
+                $outputString.= "\t\t\t".']'.PHP_EOL;
+                $outputString.= "\t\t".'},'.PHP_EOL;                
             }
-            
+
             // remove the last comma
             $outputString = substr($outputString, 0, strlen($outputString) - 2).PHP_EOL;
             
-            $outputString.="]".PHP_EOL;
+            $outputString.= "\t".']'.PHP_EOL.'}'.PHP_EOL;
         }
-        
+
         return $outputString;
     }
     
@@ -146,9 +165,11 @@ class ConfigGenerator {
 
         $outputString.="Resources.Icons = {".PHP_EOL;
 
-        foreach($this->resources as $r) {
-            $outputString.="\t".'"'.$r['id'].'" : { "label" : "'.$r['label'].'", ';
-            $outputString.='"url" : Resources.Paths.icons + "'.$r['filename'].'"},'.PHP_EOL;
+        foreach($this->markerGroups as $markerGroup) {
+            foreach($markerGroup['markerTypes'] as $markerType) {
+                $outputString.="\t".'"'.$markerType['id'].'" : { ';
+                $outputString.='"url" : Resources.Paths.icons + "'.$markerType['filename'].'"},'.PHP_EOL;
+            }
         }
 
         $outputString.="}".PHP_EOL.PHP_EOL;
