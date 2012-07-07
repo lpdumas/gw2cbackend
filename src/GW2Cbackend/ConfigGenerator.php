@@ -127,7 +127,7 @@ class ConfigGenerator {
             foreach($markerGroup['markerTypes'] as $markerType) {
 
                 $outputString.= "\t\t".'{'.PHP_EOL;
-                $outputString.= "\t\t\t".'name : "'.$markerType['name'].'",'.PHP_EOL;
+                //$outputString.= "\t\t\t".'name : "'.$markerType['name'].'",'.PHP_EOL;
                 $outputString.= "\t\t\t".'slug : "'.$markerType['id'].'",'.PHP_EOL;
                 $outputString.= "\t\t\t".'markers : ['.PHP_EOL;
 
@@ -160,18 +160,19 @@ class ConfigGenerator {
     protected function generateResourcesOutput() {
 
         $outputString = "Resources.Paths = {".PHP_EOL;
-        $outputString.= "\t".'"icons": "'.$this->resourcesPath.'"'.PHP_EOL;
+        $outputString.= "\t".'"icons" : "'.$this->resourcesPath.'"'.PHP_EOL;
         $outputString.="};".PHP_EOL.PHP_EOL;
 
         $outputString.="Resources.Icons = {".PHP_EOL;
 
         foreach($this->markerGroups as $markerGroup) {
             
-            $outputString.= "\t".$markerGroup['slug'].' : {'.PHP_EOL;
+            $outputString.= "\t".'"'.$markerGroup['slug'].'" : {'.PHP_EOL;
 
             foreach($markerGroup['markerTypes'] as $markerType) {
-                $outputString.="\t\t".'"'.$markerType['id'].'" : { ';
-                $outputString.='"url" : Resources.Paths.icons + "'.$markerType['filename'].'"},'.PHP_EOL;
+                $outputString.= "\t\t".'"'.$markerType['id'].'" : { ';
+                $outputString.= '"label" : "'.$markerType['name'].'",';
+                $outputString.= '"url" : Resources.Paths.icons + "'.$markerType['filename'].'"},'.PHP_EOL;
             }
             
             // remove the last comma
@@ -235,9 +236,9 @@ class ConfigGenerator {
     }
     
     public function minimize() {
-        $this->output = preg_replace("#[\t\n ]#", "",$this->output);
+        $this->output = preg_replace('#[\t\n ]*(=|:|,|;|{|}|\[|\]|")[\t\n ]*#', '$1',$this->output);
     }
-    
+
     public function save($pathOutput, $minimized) {
 
         $file = fopen($pathOutput, "w+");
