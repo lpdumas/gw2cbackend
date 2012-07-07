@@ -151,7 +151,7 @@ class ConfigGenerator {
             // remove the last comma
             $outputString = substr($outputString, 0, strlen($outputString) - 2).PHP_EOL;
             
-            $outputString.= "\t".']'.PHP_EOL.'}'.PHP_EOL;
+            $outputString.= "\t".']'.PHP_EOL.'};'.PHP_EOL;
         }
 
         return $outputString;
@@ -161,7 +161,7 @@ class ConfigGenerator {
 
         $outputString = "Resources.Paths = {".PHP_EOL;
         $outputString.= "\t".'"icons": "'.$this->resourcesPath.'"'.PHP_EOL;
-        $outputString.="}".PHP_EOL.PHP_EOL;
+        $outputString.="};".PHP_EOL.PHP_EOL;
 
         $outputString.="Resources.Icons = {".PHP_EOL;
 
@@ -181,7 +181,7 @@ class ConfigGenerator {
         // remove the last comma
         $outputString = substr($outputString, 0, strlen($outputString) - 2).PHP_EOL;
 
-        $outputString.="}".PHP_EOL.PHP_EOL;
+        $outputString.="};".PHP_EOL.PHP_EOL;
 
         return $outputString;
     }
@@ -197,7 +197,7 @@ class ConfigGenerator {
         }
 
         $outputString = substr($outputString, 0, strlen($outputString) - 2).PHP_EOL;
-        $outputString.= "]".PHP_EOL.PHP_EOL;
+        $outputString.= "];".PHP_EOL.PHP_EOL;
          
          return $outputString;
     }
@@ -234,21 +234,23 @@ class ConfigGenerator {
         return $outputString;
     }
     
+    public function minimize() {
+        $this->output = preg_replace("#[\t\n ]#", "",$this->output);
+    }
+    
     public function save($pathOutput, $minimized) {
 
         $file = fopen($pathOutput, "w+");
-        
+
         if($minimized) {
-            // we remove all the spaces
-            $outputString = preg_replace("#[\t\n ]#", "",$this->output);
+            $this->minimize();
         }
-        else {
-            $outputString = $this->output;
-        }
-        
-        fwrite($file, $outputString);
+
+        fwrite($file, $this->output);
         fclose($file);
     }
+    
+    public function getOutput() { return $this->output; }
     
     protected function getMarkerInChangesByID($markerID, $markerType) {
 

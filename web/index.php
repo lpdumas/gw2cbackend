@@ -107,12 +107,10 @@ $app->get('/admin/revision/{revID}', function($revID) use($app) {
     // the second part of the script is executed when an administrator validates or not the modification. Let say he does validate.
     $generator = new GW2CBackend\ConfigGenerator($jsonReference, $changes, $markerGroups, 
                                                  $options["resources-path"], $areasList);
-    $output = $generator->generate();
-    $generator->save($filepath, $minimized);
-    
-    // to mock a real config file
-    //$output = file_get_contents(__DIR__.'/../gw2cread/assets/javascripts/config.js');
-    //$output = file_get_contents(__DIR__.'/../output/config.js');
+    $generator->generate();
+    //$generator->minimize();
+    $output = $generator->getOutput();
+    //$generator->save($filepath, $minimized);
 
     return $app['twig']->render('index.html', array("js_generated" => $output));
  
