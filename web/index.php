@@ -106,12 +106,23 @@ $app->get('/admin/revision/{revID}', function($revID) use($app) {
     $generator = new GW2CBackend\ConfigGenerator($jsonReference, $changes, $markerGroups, 
                                                  $options["resources-path"], $areasList);
     $generator->generate();
-    $generator->minimize();
+    //$generator->minimize();
     $output = $generator->getOutput();
+    $generator->save(__DIR__.'/config.js', false); // for debug purpose
 
     return $app['twig']->render('index.html', array("js_generated" => $output));
  
 })->bind('admin_revision');
+
+$app->get('/format', function() use($app) {
+   
+   $json = file_get_contents(__DIR__.'/../test.json');
+   
+   $formatter = new GW2CBackend\FormatJSON($json);
+   $json = $formatter->format();
+
+   echo json_encode($json);
+});
 
 $app->run();
 
