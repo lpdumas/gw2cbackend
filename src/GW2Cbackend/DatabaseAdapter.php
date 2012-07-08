@@ -125,6 +125,18 @@ class DatabaseAdapter {
         
         return $r;
     }
+    
+    public function getMarkersStructure() {
+        $markerGroups = $this->getMarkerGroups();
+        $markerTypes = $this->getMarkerTypes();
+
+        foreach($markerTypes as $markerType) {
+
+            $markerGroups[$markerType['id_marker_group']]['markerTypes'][] = $markerType;
+        }
+        
+        return $markerGroups;
+    }
 
     public function retrieveAreasList() {
         $result = $this->pdo->query("SELECT * FROM areas_list");
