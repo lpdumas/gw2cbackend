@@ -11,12 +11,12 @@ class FormatJSON {
     }
     
     public function format() {
-        
+                
+        $id = 1;
+
         foreach($this->json  as $idMarkerGroup => $markerGroups) {
 
             foreach($markerGroups['markerGroup'] as $idMarkerType => $markerType) {
-                
-                $id = 1;
                 
                 foreach($markerType['markers'] as $idMarker => $marker) {
 
