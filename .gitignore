@@ -3,3 +3,4 @@ output/
 db-config.php
 vendor/
 composer.phar
+web/config.js
