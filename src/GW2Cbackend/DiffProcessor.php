@@ -38,25 +38,35 @@ class DiffProcessor {
      */
     public function process() {
 
-        foreach($this->reference as $markerType => $markerTypeCollection) {
+        foreach($this->reference as $markerGroupID => $markerGroup) {
+            
+            $this->changes[$markerGroupID] = array();
+            
+            foreach($markerGroup['markerGroup'] as $markerType) {
+                
+                $this->changes[$markerGroupID][$markerType['slug']] = array();
+                
+                foreach($markerType['markers'] as $marker) {
+                    
+                    $result = $this->searchForMarker($marker, $markerGroupID, $markerType['slug']);
 
-            $this->changes[$markerType] = array();
-            foreach($markerTypeCollection as $id => $marker) {
-
-                $result = $this->searchForMarker($marker, $markerType);
-
-                if($result["status"] != self::STATUS_OK) {
-                    $this->changes[$markerType][] = $result;
+                    if($result["status"] != self::STATUS_OK) {
+                        $this->changes[$markerGroupID][$markerType['slug']][] = $result;
+                    }
                 }
             }
+        }
 
-            // the remaining elements are the added markers
-            foreach($this->modification[$markerType] as $id => $marker) {
-
-                // protect against eventual errors
-                if($marker["id"] == -1) {
-                    $result = array("status" => self::STATUS_ADDED, "marker" => $marker, "marker-reference" => null);
-                    $this->changes[$markerType][] = $result;
+        // the remaining elements are the added markers
+        foreach($this->modification as $markerGroupID => $markerGroup) {
+            
+            foreach($markerGroup['markerGroup'] as $markerTypeID => $markerType) {
+                
+                foreach($markerType['markers'] as $marker) {
+                    if($marker["id"] == -1) {
+                        $result = array("status" => self::STATUS_ADDED, "marker" => $marker, "marker-reference" => null);
+                        $this->changes[$markerGroupID][$markerType['slug']][] = $result;
+                    }
                 }
             }
         }
@@ -71,16 +81,24 @@ class DiffProcessor {
      * @param $markerTypeReference the marker type from the reference
      * @return an array that represents the result with the status and eventually the marker or/and the marker from the reference
      */
-    protected function searchForMarker($markerReference, $markerType) {
+    protected function searchForMarker($markerReference, $markerGroupID, $markerTypeID) {
         
         $result = array("status" => null, "marker" => null, "marker-reference" => $markerReference);
 
-        $marker = self::getMarkerById($markerReference["id"], $this->modification[$markerType]);
+        foreach($this->modification[$markerGroupID]['markerGroup'] as $k => $markerType) {
+            
+            if($markerType['slug'] == $markerTypeID) {
+                $markerCollection = $this->modification[$markerGroupID]['markerGroup'][$k]['markers'];
+                break;
+            }
+        }
+
+        $marker = self::getMarkerById($markerReference["id"], $markerCollection);
 
         // if the marker has been found
         if($marker != null) {
 
-            $id = array_search($marker, $this->modification[$markerType]);
+            $id = array_search($marker, $markerCollection);
         
             // if the coordinates are the same
             // because of PHP stores float numbers, we can't compare them efficiently so we transtype the float to strings
@@ -112,8 +130,8 @@ class DiffProcessor {
             }
 
             // we remove the marker from the array so we can know which markers have been added
-            unset($this->modification[$markerType][$id]);
-            $this->modification[$markerType] = array_values($this->modification[$markerType]);
+            unset($markerCollection[$id]);
+            $markerCollection = array_values($markerCollection);
         }
         else { // if the marker has been removed
 

@@ -102,12 +102,24 @@ $app->get('/admin/revision/{revID}', function($revID) use($app) {
 
     $app['database']->retrieveOptions();
     $app['database']->retrieveAreasList();
+    $app['database']->retrieveCurrentReference();
     $options = $app['database']->getData("options");
     $areasList = $app['database']->getData("areas-list");
-    $changes = array();
+    
+    // the third step is getting the current version of the map
+    $currentReference = $app['database']->getData("current-reference");
+    $jsonReference = json_decode($currentReference["value"], true);
     
     $lastRev = $app['database']->retrieveModification($revID);
-    $jsonReference = json_decode($lastRev['value'], true);
+    $jsonLastRev = json_decode($lastRev['value'], true);
+
+    $app['database']->retrieveReferenceAtSubmission($lastRev['id_reference_at_submission']);
+    $referenceAtSubmission = $app['database']->getData('reference-at-submission');
+    $maxReferenceID = $referenceAtSubmission['max_marker_id'];
+
+    // we 'diff' the two versions
+    $differ = new GW2CBackend\DiffProcessor($jsonLastRev, $jsonReference, $maxReferenceID);
+    $changes = $differ->process();
 
     $markerGroups = $app['database']->getMarkersStructure();
 
