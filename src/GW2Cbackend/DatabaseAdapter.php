@@ -28,11 +28,13 @@ class DatabaseAdapter {
         }
 
         $idReference = $this->data["current-reference"]["id"];
+        
+        $json = addslashes($json);
 
         $q = "INSERT INTO modification_list (date_added, value, id_reference_at_submission) 
                          VALUES ('".$date."', '".$json."', '".$idReference."')";
 
-        $this->pdo->exec($q);
+        $r = $this->pdo->exec($q);
     }
     
     public function addReference($reference, $maxMarkerID, $idModification) {

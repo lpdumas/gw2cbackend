@@ -68,7 +68,7 @@ $app->post('/submit-modification', function(Request $request) use($app) {
     $isValid = $validator->validate();
 
     if($isValid == true) {
-        //$app['database']->addModification($jsonString);
+        $app['database']->addModification($jsonString);
 
         $message = array('success' => true, 'message' => 'The modification has been submitted.');        
     }
