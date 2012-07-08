@@ -131,17 +131,22 @@ class ConfigGenerator {
                 $outputString.= "\t\t\t".'slug : "'.$markerType['id'].'",'.PHP_EOL;
                 $outputString.= "\t\t\t".'markers : ['.PHP_EOL;
 
-                if(array_key_exists($markerType['id'], $this->reference)) {
-                    
+
+                if(array_key_exists($markerGroup['slug'], $this->reference)) {
+
                     $tab = "\t\t\t\t";
-                    foreach($this->reference[$markerType['id']] as $marker) {
+                    $markers = $this->getMarkersByType($markerType['id']);
+                    
+                    foreach($markers as $marker) {
                         $outputString.= $tab.'{ "id" : '.$marker['id'].', "lat" : '.$marker['lat'].', "lng" : '.$marker['lng'].', ';
                         $outputString.='"area" : '.$marker["area"].', ';
                         $outputString.='"title" : "'.$marker['title'].'", "desc" : "'.$marker["desc"].'"},'.PHP_EOL;
                     }
 
                     // remove the last comma
-                    $outputString = substr($outputString, 0, strlen($outputString) - 2).PHP_EOL;
+                    if(!empty($markers)) {
+                        $outputString = substr($outputString, 0, strlen($outputString) - 2).PHP_EOL;
+                    }
                 }
 
                 $outputString.= "\t\t\t".']'.PHP_EOL;
@@ -166,7 +171,7 @@ class ConfigGenerator {
         $outputString.="Resources.Icons = {".PHP_EOL;
 
         foreach($this->markerGroups as $markerGroup) {
-            
+
             $outputString.= "\t".'"'.$markerGroup['slug'].'" : {'.PHP_EOL;
 
             foreach($markerGroup['markerTypes'] as $markerType) {
@@ -207,11 +212,15 @@ class ConfigGenerator {
         
         $summary = array("hearts" => 0, "waypoints" => 0, "skillpoints" => 0, "poi" => 0, "dungeons" => 0);
 
-        foreach($this->reference as $markerType => $markerTypeCollection) {
-            
-            foreach($markerTypeCollection as $marker) {
-                if($marker["area"] == $idArea) {
-                    $summary[$markerType]++;
+        foreach($this->reference as $markerGroup) {
+
+            foreach($markerGroup['markerGroup'] as $markerType => $markerTypeCollection) {
+
+                foreach($markerTypeCollection['markers'] as $marker) {
+
+                    if(array_key_exists("area", $marker) && $marker["area"] == $idArea) {
+                        $summary[$markerType]++;
+                    }
                 }
             }
         }
@@ -252,6 +261,20 @@ class ConfigGenerator {
     }
     
     public function getOutput() { return $this->output; }
+    
+    protected function getMarkersByType($type) {
+        
+        foreach($this->reference as $markerGroup) {
+            
+            foreach($markerGroup['markerGroup'] as $markerType) {
+                if($markerType['slug'] == $type) {
+                    return $markerType['markers'];
+                }
+            }
+        }
+        
+        return array();
+    }
     
     protected function getMarkerInChangesByID($markerID, $markerType) {
 
