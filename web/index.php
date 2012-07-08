@@ -60,8 +60,23 @@ $app->post('/submit-modification', function(Request $request) use($app) {
 
     // we mock the submission
     $jsonString = stripslashes($request->request->get('json'));
+    $json = json_decode($jsonString, true);
+
+    $app['database']->retrieveAreasList();
+
+    $validator = new GW2CBackend\InputValidator($json, $app['database']->getData("areas-list"));
+    $isValid = $validator->validate();
+
+    if($isValid == true) {
+        //$app['database']->addModification($jsonString);
+
+        $message = array('success' => true, 'message' => 'The modification has been submitted.');        
+    }
+    else {
+        $message = array('success' => false, 'message' => 'The JSON is invalid.');
+    }
     
-    $app['database']->addModification($jsonString);
+    return $app->json($message , 200);
 });
 
 $app->get('/login', function(Request $request) use ($app) {
@@ -94,13 +109,7 @@ $app->get('/admin/revision/{revID}', function($revID) use($app) {
     $lastRev = $app['database']->retrieveModification($revID);
     $jsonReference = json_decode($lastRev['value'], true);
 
-    $markerGroups = $app['database']->getMarkerGroups();
-    $markerTypes = $app['database']->getMarkerTypes();
-    
-    foreach($markerTypes as $markerType) {
-        
-        $markerGroups[$markerType['id_marker_group']]['markerTypes'][] = $markerType;
-    }
+    $markerGroups = $app['database']->getMarkersStructure();
 
     // the second part of the script is executed when an administrator validates or not the modification. Let say he does validate.
     $generator = new GW2CBackend\ConfigGenerator($jsonReference, $changes, $markerGroups, 
