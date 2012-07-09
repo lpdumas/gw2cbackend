@@ -95,13 +95,6 @@ class DatabaseAdapter {
         }
     }
     
-    /*public function retrieveResources() {
-        $result = $this->pdo->query("SELECT * FROM resources");
-        $result->setFetchMode(\PDO::FETCH_ASSOC);
-        
-        $this->data["resources"] = $result->fetchAll();
-    }*/
-    
     public function getMarkerGroups() {
         $result = $this->pdo->query("SELECT * FROM marker_group");
         $result->setFetchMode(\PDO::FETCH_ASSOC);
@@ -109,7 +102,7 @@ class DatabaseAdapter {
         $r = array();
         foreach($result->fetchAll() as $res) {
             
-            $r[$res['id']] = $res;
+            $r[$res['slug']] = $res;
         }
         
         $this->data["marker.groups"] = $r;
@@ -133,10 +126,9 @@ class DatabaseAdapter {
         $markerTypes = $this->getMarkerTypes();
 
         foreach($markerTypes as $markerType) {
-
-            $markerGroups[$markerType['id_marker_group']]['markerTypes'][] = $markerType;
+            $markerGroups[$markerType['slug_marker_group']]['markerTypes'][$markerType['id']] = $markerType;
         }
-        
+
         return $markerGroups;
     }
 

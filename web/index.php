@@ -126,12 +126,33 @@ $app->get('/admin/revision/{revID}', function($revID) use($app) {
     // the second part of the script is executed when an administrator validates or not the modification. Let say he does validate.
     $generator = new GW2CBackend\ConfigGenerator($jsonReference, $changes, $markerGroups, 
                                                  $options["resources-path"], $areasList);
-    $generator->generate();
+
+    $mergeForAdmin = true;
+    $generator->generate($mergeForAdmin);
     //$generator->minimize();
     $output = $generator->getOutput();
+    //echo nl2br($output); exit();
+    
+    /*
+        We make an array twig-friendly to easily display the changes in a list
+    */
+    $flatChanges = array();
+    foreach($changes as $markerGroupID => $markerGroup) {
+        foreach($markerGroup as $markerTypeID => $markerType) {
+            foreach($markerType as $change) {
+                
+                $id = $change['marker'] != null ? $change['marker']['id'] : $change['marker-reference']['id'];
+                $name = $markerGroups[$markerGroupID]['markerTypes'][$markerTypeID]['name'];
+
+                $image = $markerGroups[$markerGroupID]['markerTypes'][$markerTypeID]['filename'];
+                $flatChanges[] = array('id' => $id, 'name' => $name, 'image' => $image, 'change' => $change);
+            }
+        }
+    }
+    //var_dump($flatChanges); exit();
     $generator->save(__DIR__.'/config.js', false); // for debug purpose
 
-    return $app['twig']->render('index.html', array("js_generated" => $output));
+    return $app['twig']->render('index.html', array("js_generated" => $output, 'changes' => $flatChanges));
  
 })->bind('admin_revision');
 

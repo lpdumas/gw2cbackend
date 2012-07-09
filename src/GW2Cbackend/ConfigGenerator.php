@@ -25,12 +25,12 @@ class ConfigGenerator {
         $this->maxID = 0;
     }
     
-    public function generate() {
+    public function generate($mergeForAdmin) {
         
         $outputString = "";
 
         $this->setIDToNewMarkers();
-        $this->mergeChanges();
+        $this->mergeChanges($mergeForAdmin);
         
         $outputString.= $this->generateResourcesOutput();
         $outputString.= $this->generateAreasOutput();
@@ -79,9 +79,9 @@ class ConfigGenerator {
         }
 
         return $maxID;
-    }    
+    }
 
-    protected function mergeChanges() {
+    protected function mergeChanges($mergeForAdmin) {
         
         foreach($this->reference as $markerGroupID => $markerGroup) {
             foreach($markerGroup['markerGroup'] as $markerTypeID => $markerType) {
@@ -99,10 +99,19 @@ class ConfigGenerator {
                             case DiffProcessor::STATUS_MODIFIED_DATA:
                             case DiffProcessor::STATUS_MODIFIED_ALL:
                                 $markerCollection[$markerID] = $change["marker"];
+                                if($mergeForAdmin) {
+                                    $markerCollection[$markerID]['marker-reference'] = $change["marker-reference"];
+                                    $markerCollection[$markerID]['status'] = $change['status'];
+                                }
                                 break;
                             case DiffProcessor::STATUS_REMOVED:
-                                unset($markerCollection[$markerID]);
-                                $markerCollection = array_values($markerCollection);
+                                if(!$mergeForAdmin) {
+                                    unset($markerCollection[$markerID]);
+                                    $markerCollection = array_values($markerCollection);
+                                }
+                                else {
+                                    $markerCollection[$markerID]['status'] = DiffProcessor::STATUS_REMOVED;
+                                }
                                 break;
                         }
 
@@ -117,6 +126,7 @@ class ConfigGenerator {
                 
                 foreach($this->changes[$markerGroupID][$markerType['slug']] as $change) {
                     
+                    $change['marker']['status'] = DiffProcessor::STATUS_ADDED;
                     $markerCollection[] = $change['marker'];
                 }
             }
@@ -149,6 +159,9 @@ class ConfigGenerator {
                     foreach($markers as $marker) {
                         $outputString.= $tab.'{ "id" : '.$marker['id'].', "lat" : '.$marker['lat'].', "lng" : '.$marker['lng'].', ';
                         $outputString.='"area" : '.$marker["area"].', ';
+                        if(array_key_exists('status', $marker)) {
+                            $outputString.='"status" : "'.$marker["status"].'", ';
+                        }
                         $outputString.='"title" : "'.$marker['title'].'", "desc" : "'.$marker["desc"].'"},'.PHP_EOL;
                     }
 
