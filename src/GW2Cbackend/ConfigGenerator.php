@@ -29,7 +29,8 @@ class ConfigGenerator {
         
         $outputString = "";
 
-        //$this->mergeChanges();
+        $this->setIDToNewMarkers();
+        $this->mergeChanges();
         
         $outputString.= $this->generateResourcesOutput();
         $outputString.= $this->generateAreasOutput();
@@ -43,20 +44,22 @@ class ConfigGenerator {
     public function setIDToNewMarkers() {
         
         $this->maxID = self::getMaximumID($this->reference);
-        
-        foreach($this->changes as $markerType => $markerTypeCollection) {
-            
-            foreach($markerTypeCollection as $changeID => $change) {
 
-                if($change["status"] == DiffProcessor::STATUS_ADDED && $change["marker"]["id"] == -1) {
-                    $this->changes[$markerType][$changeID]["marker"]["id"] = $this->getNewID();
+        foreach($this->changes as $markerGroupID => $markerGroup) {
+            
+            foreach($markerGroup as $markerTypeID => $markerType) {
+                
+                foreach($markerType as $changeID => $change) {
+
+                    if($change["status"] == DiffProcessor::STATUS_ADDED && $change["marker"]["id"] == -1) {
+                        $this->changes[$markerGroupID][$markerTypeID][$changeID]["marker"]["id"] = $this->getNewID();
+                    }
                 }
             }
         }
     }
     
     protected function getNewID() {
-
         return ++$this->maxID;
     }
     
@@ -66,54 +69,60 @@ class ConfigGenerator {
 
         $maxID = 0;
 
-        foreach($collection as $markerType => $markerTypeCollection) {
+        foreach($collection as $markerGroup) {
+            foreach($markerGroup['markerGroup'] as $markerType) {
             
-            foreach($markerTypeCollection as $markerID => $marker) {
-                if($marker["id"] > $maxID) $maxID = $marker["id"];
-            }   
+                foreach($markerType['markers'] as $marker) {
+                    if($marker["id"] > $maxID) $maxID = $marker["id"];
+                }
+            }
         }
 
         return $maxID;
     }    
 
     protected function mergeChanges() {
+        
+        foreach($this->reference as $markerGroupID => $markerGroup) {
+            foreach($markerGroup['markerGroup'] as $markerTypeID => $markerType) {
 
-        foreach($this->reference as $markerType => $markerTypeCollection) {
-            
-            foreach($markerTypeCollection as $markerID => $marker) {
+                $markerCollection = &$this->reference[$markerGroupID]['markerGroup'][$markerTypeID]['markers'];
 
-                $change = $this->getMarkerInChangesByID($marker["id"], $markerType);
+                foreach($markerType['markers'] as $markerID => $marker) {
+                
+                    $change = $this->getMarkerInChangesByID($marker["id"], $markerGroupID, $markerType);
 
-                if($change != null) {
+                    if($change != null) {
 
-                    switch($change["status"]) {
-                        case DiffProcessor::STATUS_MODIFIED_COORDINATES:
-                        case DiffProcessor::STATUS_MODIFIED_DATA:
-                        case DiffProcessor::STATUS_MODIFIED_ALL:
-                            $this->reference[$markerType][$markerID] = $change["marker"];
-                            break;
-                        case DiffProcessor::STATUS_REMOVED:
-                            unset($this->reference[$markerType][$markerID]);
-                            $this->reference[$markerType] = array_values($this->reference[$markerType]);
-                            break;
+                        switch($change["status"]) {
+                            case DiffProcessor::STATUS_MODIFIED_COORDINATES:
+                            case DiffProcessor::STATUS_MODIFIED_DATA:
+                            case DiffProcessor::STATUS_MODIFIED_ALL:
+                                $markerCollection[$markerID] = $change["marker"];
+                                break;
+                            case DiffProcessor::STATUS_REMOVED:
+                                unset($markerCollection[$markerID]);
+                                $markerCollection = array_values($markerCollection);
+                                break;
+                        }
+
+                        $changeCollection = &$this->changes[$markerGroupID][$markerType['slug']];
+
+                        // we remove the items so there is only the remainings items with the "STATUS_ADDED" status
+                        $id = array_search($change, $changeCollection);
+                        unset($changeCollection[$id]);
+                        $changeCollection = array_values($changeCollection);
                     }
+                }
+                
+                foreach($this->changes[$markerGroupID][$markerType['slug']] as $change) {
                     
-                    // we remove the items so there is only the remainings items with the "STATUS_ADDED" status
-                    $id = array_search($change, $this->changes[$markerType]);
-                    unset($this->changes[$markerType][$id]);
-                    $this->changes[$markerType] = array_values($this->changes[$markerType]);
+                    $markerCollection[] = $change['marker'];
                 }
             }
         }
-
-        // the remainings items are the "STATUS_ADDED" one
-        foreach($this->changes as $markerType => $markerTypeCollection) {
-            foreach($markerTypeCollection as $change) {
-                $this->reference[$markerType][] = $change["marker"];
-            }            
-        }
     }
-    
+
     protected function generateMarkersOutput() {
         
         $outputString = "";
@@ -276,11 +285,11 @@ class ConfigGenerator {
         return array();
     }
     
-    protected function getMarkerInChangesByID($markerID, $markerType) {
+    protected function getMarkerInChangesByID($markerID, $markerGroupID, $markerType) {
 
-        if(!array_key_exists($markerType, $this->changes)) return null;
+        if(!array_key_exists($markerType['slug'], $this->changes[$markerGroupID])) return null;
 
-        foreach($this->changes[$markerType] as $change) {
+        foreach($this->changes[$markerGroupID][$markerType['slug']] as $change) {
 
             if((array_key_exists("marker", $change) && $change["marker"]["id"] == $markerID) || 
                 (array_key_exists("marker-reference", $change) && $change["marker-reference"]["id"] == $markerID)) {
