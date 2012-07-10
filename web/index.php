@@ -158,6 +158,12 @@ $app->get('/admin/revision/{revID}', function($revID) use($app) {
  
 })->bind('admin_revision');
 
+$app->post('/admin/merge-changes', function(Request $request) use($app) {
+    
+    var_dump($request->request);
+    
+})->bind('admin_merge_changes');
+
 $app->get('/format', function() use($app) {
    
    $json = file_get_contents(__DIR__.'/../test.json');
