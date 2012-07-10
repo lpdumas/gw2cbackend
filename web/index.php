@@ -152,7 +152,9 @@ $app->get('/admin/revision/{revID}', function($revID) use($app) {
     //var_dump($flatChanges); exit();
     $generator->save(__DIR__.'/config.js', false); // for debug purpose
 
-    return $app['twig']->render('index.html', array("js_generated" => $output, 'changes' => $flatChanges));
+    $params = array("js_generated" => $output, 'imagePath' => $options["resources-path"], 'changes' => $flatChanges);
+
+    return $app['twig']->render('index.html', $params);
  
 })->bind('admin_revision');
 
