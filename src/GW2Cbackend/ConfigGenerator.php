@@ -8,6 +8,7 @@ class ConfigGenerator {
     
     protected $reference;
     protected $changes;
+    protected $changesOriginal;
     
     protected $markerGroups;
     protected $areas;
@@ -19,6 +20,7 @@ class ConfigGenerator {
         
         $this->reference = $reference;
         $this->changes = $changes;
+        $this->changesOriginal = $changes; 
         $this->markerGroups = $markerGroups;
         $this->areas = $areas;
         $this->resourcesPath = $resourcesPath;
@@ -57,6 +59,8 @@ class ConfigGenerator {
                 }
             }
         }
+        
+        $this->changesOriginal = $this->changes;
     }
     
     protected function getNewID() {
@@ -316,5 +320,9 @@ class ConfigGenerator {
     
     public function getReference() {
         return $this->reference;
+    }
+    
+    public function getChanges() {
+        return $this->changesOriginal;
     }
 }

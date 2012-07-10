@@ -137,7 +137,7 @@ $app->get('/admin/revision/{revID}', function($revID) use($app) {
         We make an array twig-friendly to easily display the changes in a list
     */
     $flatChanges = array();
-    foreach($changes as $markerGroupID => $markerGroup) {
+    foreach($generator->getChanges() as $markerGroupID => $markerGroup) {
         foreach($markerGroup as $markerTypeID => $markerType) {
             foreach($markerType as $change) {
                 
