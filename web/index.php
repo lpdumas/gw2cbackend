@@ -137,6 +137,7 @@ $app->get('/admin/revision/{revID}', function($revID) use($app) {
         We make an array twig-friendly to easily display the changes in a list
     */
     $flatChanges = array();
+    $changeID = 1;
     foreach($generator->getChanges() as $markerGroupID => $markerGroup) {
         foreach($markerGroup as $markerTypeID => $markerType) {
             foreach($markerType as $change) {
@@ -145,22 +146,59 @@ $app->get('/admin/revision/{revID}', function($revID) use($app) {
                 $name = $markerGroups[$markerGroupID]['markerTypes'][$markerTypeID]['name'];
 
                 $image = $markerGroups[$markerGroupID]['markerTypes'][$markerTypeID]['filename'];
-                $flatChanges[] = array('id' => $id, 'name' => $name, 'image' => $image, 'change' => $change);
+                $flatChanges[] = array('id' => $changeID, 'markerID' => $id, 'name' => $name, 'image' => $image, 'change' => $change);
+                $changeID++;
             }
         }
     }
     //var_dump($flatChanges); exit();
     $generator->save(__DIR__.'/config.js', false); // for debug purpose
 
-    $params = array("js_generated" => $output, 'imagePath' => $options["resources-path"], 'changes' => $flatChanges);
+    $params = array("js_generated" => $output, 'revID' => $revID, 'imagePath' => $options["resources-path"], 'changes' => $flatChanges);
 
     return $app['twig']->render('index.html', $params);
  
 })->bind('admin_revision');
 
 $app->post('/admin/merge-changes', function(Request $request) use($app) {
+
+    $revID = $request->request->get('revID');
+    $changesToMerge = array();
+    foreach($request->request as $changeToMerge => $v) {
+        if(is_numeric($changeToMerge)) {
+            $changesToMerge[] = $changeToMerge;
+        }
+    }
+
+    $app['database']->retrieveOptions();
+    $app['database']->retrieveAreasList();
+    $app['database']->retrieveCurrentReference();
+    $options = $app['database']->getData("options");
+    $areasList = $app['database']->getData("areas-list");
     
-    var_dump($request->request);
+    // the third step is getting the current version of the map
+    $currentReference = $app['database']->getData("current-reference");
+    $jsonReference = json_decode($currentReference["value"], true);
+    
+    $lastRev = $app['database']->retrieveModification($revID);
+    $jsonLastRev = json_decode($lastRev['value'], true);
+
+    $app['database']->retrieveReferenceAtSubmission($lastRev['id_reference_at_submission']);
+    $referenceAtSubmission = $app['database']->getData('reference-at-submission');
+    $maxReferenceID = $referenceAtSubmission['max_marker_id'];
+
+    // we 'diff' the two versions
+    $differ = new GW2CBackend\DiffProcessor($jsonLastRev, $jsonReference, $maxReferenceID);
+    $changes = $differ->process();
+
+    $markerGroups = $app['database']->getMarkersStructure();
+
+    // the second part of the script is executed when an administrator validates or not the modification. Let say he does validate.
+    $generator = new GW2CBackend\ConfigGenerator($jsonReference, $changes, $markerGroups, 
+                                                 $options["resources-path"], $areasList);
+    $mergeForAdmin = false;
+    $generator->generate($mergeForAdmin, $changesToMerge);
+    $generator->save(__DIR__.'/config.js', false);
     
 })->bind('admin_merge_changes');
 

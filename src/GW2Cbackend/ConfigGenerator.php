@@ -27,12 +27,24 @@ class ConfigGenerator {
         $this->maxID = 0;
     }
     
-    public function generate($mergeForAdmin) {
+    public function generate($mergeForAdmin, $changesToMerge = array()) {
         
         $outputString = "";
 
         $this->setIDToNewMarkers();
-        $this->mergeChanges($mergeForAdmin);
+        
+        $changeID = 1;
+        foreach($this->changes as $mgk => $markerGroup) {
+            foreach($markerGroup as $mtk => $markerType) {
+                foreach($markerType as $ck => $change) {
+                    $this->changes[$mgk][$mtk][$ck]['id'] = $changeID;
+                    $changeID++;
+                }
+            }
+        }
+        
+        
+        $this->mergeChanges($mergeForAdmin, $changesToMerge);
         
         $outputString.= $this->generateResourcesOutput();
         $outputString.= $this->generateAreasOutput();
@@ -85,7 +97,7 @@ class ConfigGenerator {
         return $maxID;
     }
 
-    protected function mergeChanges($mergeForAdmin) {
+    protected function mergeChanges($mergeForAdmin, $changesToMerge) {
         
         foreach($this->reference as $markerGroupID => $markerGroup) {
             foreach($markerGroup['markerGroup'] as $markerTypeID => $markerType) {
@@ -96,8 +108,8 @@ class ConfigGenerator {
                 
                     $change = $this->getMarkerInChangesByID($marker["id"], $markerGroupID, $markerType);
 
-                    if($change != null) {
-
+                    if($change != null && (in_array($change['id'], $changesToMerge) || $mergeForAdmin) ) {
+                        
                         switch($change["status"]) {
                             case DiffProcessor::STATUS_MODIFIED_COORDINATES:
                             case DiffProcessor::STATUS_MODIFIED_DATA:
@@ -129,9 +141,11 @@ class ConfigGenerator {
                 }
                 
                 foreach($this->changes[$markerGroupID][$markerType['slug']] as $change) {
-                    
-                    $change['marker']['status'] = DiffProcessor::STATUS_ADDED;
-                    $markerCollection[] = $change['marker'];
+
+                    if(in_array($change['id'], $changesToMerge) || $mergeForAdmin) {
+                        $change['marker']['status'] = DiffProcessor::STATUS_ADDED;
+                        $markerCollection[] = $change['marker'];
+                    }
                 }
             }
         }
