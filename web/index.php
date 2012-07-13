@@ -160,6 +160,28 @@ $app->get('/admin/revision/{revID}', function($revID) use($app) {
  
 })->bind('admin_revision');
 
+$app->get('/refactoring', function() use($app) {
+    $app['database']->retrieveCurrentReference();
+    $app['database']->retrieveOptions();
+    $app['database']->retrieveAreasList();
+    $options = $app['database']->getData("options");
+    $areasList = $app['database']->getData("areas-list");
+    
+    // the third step is getting the current version of the map
+    $currentReference = file_get_contents(__DIR__.'/../test.json');
+
+    $reference = json_decode($currentReference, true);
+    
+    $builder = new GW2CBackend\MarkerBuilder($app['database']);
+    $mapRevision = $builder->build(1, $reference);
+    
+    $generator = new GW2CBackend\ConfigGenerator($mapRevision, $options["resources-path"], $areasList);
+    
+    $output = $generator->generate();
+    $generator->save(__DIR__.'/config.js');
+    echo nl2br($output);
+});
+
 $app->post('/admin/merge-changes', function(Request $request) use($app) {
 
     $revID = $request->request->get('revID');
