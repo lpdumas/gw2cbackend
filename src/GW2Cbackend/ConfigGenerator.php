@@ -76,13 +76,13 @@ class ConfigGenerator {
 
             $outputString.= 'Markers.'.$markerGroup->getSlug().' = {'.PHP_EOL;
             $outputString.= $this->generateTranslatedDataOutput($markerGroup->getData(), 1);
-            $outputString.= self::tabs().'markerTypes : ['.PHP_EOL;
+            $outputString.= self::tabs().'marker_types : {'.PHP_EOL;
 
             foreach($markerGroup->getAllMarkerTypes() as $markerType) {
 
-                $outputString.= self::tabs(2).'{'.PHP_EOL;
-                $outputString.= self::tabs(3).'"slug" : "'.$markerType->getSlug().'",'.PHP_EOL;
-                $outputString.= self::tabs(3).'"icon" : "'.$markerType->getIcon().'",'.PHP_EOL;
+                $outputString.= self::tabs(2).'"'.$markerType->getSlug().'" : {'.PHP_EOL;
+                $outputString.= self::tabs(3).'slug : "'.$markerType->getSlug().'",'.PHP_EOL;
+                $outputString.= self::tabs(3).'icon : "'.$markerType->getIcon().'",'.PHP_EOL;
                 $outputString.= $this->generateTranslatedDataOutput($markerType->getData(), 3);
                 $outputString.= self::tabs(3).'markers : ['.PHP_EOL;
 
@@ -94,7 +94,7 @@ class ConfigGenerator {
                     $outputString = substr($outputString, 0, strlen($outputString) - 2).PHP_EOL;
                 }
 
-                $outputString.= self::tabs(3).']'.PHP_EOL;
+                $outputString.= self::tabs(3).'}'.PHP_EOL;
                 $outputString.= self::tabs(2).'},'.PHP_EOL;                
             }
 
@@ -115,9 +115,9 @@ class ConfigGenerator {
      */
     protected function generateMarkerOutput(Marker $marker, $numTabs) {
         $outputString = self::tabs($numTabs).'{'.PHP_EOL;
-        $outputString.= self::tabs($numTabs + 1).'"id" : '.$marker->getID().', ';
-        $outputString.= '"lat" : '.$marker->getLat().', "lng" : '.$marker->getLng().', ';
-        $outputString.= '"area" : '.$marker->getArea();
+        $outputString.= self::tabs($numTabs + 1).'id : '.$marker->getID().', ';
+        $outputString.= 'lat : '.$marker->getLat().', lng : '.$marker->getLng().', ';
+        $outputString.= 'area : '.$marker->getArea();
 
         $tDataOutput = $this->generateTranslatedDataOutput($marker->getData(), $numTabs + 1);
 
@@ -143,12 +143,12 @@ class ConfigGenerator {
 
         if(empty($dataCollection)) return "";
 
-        $outputString = self::tabs($numTabs).'"translated_data" : {'.PHP_EOL;
+        $outputString = self::tabs($numTabs).'data_translation : {'.PHP_EOL;
 
         foreach($dataCollection as $lang => $content) {
-            $outputString.= self::tabs($numTabs + 1).'"'.$lang.'" : {'.PHP_EOL;
+            $outputString.= self::tabs($numTabs + 1).''.$lang.' : {'.PHP_EOL;
             foreach($content as $key => $value) {
-                $outputString.= self::tabs($numTabs + 2).'"'.$key.'" : "'.$value.'",'.PHP_EOL;
+                $outputString.= self::tabs($numTabs + 2).''.$key.' : "'.$value.'",'.PHP_EOL;
             }
             
             if(!empty($content)) {
