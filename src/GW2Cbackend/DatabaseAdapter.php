@@ -101,6 +101,8 @@ class DatabaseAdapter {
         
         $r = array();
         foreach($result->fetchAll() as $res) {
+
+            $res['translated_data'] = $this->getTranslatedData($res['id_translated_data']);;
             
             $r[$res['slug']] = $res;
         }
@@ -109,13 +111,39 @@ class DatabaseAdapter {
         
         return $r;
     }
+    
+    public function getTranslatedData($id) {
+        
+        if($id == null) {
+            $tData = new TranslatedData();
+        }
+        else {
+            $q = "SELECT * FROM translated_data WHERE id = ".$id;
+
+            $data = $this->pdo->query($q);
+            $data->setFetchMode(\PDO::FETCH_ASSOC);
+            $tData = array();
+            foreach($data->fetchAll() as $d) {
+                $tData[$d['lang']][$d['key']] = $d['value'];
+            }
+        
+            $tData = new TranslatedData($tData);
+        }
+
+        return $tData;
+    }
 
     public function getMarkerTypes() {
         $result = $this->pdo->query("SELECT * FROM marker_type");
         $result->setFetchMode(\PDO::FETCH_ASSOC);
-        
-        $r = $result->fetchAll();
-        
+
+        $r = array();
+        foreach($result->fetchAll() as $res) {
+
+            $res['translated_data'] = $this->getTranslatedData($res['id_translated_data']);
+            $r[$res['id']] = $res;
+        }
+
         $this->data["marker.types"] = $r;
         
         return $r;
