@@ -139,6 +139,8 @@ class DatabaseAdapter {
         foreach($result->fetchAll() as $row) {
             $this->data["areas-list"][$row["id"]] = $row;
         }
+        
+        return $this->data["areas-list"];
     }
     
     public function retrieveModification($idModification) {

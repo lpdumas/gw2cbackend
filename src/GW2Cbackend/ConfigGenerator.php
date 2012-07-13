@@ -2,264 +2,233 @@
 
 namespace GW2CBackend;
 
+use GW2CBackend\Marker\MapRevision;
+use GW2CBackend\Marker\Marker;
+
+/**
+ * Generator of the configuration file
+ */
 class ConfigGenerator {
     
+    /**
+     * Contains the generator's output
+     * @var string
+     */
     protected $output;
     
-    protected $reference;
-    protected $changes;
-    protected $changesOriginal;
+    /**
+     * Contains the source of the generation
+     * @var \GW2CBackend\Marker\MapRevision
+     */
+    protected $revision;
     
-    protected $markerGroups;
+    /**
+     * Contains all the area information
+     * @var array
+     */
     protected $areas;
+    
+    /**
+     * The path of the marker types's sicons
+     * @var string
+     */
     protected $resourcesPath;
     
-    protected $maxID;
-    
-    public function __construct($reference, $changes, $markerGroups, $resourcesPath, $areas) {
+    /**
+     * Constructor
+     * @param \GW2CBackend\Marker\MapRevision $revision the source of the generation
+     * @param string $resourcesPath the path to the marker's icons
+     * @param array $areas contains arrays that describe areas
+     */
+    public function __construct(MapRevision $revision, $resourcesPath, array $areas) {
         
-        $this->reference = $reference;
-        $this->changes = $changes;
-        $this->changesOriginal = $changes; 
-        $this->markerGroups = $markerGroups;
+        $this->revision = $revision;
         $this->areas = $areas;
         $this->resourcesPath = $resourcesPath;
-        $this->maxID = 0;
     }
     
-    public function generate($mergeForAdmin, $changesToMerge = array()) {
+    /**
+     * Trigger the generation process
+     * @return string the generated output
+     */
+    public function generate() {
         
         $outputString = "";
-
-        $this->setIDToNewMarkers();
         
-        $changeID = 1;
-        foreach($this->changes as $mgk => $markerGroup) {
-            foreach($markerGroup as $mtk => $markerType) {
-                foreach($markerType as $ck => $change) {
-                    $this->changes[$mgk][$mtk][$ck]['id'] = $changeID;
-                    $changeID++;
-                }
-            }
-        }
-        
-        
-        $this->mergeChanges($mergeForAdmin, $changesToMerge);
-        
-        $outputString.= $this->generateResourcesOutput();
-        $outputString.= $this->generateAreasOutput();
+        $outputString.= $this->generateMetadataOutput();
         $outputString.= $this->generateMarkersOutput();
+        $outputString.= $this->generateAreasOutput();
 
         $this->output = $outputString;
         
         return $this->output;
     }
-    
-    public function setIDToNewMarkers() {
-        
-        $this->maxID = self::getMaximumID($this->reference);
 
-        foreach($this->changes as $markerGroupID => $markerGroup) {
-            
-            foreach($markerGroup as $markerTypeID => $markerType) {
-                
-                foreach($markerType as $changeID => $change) {
-
-                    if($change["status"] == DiffProcessor::STATUS_ADDED && $change["marker"]["id"] == -1) {
-                        $this->changes[$markerGroupID][$markerTypeID][$changeID]["marker"]["id"] = $this->getNewID();
-                    }
-                }
-            }
-        }
-        
-        $this->changesOriginal = $this->changes;
-    }
-    
-    protected function getNewID() {
-        return ++$this->maxID;
-    }
-    
-    public function getMaxMarkerID() { return $this->maxID; }
-    
-    static protected function getMaximumID($collection) {
-
-        $maxID = 0;
-
-        foreach($collection as $markerGroup) {
-            foreach($markerGroup['markerGroup'] as $markerType) {
-            
-                foreach($markerType['markers'] as $marker) {
-                    if($marker["id"] > $maxID) $maxID = $marker["id"];
-                }
-            }
-        }
-
-        return $maxID;
-    }
-
-    protected function mergeChanges($mergeForAdmin, $changesToMerge) {
-        
-        foreach($this->reference as $markerGroupID => $markerGroup) {
-            foreach($markerGroup['markerGroup'] as $markerTypeID => $markerType) {
-
-                $markerCollection = &$this->reference[$markerGroupID]['markerGroup'][$markerTypeID]['markers'];
-
-                foreach($markerType['markers'] as $markerID => $marker) {
-                
-                    $change = $this->getMarkerInChangesByID($marker["id"], $markerGroupID, $markerType);
-
-                    if($change != null && (in_array($change['id'], $changesToMerge) || $mergeForAdmin) ) {
-                        
-                        switch($change["status"]) {
-                            case DiffProcessor::STATUS_MODIFIED_COORDINATES:
-                            case DiffProcessor::STATUS_MODIFIED_DATA:
-                            case DiffProcessor::STATUS_MODIFIED_ALL:
-                                $markerCollection[$markerID] = $change["marker"];
-                                if($mergeForAdmin) {
-                                    $markerCollection[$markerID]['marker-reference'] = $change["marker-reference"];
-                                    $markerCollection[$markerID]['status'] = $change['status'];
-                                }
-                                break;
-                            case DiffProcessor::STATUS_REMOVED:
-                                if(!$mergeForAdmin) {
-                                    unset($markerCollection[$markerID]);
-                                    $markerCollection = array_values($markerCollection);
-                                }
-                                else {
-                                    $markerCollection[$markerID]['status'] = DiffProcessor::STATUS_REMOVED;
-                                }
-                                break;
-                        }
-
-                        $changeCollection = &$this->changes[$markerGroupID][$markerType['slug']];
-
-                        // we remove the items so there is only the remainings items with the "STATUS_ADDED" status
-                        $id = array_search($change, $changeCollection);
-                        unset($changeCollection[$id]);
-                        $changeCollection = array_values($changeCollection);
-                    }
-                }
-                
-                foreach($this->changes[$markerGroupID][$markerType['slug']] as $change) {
-
-                    if(in_array($change['id'], $changesToMerge) || $mergeForAdmin) {
-                        $change['marker']['status'] = DiffProcessor::STATUS_ADDED;
-                        $markerCollection[] = $change['marker'];
-                    }
-                }
-            }
-        }
-    }
-
+    /**
+     * Generator Subprocess. Generates the output of the markers
+     * @return string the generated output
+     */
     protected function generateMarkersOutput() {
         
         $outputString = "";
         
-        foreach($this->markerGroups as $markerGroup) {
+        foreach($this->revision->getAllMarkerGroups() as $markerGroup) {
 
-            $outputString.= 'Markers.'.$markerGroup['slug'].' = {'.PHP_EOL;
-            $outputString.= "\t".'name : "'.$markerGroup['name'].'",'.PHP_EOL;
-            $outputString.= "\t".'markerGroup : ['.PHP_EOL;
+            $outputString.= 'Markers.'.$markerGroup->getSlug().' = {'.PHP_EOL;
+            $outputString.= $this->generateTranslatedDataOutput($markerGroup->getData(), 1);
+            $outputString.= self::tabs().'markerTypes : ['.PHP_EOL;
 
-            foreach($markerGroup['markerTypes'] as $markerType) {
+            foreach($markerGroup->getAllMarkerTypes() as $markerType) {
 
-                $outputString.= "\t\t".'{'.PHP_EOL;
-                //$outputString.= "\t\t\t".'name : "'.$markerType['name'].'",'.PHP_EOL;
-                $outputString.= "\t\t\t".'slug : "'.$markerType['id'].'",'.PHP_EOL;
-                $outputString.= "\t\t\t".'markers : ['.PHP_EOL;
+                $outputString.= self::tabs(2).'{'.PHP_EOL;
+                $outputString.= self::tabs(3).'"slug" : "'.$markerType->getSlug().'",'.PHP_EOL;
+                $outputString.= self::tabs(3).'"icon" : "'.$markerType->getIcon().'",'.PHP_EOL;
+                $outputString.= $this->generateTranslatedDataOutput($markerType->getData(), 3);
+                $outputString.= self::tabs(3).'markers : ['.PHP_EOL;
 
-
-                if(array_key_exists($markerGroup['slug'], $this->reference)) {
-
-                    $tab = "\t\t\t\t";
-                    $markers = $this->getMarkersByType($markerType['id']);
-                    
-                    foreach($markers as $marker) {
-                        $outputString.= $tab.'{ "id" : '.$marker['id'].', "lat" : '.$marker['lat'].', "lng" : '.$marker['lng'].', ';
-                        $outputString.='"area" : '.$marker["area"].', ';
-                        if(array_key_exists('status', $marker)) {
-                            $outputString.='"status" : "'.$marker["status"].'", ';
-                        }
-                        $outputString.='"title" : "'.$marker['title'].'", "desc" : "'.$marker["desc"].'"},'.PHP_EOL;
-                    }
-
-                    // remove the last comma
-                    if(!empty($markers)) {
-                        $outputString = substr($outputString, 0, strlen($outputString) - 2).PHP_EOL;
-                    }
+                foreach($markerType->getAllMarkers() as $marker) {
+                    $outputString.= $this->generateMarkerOutput($marker, 4);
+                }
+                
+                if(!empty($markers)) {
+                    $outputString = substr($outputString, 0, strlen($outputString) - 2).PHP_EOL;
                 }
 
-                $outputString.= "\t\t\t".']'.PHP_EOL;
-                $outputString.= "\t\t".'},'.PHP_EOL;                
+                $outputString.= self::tabs(3).']'.PHP_EOL;
+                $outputString.= self::tabs(2).'},'.PHP_EOL;                
             }
 
             // remove the last comma
             $outputString = substr($outputString, 0, strlen($outputString) - 2).PHP_EOL;
             
-            $outputString.= "\t".']'.PHP_EOL.'};'.PHP_EOL;
+            $outputString.= self::tabs().']'.PHP_EOL.'};'.PHP_EOL;
         }
 
         return $outputString;
     }
     
-    protected function generateResourcesOutput() {
+    /**
+     * Generator subprocess. Generates the output of ONE marker
+     * @param \GW2CBackend\Marker\Marker $marker the marker source of the generation
+     * @param integer $numTabs the number of tabs to put in front of the output
+     * @return string the generated output
+     */
+    protected function generateMarkerOutput(Marker $marker, $numTabs) {
+        $outputString = self::tabs($numTabs).'{'.PHP_EOL;
+        $outputString.= self::tabs($numTabs + 1).'"id" : '.$marker->getID().', ';
+        $outputString.= '"lat" : '.$marker->getLat().', "lng" : '.$marker->getLng().', ';
+        $outputString.= '"area" : '.$marker->getArea();
 
-        $outputString = "Resources.Paths = {".PHP_EOL;
-        $outputString.= "\t".'"icons" : "'.$this->resourcesPath.'"'.PHP_EOL;
-        $outputString.="};".PHP_EOL.PHP_EOL;
+        $tDataOutput = $this->generateTranslatedDataOutput($marker->getData(), $numTabs + 1);
 
-        $outputString.="Resources.Icons = {".PHP_EOL;
+        if(!empty($tDataOutput)) {
+            $outputString.= ', '.PHP_EOL.$tDataOutput;
+            $outputString = substr($outputString, 0, strlen($outputString) - 2); // remove the last comma
+        }
 
-        foreach($this->markerGroups as $markerGroup) {
+        $outputString.= PHP_EOL.self::tabs($numTabs)."},".PHP_EOL;
+        
+        return $outputString;
+    }
+    
+    /**
+     * Generator subprocess. Generates the output of ONE translated data field
+     * @param \GW2CBackend\TranslatedData $tData the data source of the generation
+     * @param integer $numTabs the number of tabs to put in front of the output
+     * @return string the generated output
+     */
+    protected function generateTranslatedDataOutput(TranslatedData $tData, $numTabs) {
 
-            $outputString.= "\t".'"'.$markerGroup['slug'].'" : {'.PHP_EOL;
+        $dataCollection = $tData->getAllData();
 
-            foreach($markerGroup['markerTypes'] as $markerType) {
-                $outputString.= "\t\t".'"'.$markerType['id'].'" : { ';
-                $outputString.= '"label" : "'.$markerType['name'].'",';
-                $outputString.= '"url" : Resources.Paths.icons + "'.$markerType['filename'].'"},'.PHP_EOL;
+        if(empty($dataCollection)) return "";
+
+        $outputString = self::tabs($numTabs).'"translated_data" : {'.PHP_EOL;
+
+        foreach($dataCollection as $lang => $content) {
+            $outputString.= self::tabs($numTabs + 1).'"'.$lang.'" : {'.PHP_EOL;
+            foreach($content as $key => $value) {
+                $outputString.= self::tabs($numTabs + 2).'"'.$key.'" : "'.$value.'",'.PHP_EOL;
             }
             
-            // remove the last comma
-            $outputString = substr($outputString, 0, strlen($outputString) - 2).PHP_EOL."\t".'},'.PHP_EOL;
+            if(!empty($content)) {
+                $outputString = substr($outputString, 0, strlen($outputString) - 2).PHP_EOL; // remove the last comma
+            }
+            
+            $outputString.= self::tabs($numTabs + 1).'},'.PHP_EOL;
+        }
+        
+        if(!empty($dataCollection)) {
+                $outputString = substr($outputString, 0, strlen($outputString) - 2).PHP_EOL; // remove the last comma
         }
 
-        // remove the last comma
-        $outputString = substr($outputString, 0, strlen($outputString) - 2).PHP_EOL;
-
-        $outputString.="};".PHP_EOL.PHP_EOL;
+        $outputString.= self::tabs($numTabs).'},'.PHP_EOL;
 
         return $outputString;
     }
     
+    /**
+     * Generator subprocess. Generates the output of file's metadata
+     * @return string the generated output
+     */
+    protected function generateMetadataOutput() {
+        
+        $mapVersion = $this->revision->getID();
+        $date = date('Y-m-d H:i:s');
+
+        $outputString = 'Metadata = {'.PHP_EOL;
+        $outputString.= self::tabs().'"version" : '.$mapVersion.','.PHP_EOL;
+        $outputString.= self::tabs().'"date_generation" : "'.$date.'"'.PHP_EOL;
+        $outputString.= self::tabs().'"icons_path" : "'.$this->resourcesPath.'",'.PHP_EOL;
+        $outputString.= "};".PHP_EOL.PHP_EOL;
+        
+        return $outputString;
+    }
+    
+    
+    /**
+     * Generator subprocess. Generates the output of all areas
+     * @return string the generated output
+     */
     protected function generateAreasOutput() {
         
         $outputString = "Areas = [".PHP_EOL;
         
         foreach($this->areas as $a) {
             $summary = $this->getAreaSummary($a["id"]);
-            $outputString.= "\t".$this->generateOneAreaOutput($a["id"], $a["name"], $a["rangeLvl"], $summary,
-                                                              $a["neLat"], $a["neLng"], $a["swLat"], $a["swLng"]).",".PHP_EOL;
+            $outputString.= self::tabs().$this->generateOneAreaOutput($a, $summary).",".PHP_EOL;
         }
 
-        $outputString = substr($outputString, 0, strlen($outputString) - 2).PHP_EOL;
+        $outputString = substr($outputString, 0, strlen($outputString) - 2).PHP_EOL; // remove the last comma
         $outputString.= "];".PHP_EOL.PHP_EOL;
          
          return $outputString;
     }
     
-    protected function getAreaSummary($idArea) {
+    /**
+     * Calculates the area summary (number of markers) for each relevant MarkerType
+     * @param integer $areaID the area's ID
+     * @return array of values where the key is the marker type's slug and the value the number of associated markers.
+     */
+    protected function getAreaSummary($areaID) {
         
-        $summary = array("hearts" => 0, "waypoints" => 0, "skillpoints" => 0, "poi" => 0, "dungeons" => 0);
+        $summary = array();
 
-        foreach($this->reference as $markerGroup) {
+        foreach($this->revision->getAllMarkerGroups() as $markerGroup) {
 
-            foreach($markerGroup['markerGroup'] as $markerType => $markerTypeCollection) {
+            foreach($markerGroup->getAllMarkerTypes() as $markerType) {
+                
+                if($markerType->isDisplayInAreaSummary()) {
+                
+                    if(!array_key_exists($markerType->getSlug(), $summary)) {
+                        $summary[$markerType->Slug()] = 0;
+                    }
 
-                foreach($markerTypeCollection['markers'] as $marker) {
+                    foreach($markerType->getAllMarkers() as $marker) {
 
-                    if(array_key_exists("area", $marker) && $marker["area"] == $idArea) {
-                        $summary[$markerType]++;
+                        if(array_key_exists("area", $marker) && $marker["area"] == $areaID) {
+                            $summary[$markerType]++;
+                        }
                     }
                 }
             }
@@ -268,75 +237,70 @@ class ConfigGenerator {
         return $summary;
     }
     
-    protected function generateOneAreaOutput($id, $name, $rangeLvl, $summary, $neLat, $neLng, $swLat, $swLng) {
+    /**
+     * Generator subprocess. Generates the output of ONE area
+     * @param array $area describes an area
+     * @param array $summary where the key is marker type's slug and the value the number of associated markers
+     * @return string the generated output
+     */
+    protected function generateOneAreaOutput($area, $summary) {
         
-        $outputString = '{ id : '.$id.', name : "'.$name.'", rangeLvl : "'.$rangeLvl.'",'.PHP_EOL;
+        $outputString = '{ id : '.$area['id'].', name : "'.$area['name'].'", rangeLvl : "'.$area['rangeLvl'].'",'.PHP_EOL;
         
-        $outputString.= "\t\t".'summary : {'.PHP_EOL;
+        $outputString.= self::tabs(2).'summary : {'.PHP_EOL;
         foreach($summary as $markerType => $value) {
-            $outputString.= "\t\t\t".'"'.$markerType.'" : '.$value.','.PHP_EOL;
+            $outputString.= self::tabs(3).'"'.$markerType.'" : '.$value.','.PHP_EOL;
         }
         
-        $outputString = substr($outputString, 0, strlen($outputString) - 2).PHP_EOL."\t\t},".PHP_EOL;
-        $outputString.= "\t\t".'neLat : '.$neLat.', neLng : '.$neLng.', swLat : '.$swLat.', swLng : '.$swLng.''.PHP_EOL;
-        $outputString.= "\t".'}';
+        if(!empty($summary)) {
+            $outputString = substr($outputString, 0, strlen($outputString) - 2); // remove the last comma
+        }
+        
+        $outputString.= PHP_EOL."\t\t},".PHP_EOL;
+        $outputString.= self::tabs(2).'neLat : '.$area['neLat'].', neLng : '.$area['neLng'].', ';
+        $outputString.= 'swLat : '.$area['swLat'].', swLng : '.$area['swLng'].''.PHP_EOL;
+        $outputString.= self::tabs().'}';
         
         return $outputString;
     }
     
+    /**
+     * Minimizes the output
+     * @return string the minimized output
+     */
     public function minimize() {
-        $this->output = preg_replace('#[\t\n ]*(=|:|,|;|{|}|\[|\]|")[\t\n ]*#', '$1',$this->output);
+        $this->output = preg_replace('#[\t\n ]*(=|:|,|;|{|}|\[|\]|")[\t\n ]*#', '$1', $this->output);
+        
+        return $this->output;
     }
 
-    public function save($pathOutput, $minimized) {
+    /**
+     * Saves the output to a file
+     * @param string $path the path where the file will be saved
+     */
+    public function save($path) {
 
-        $file = fopen($pathOutput, "w+");
-
-        if($minimized) {
-            $this->minimize();
-        }
-
+        $file = fopen($path, "w+");
         fwrite($file, $this->output);
         fclose($file);
     }
     
+    /**
+     * Returns the output
+     * @return string the output
+     */
     public function getOutput() { return $this->output; }
     
-    protected function getMarkersByType($type) {
+    /**
+     * Creates a string of tabs
+     * @param integer $numTabs the number of tabs. Default is 1.
+     * @return string with $numTabs tabs
+     */
+    protected static function tabs($numTabs = 1) {
         
-        foreach($this->reference as $markerGroup) {
-            
-            foreach($markerGroup['markerGroup'] as $markerType) {
-                if($markerType['slug'] == $type) {
-                    return $markerType['markers'];
-                }
-            }
-        }
+        $output = "";
+        for($i = 0; $i < $numTabs; $i++) { $output.= "\t"; }
         
-        return array();
-    }
-    
-    protected function getMarkerInChangesByID($markerID, $markerGroupID, $markerType) {
-
-        if(!array_key_exists($markerType['slug'], $this->changes[$markerGroupID])) return null;
-
-        foreach($this->changes[$markerGroupID][$markerType['slug']] as $change) {
-
-            if((array_key_exists("marker", $change) && $change["marker"]["id"] == $markerID) || 
-                (array_key_exists("marker-reference", $change) && $change["marker-reference"]["id"] == $markerID)) {
-
-                return $change;
-            }
-        }
-
-        return null;
-    }
-    
-    public function getReference() {
-        return $this->reference;
-    }
-    
-    public function getChanges() {
-        return $this->changesOriginal;
+        return $output;
     }
 }
