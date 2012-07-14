@@ -166,16 +166,27 @@ $app->get('/refactoring', function() use($app) {
     $app['database']->retrieveAreasList();
     $options = $app['database']->getData("options");
     $areasList = $app['database']->getData("areas-list");
+    $currentReference = $app['database']->getData('current-reference');
     
-    // the third step is getting the current version of the map
-    $currentReference = file_get_contents(__DIR__.'/../test.json');
-
-    $reference = json_decode($currentReference, true);
+    $modification = file_get_contents(__DIR__.'/../test.json');
+    $modification = json_decode($modification, true);
+    $reference = json_decode($currentReference['value'], true);
     
     $builder = new GW2CBackend\MarkerBuilder($app['database']);
-    $mapRevision = $builder->build(1, $reference);
+    $mapModif = $builder->build(-1, $modification);
+    $mapRef = $builder->build($currentReference['id'], $reference);
     
-    $generator = new GW2CBackend\ConfigGenerator($mapRevision, $options["resources-path"], $areasList);
+    // the max id will have to come from the JSON
+    $diff = new GW2CBackend\DiffProcessor($mapModif, $mapRef, $currentReference['max_marker_id']);
+    $changes = $diff->process();
+    
+    $merger = new GW2CBackend\ChangeMerger($mapRef, $changes);
+    
+    $forAdmin = false;
+    $mergedRevision = $merger->merge($forAdmin);
+    
+    $generator = new GW2CBackend\ConfigGenerator($mergedRevision, $options["resources-path"], $areasList);
+    $generator->setForAdmin(true);
     
     $output = $generator->generate();
     $generator->save(__DIR__.'/config.js');
