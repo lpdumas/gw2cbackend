@@ -94,7 +94,7 @@ class ConfigGenerator {
                     $outputString = substr($outputString, 0, strlen($outputString) - 2).PHP_EOL;
                 }
 
-                $outputString.= self::tabs(3).'}'.PHP_EOL;
+                $outputString.= self::tabs(3).']'.PHP_EOL;
                 $outputString.= self::tabs(2).'},'.PHP_EOL;                
             }
 
@@ -221,7 +221,7 @@ class ConfigGenerator {
                 if($markerType->isDisplayInAreaSummary()) {
                 
                     if(!array_key_exists($markerType->getSlug(), $summary)) {
-                        $summary[$markerType->Slug()] = 0;
+                        $summary[$markerType->getSlug()] = 0;
                     }
 
                     foreach($markerType->getAllMarkers() as $marker) {
