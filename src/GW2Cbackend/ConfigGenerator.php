@@ -35,6 +35,12 @@ class ConfigGenerator {
     protected $resourcesPath;
     
     /**
+     * Indicates if the generation is for gw2c or gw2c-backend's merging envrionment
+     * @var boolean
+     */
+    protected $forAdmin;
+    
+    /**
      * Constructor
      * @param \GW2CBackend\Marker\MapRevision $revision the source of the generation
      * @param string $resourcesPath the path to the marker's icons
@@ -45,6 +51,8 @@ class ConfigGenerator {
         $this->revision = $revision;
         $this->areas = $areas;
         $this->resourcesPath = $resourcesPath;
+        
+        $this->forAdmin = false;
     }
     
     /**
@@ -128,6 +136,10 @@ class ConfigGenerator {
         if(!empty($tDataOutput)) {
             $outputString.= ', '.PHP_EOL.$tDataOutput;
             $outputString = substr($outputString, 0, strlen($outputString) - 2); // remove the last comma
+        }
+
+        if($this->forAdmin && !is_null($marker->getStatus())) {
+            $outputString.=', status : "'.$marker->getStatus().'"';
         }
 
         $outputString.= PHP_EOL.self::tabs($numTabs)."},".PHP_EOL;
@@ -307,4 +319,10 @@ class ConfigGenerator {
         
         return $output;
     }
+    
+    /**
+     * Set the indicator that will determine if the output will be used by gw2c-backend's merging environment
+     * @param boolean $forAdmin
+     */
+    public function setForAdmin($forAdmin) { $this->forAdmin = $forAdmin; }
 }
