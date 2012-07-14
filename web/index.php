@@ -160,7 +160,10 @@ $app->get('/admin/revision/{revID}', function($revID) use($app) {
  
 })->bind('admin_revision');
 
-$app->get('/refactoring', function() use($app) {
+$app->get('/refactoring/{revID}', function($revID) use($app) {
+
+    $app['twig.path'] = __DIR__.'/../gw2cread/';
+
     $app['database']->retrieveCurrentReference();
     $app['database']->retrieveOptions();
     $app['database']->retrieveAreasList();
@@ -168,8 +171,8 @@ $app->get('/refactoring', function() use($app) {
     $areasList = $app['database']->getData("areas-list");
     $currentReference = $app['database']->getData('current-reference');
     
-    $modification = file_get_contents(__DIR__.'/../test.json');
-    $modification = json_decode($modification, true);
+    $lastRev = $app['database']->retrieveModification($revID);
+    $modification = json_decode($lastRev['value'], true);
     $reference = json_decode($currentReference['value'], true);
     
     $builder = new GW2CBackend\MarkerBuilder($app['database']);
@@ -182,15 +185,26 @@ $app->get('/refactoring', function() use($app) {
     
     $merger = new GW2CBackend\ChangeMerger($mapRef, $changes);
     
-    $forAdmin = false;
+    $forAdmin = true;
     $mergedRevision = $merger->merge($forAdmin);
     
     $generator = new GW2CBackend\ConfigGenerator($mergedRevision, $options["resources-path"], $areasList);
-    $generator->setForAdmin(true);
+    $generator->setForAdmin($forAdmin);
     
     $output = $generator->generate();
+    //$generator->minimize();
+    //$output = $generator->getOutput();
     $generator->save(__DIR__.'/config.js');
-    echo nl2br(str_replace("\t", "&nbsp;&nbsp;&nbsp;&nbsp;", $output));
+    //echo nl2br(str_replace("\t", "&nbsp;&nbsp;&nbsp;&nbsp;", $output));
+    
+    $flatChanges = array();
+    
+    $params = array("js_generated" => $output, 
+                    'revID' => $revID, 
+                    'imagePath' => $options["resources-path"], 
+                    'changes' => $flatChanges);
+
+    return $app['twig']->render('index.html', $params);
 });
 
 $app->get('/admin/organize', function() use($app) {
