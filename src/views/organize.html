@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Organize</title>
+    <meta charset="UTF-8" />
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+    <style>
+        div.fieldset { display: none; }
+        div.marker-group { margin: 50px 0; }
+        div.marker-type { margin: 15px 0 15px 50px; }
+    </style>
+</head>
+<body>
+
+{% if feedback is defined %}
+<p>{{ feedback }}</p>
+{% endif %}
+
+<h1>Set of fields</h1>
+
+<form method="post" action="{{ path('admin_add_fieldset') }}">
+    <input type="text" name="fieldset_name" />
+    <input type="submit" name="fieldset_create" value="Create a set of fields" />
+</form>
+
+<form method="post" action="{{ path('admin_remove_fieldset') }}">
+    <select id="fieldsets-list" name="fieldsets-list">
+        <option value="default"></option>
+        {% for fieldset in fieldsets %}
+        <option value="{{ fieldset.id }}">{{ fieldset.name }}</option>
+        {% endfor %}
+    </select>
+    <input type="submit" name="fieldset_delete" value="Remove this set of fields" />
+</form>
+
+{% for fieldset in fieldsets %}
+<div class="fieldset" id="fieldset-{{ fieldset.id }}">
+    {% for field in fieldset['fields'] %}
+    <form method="post" action="{{ path('admin_edit_field') }}">
+        <input type="text" name="fieldname" value="{{ field.key_value }}" />
+        <input type="hidden" name="fieldID" value="{{ field.id }}" />
+        <input type="submit" name="fieldset-editfield" value="edit">
+        <input type="submit" name="fieldset-removefield" value="Remove">
+    </form>
+    {% endfor %}
+    <form method="post" action="{{ path('admin_add_field') }}">
+        <input type="hidden" name="fieldset-id" value="{{ fieldset.id }}" />
+        <input type="text" name="fieldname" />
+        <input type="submit" name="fieldset-addfield" value="Add" />
+    </form>
+</div>
+{% endfor %}
+
+<h1>Manage marker groups and marker types</h1>
+<p></p>
+<form method="post" action="{{ path('admin_add_marker_group') }}">
+    <p>Add a new marker group:</p>
+    <label >Slug</label>
+    <input type="text" name="slug" value="" />
+    <select name="fieldset">
+        <option value="default"></option>
+        {% for fieldset in fieldsets %}
+        <option value="{{ fieldset.id }}">{{ fieldset.name }}</option>
+        {% endfor %}
+    </select>
+    <input type="submit" value="Add" />
+</form>
+
+{% for mg in markers_structure %}
+<div class="marker-group">
+<form method="post" action="{{ path('admin_edit_marker_group') }}">
+    <input type="text" name="slug" value="{{ mg['slug'] }}" />
+    <select name="fieldset">
+        <option value="default"></option>
+        {% for fieldset in fieldsets %}
+        <option value="{{ fieldset.id }}" {% if mg.id_fieldset == fieldset.id %}selected{% endif %}>{{ fieldset.name }}</option>
+        {% endfor %}
+    </select>
+    <input type="hidden" name="slug-reference" value="{{ mg['slug'] }}" />
+    <input type="submit" name="edit" value="Update" />
+    <input type="submit" name="remove" value="Remove" />
+</form>
+
+    <form method="post" action="{{ path('admin_edit_translated_data') }}">
+    {% for lang, fields in mg['translated_data'].getAllData()  %}
+        <p>{{ lang }}</p>
+        {% for key, value in fields %}
+            <label>{{ key }}</label> : <input type="text" name="{{ lang ~ '-' ~ key }}" value="{{ value }}" /> <br />
+        {% endfor %}
+    {% endfor %}
+    <input type="hidden" name="id-translated-data" value="{{ mg.id_translated_data }}" />
+    <input type="hidden" name="id-fieldset" value="{{ mg.id_fieldset }}" />
+    <input type="submit" value="Update" />
+    </form>
+
+    <form method="post" action="{{ path('admin_add_marker_type') }}">
+        <p>Add a new marker type:
+        <label>slug</label> <input type="text" name="slug" value="" />
+        <label>filename</label> <input type="text" name="filename" value="" />
+        <input type="hidden" name="marker-group" value="{{ mg.slug }}" />
+        <select name="fieldset">
+            <option value="default"></option>
+            {% for fieldset in fieldsets %}
+            <option value="{{ fieldset.id }}">{{ fieldset.name }}</option>
+            {% endfor %}
+        </select>
+        <input type="submit" value="Add" /></p>
+    </form>
+
+    {% for mt in mg['marker_types'] %}
+    <div class="marker-type">
+        <form method="post" action="{{ path('admin_edit_marker_type') }}">
+            <input type="text" name="slug" value="{{ mt['id'] }}" />
+            <input type="text" name="filename" value="{{ mt['filename'] }}" />
+            <select name="fieldset">
+                <option value="default"></option>
+                {% for fieldset in fieldsets %}
+                <option value="{{ fieldset.id }}" {% if mt.id_fieldset == fieldset.id %}selected{% endif %}>{{ fieldset.name }}</option>
+                {% endfor %}
+            </select>
+            <input type="hidden" name="slug-reference" value="{{ mt['id'] }}" />
+            <input type="submit" name="edit" value="Update" />
+            <input type="submit" name="remove" value="Remove" />
+        </form>
+        
+        <form method="post" action="{{ path('admin_edit_translated_data') }}">
+        {% for lang, fields in mt['translated_data'].getAllData()  %}
+            <p>{{ lang }}</p>
+            {% for key, value in fields %}
+                <label>{{ key }}</label> : <input type="text" name="{{ lang ~ '-' ~ key }}" value="{{ value }}" /> <br />
+            {% endfor %}
+        {% endfor %}
+        <input type="hidden" name="id-translated-data" value="{{ mt.id_translated_data }}" />
+        <input type="hidden" name="id-fieldset" value="{{ mt.id_fieldset }}" />
+        <input type="submit" value="Update" />
+        </form>
+    </div>
+    {% endfor %}
+</div>
+{% endfor %}
+
+<script>
+
+  $(document).ready(function () {
+      
+      $('#fieldsets-list').change(function() {
+          
+          $('div.fieldset').hide();
+          $('#fieldset-' + $(this).val()).show();
+      });
+      
+  });
+</script>
+
+</body>
+</html>
