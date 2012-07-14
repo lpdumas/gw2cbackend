@@ -22,10 +22,11 @@ class ChangeMerger {
         $this->forAdmin = false;
     }
     
-    public function merge() {
+    public function merge(array $changesToMerge = array()) {
         
         $this->setIDToNewMarkers();
 
+        $changeID = 1;
         foreach($this->changes as $gSlug => $mGroup) {
             foreach($mGroup as $tSlug => $mType) {
                 
@@ -33,24 +34,29 @@ class ChangeMerger {
                 
                 foreach($mType as $change) {
                     
-                    switch($change['status']) {
-                        case DiffProcessor::STATUS_MODIFIED_COORDINATES:
-                        case DiffProcessor::STATUS_MODIFIED_DATA:
-                        case DiffProcessor::STATUS_MODIFIED_ALL:
-                            $markerType->getMarker($change["marker"]->getID())->setStatus($change["status"]);
-                            $markerType->getMarker($change["marker"]->getID())->setData($change["marker"]->getData());
-                            break;
-                        case DiffProcessor::STATUS_ADDED:
-                            $change["marker"]->setStatus($change["status"]);
-                            $markerType->addMarker($change['marker']);
-                            break;
-                        case DiffProcessor::STATUS_REMOVED:
-                            $markerType->getMarker($change["marker"]->getID())->setStatus($change["status"]);
-                            if($this->forAdmin) {
-                                $markerType->removeMarker($change["marker"]->getID());
-                            }
-                            break;
+                    if(in_array($changeID, $changesToMerge) || $this->forAdmin) {
+                    
+                        switch($change['status']) {
+                            case DiffProcessor::STATUS_MODIFIED_COORDINATES:
+                            case DiffProcessor::STATUS_MODIFIED_DATA:
+                            case DiffProcessor::STATUS_MODIFIED_ALL:
+                                $markerType->getMarker($change["marker"]->getID())->setStatus($change["status"]);
+                                $markerType->getMarker($change["marker"]->getID())->setData($change["marker"]->getData());
+                                break;
+                            case DiffProcessor::STATUS_ADDED:
+                                $change["marker"]->setStatus($change["status"]);
+                                $markerType->addMarker($change['marker']);
+                                break;
+                            case DiffProcessor::STATUS_REMOVED:
+                                $markerType->getMarker($change["marker"]->getID())->setStatus($change["status"]);
+                                if($this->forAdmin) {
+                                    $markerType->removeMarker($change["marker"]->getID());
+                                }
+                                break;
+                        }
                     }
+                    
+                    $changeID++;
                 }
             }
         }
