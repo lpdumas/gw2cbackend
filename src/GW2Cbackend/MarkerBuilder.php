@@ -23,19 +23,22 @@ class MarkerBuilder {
         $tData = null;
 
         $mapRevision = new MapRevision($revisionID);
+        
+        $structure = $this->getMarkersStructure();
 
         foreach($json as $markerGroupID => $markerGroup) {
 
-            $tData = new TranslatedData($markerGroup['translated_data']);
+            $tData = $structure[$markerGroupID]['translated_data']; // this is an instance of TranslatedData
             $mGroup = new MarkerGroup($markerGroupID, $tData);
 
             foreach($markerGroup['markerTypes'] as $markerType) {
 
-                $icon = $this->getMarkerTypeIcon($markerType['slug']);
-                $translatedData = array_key_exists('translated_data', $markerType) ? $markerType['translated_data'] : array();
+                $mTypeData = $structure[$markerGroupID]['marker_types'][$markerType['slug']];
+                $icon = $mTypeData['filename'];
+                $translatedData = array_key_exists('translated_data', $markerType) ? $mTypeData['translated_data']->getAllData() : array();
                 $tData = new TranslatedData($translatedData);
 
-                $mType = new MarkerType($markerType['slug'], $icon, 0, $tData);
+                $mType = new MarkerType($markerType['slug'], $icon, $mTypeData['display_in_area_summary'], $tData);
                 $mGroup->addMarkerType($mType);
                 
                 foreach($markerType['markers'] as $marker) {
@@ -81,5 +84,10 @@ class MarkerBuilder {
         }
         
         return 0;
+    }
+    
+    protected function getMarkersStructure() {
+
+        return $this->db->getMarkersStructure();
     }
 }
