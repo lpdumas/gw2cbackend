@@ -78,7 +78,8 @@ class ConfigGenerator {
             $outputString.= $this->generateTranslatedDataOutput($markerGroup->getData(), 1);
             $outputString.= self::tabs().'marker_types : {'.PHP_EOL;
 
-            foreach($markerGroup->getAllMarkerTypes() as $markerType) {
+            $markerTypes = $markerGroup->getAllMarkerTypes();
+            foreach($markerTypes as $markerType) {
 
                 $outputString.= self::tabs(2).'"'.$markerType->getSlug().'" : {'.PHP_EOL;
                 $outputString.= self::tabs(3).'slug : "'.$markerType->getSlug().'",'.PHP_EOL;
@@ -86,7 +87,8 @@ class ConfigGenerator {
                 $outputString.= $this->generateTranslatedDataOutput($markerType->getData(), 3);
                 $outputString.= self::tabs(3).'markers : ['.PHP_EOL;
 
-                foreach($markerType->getAllMarkers() as $marker) {
+                $markers = $markerType->getAllMarkers();
+                foreach($markers as $marker) {
                     $outputString.= $this->generateMarkerOutput($marker, 4);
                 }
                 
@@ -99,9 +101,11 @@ class ConfigGenerator {
             }
 
             // remove the last comma
-            $outputString = substr($outputString, 0, strlen($outputString) - 2).PHP_EOL;
+            if(!empty($markerTypes)) {
+                $outputString = substr($outputString, 0, strlen($outputString) - 2).PHP_EOL;
+            }
             
-            $outputString.= self::tabs().']'.PHP_EOL.'};'.PHP_EOL;
+            $outputString.= self::tabs().'}'.PHP_EOL.'};'.PHP_EOL;
         }
 
         return $outputString;
