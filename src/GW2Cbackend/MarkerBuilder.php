@@ -58,19 +58,6 @@ class MarkerBuilder {
         return $mapRevision;
     }
     
-    protected function getMarkerTypeIcon($markerTypeSlug) {
-        
-        $markerTypes = $this->db->getMarkerTypes();
-        
-        foreach($markerTypes as $slug => $markerType) {
-            if($slug == $markerTypeSlug) {
-                return $markerType['filename'];
-            }
-        }
-        
-        return "";
-    }
-    
     protected function getMarkerArea($lat, $lng) {
         
         $areas = $this->db->retrieveAreasList();
