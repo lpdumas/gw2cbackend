@@ -10,6 +10,19 @@ class TranslatedData {
         $this->langs = $langs;
     }
     
+    public function compare(TranslatedData $tData) {
+        
+        $isEqual = true;
+        
+        foreach($this->langs as $lang => $content) {
+            foreach($content as $field => $value) {
+                $isEqual = $isEqual && $tData->getData($lang, $field) == $value;
+            }
+        }
+        
+        return $isEqual;
+    }
+    
     public function addData($lang, $key, $value) {
         
         if(!array_key_exists($lang, $this->lang)) {

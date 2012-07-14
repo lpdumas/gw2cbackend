@@ -2,6 +2,8 @@
 
 namespace GW2CBackend;
 
+use \GW2CBackend\Marker\MapRevision;
+
 class DiffProcessor {
     
     const STATUS_OK = "status_ok";
@@ -19,7 +21,7 @@ class DiffProcessor {
     
     protected $maxReferenceID;
     
-    public function __construct($modification, $reference, $maxReferenceID) {
+    public function __construct(MapRevision $modification, MapRevision $reference, $maxReferenceID) {
 
         $this->modification = $modification;
         $this->modificationDefault = $modification;
@@ -37,41 +39,96 @@ class DiffProcessor {
      * @return $changes an array with all the changes from the DIFF
      */
     public function process() {
+        
+        $processIDs = array();
+        
+        foreach($this->modification->getAllMarkerGroups() as $mGroup) {
+            
+            $this->changes[$mGroup->getSlug()] = array();
+            
+            foreach($mGroup->getAllMarkerTypes() as $mType) {
 
-        foreach($this->reference as $markerGroupID => $markerGroup) {
-            
-            $this->changes[$markerGroupID] = array();
-            
-            foreach($markerGroup['markerGroup'] as $markerType) {
+                $this->changes[$mGroup->getSlug()][$mType->getSlug()] = array();
                 
-                $this->changes[$markerGroupID][$markerType['slug']] = array();
-                
-                foreach($markerType['markers'] as $marker) {
+                foreach($mType->getAllMarkers() as $marker) {
                     
-                    $result = $this->searchForMarker($marker, $markerGroupID, $markerType['slug']);
-
-                    if($result["status"] != self::STATUS_OK) {
-                        $this->changes[$markerGroupID][$markerType['slug']][] = $result;
+                    $markersReference = $this->reference->getMarkerGroup($mGroup->getSlug())
+                                                        ->getMarkerType($mType->getSlug())
+                                                        ->getAllMarkers();
+                    $item = $this->lookForMarker($marker, $markersReference);
+                    
+                    if($item["status"] != self::STATUS_OK) {
+                        $this->changes[$mGroup->getSlug()][$mType->getSlug()][] = $item;
+                    }
+                    
+                    if($marker->getID() != -1) {
+                        array_push($processIDs, $marker->getID());
                     }
                 }
             }
         }
 
-        // the remaining elements are the added markers
-        foreach($this->modification as $markerGroupID => $markerGroup) {
+        // we must look for deleted items
+        foreach($this->reference->getAllMarkerGroups() as $mGroup) {
             
-            foreach($markerGroup['markerGroup'] as $markerTypeID => $markerType) {
+            foreach($mGroup->getAllMarkerTypes() as $mType) {
                 
-                foreach($markerType['markers'] as $marker) {
-                    if($marker["id"] == -1) {
-                        $result = array("status" => self::STATUS_ADDED, "marker" => $marker, "marker-reference" => null);
-                        $this->changes[$markerGroupID][$markerType['slug']][] = $result;
+                foreach($mType->getAllMarkers() as $marker) {
+                    
+                    if($marker->getID() <= $this->maxReferenceID && !in_array($marker->getID(), $processIDs)) {
+                        
+                        $item = array("status" => self::STATUS_REMOVED, "marker" => $marker, "marker-reference" => null);
+                        $this->changes[$mGroup->getSlug()][$mType->getSlug()][] = $item;
                     }
                 }
             }
+        }
+
+        return $this->changes;
+    }
+    
+    protected function lookForMarker($marker, $markersReference) {
+        
+        $item = array("status" => "", "marker" => null, "marker-reference" => null);
+        
+        $markerReference = self::getMarkerByID($marker->getID(), $markersReference);
+        
+        if(!is_null($markerReference)) {
+
+            // if the coordinates are the same
+            // because of PHP stores float numbers, we can't compare them efficiently so we transtype the float to strings
+            if($markerReference->getLat()."" == $marker->getLat()."" && $markerReference->getLng()."" == $marker->getLng()."") {
+
+                // if the data are the same
+                if($markerReference->compare($marker)) {
+                    $item["status"] = self::STATUS_OK;
+                }
+                else { // if the data have changed
+                    $item["status"] = self::STATUS_MODIFIED_DATA;
+                    $item["marker"] = $marker;
+                    $item["marker-reference"] = $markerReference;
+                }
+            }
+            else { // if the coordinantes changed
+                // if the data are the same
+                if($markerReference->compare($marker)) {
+                    $item["status"] = self::STATUS_MODIFIED_COORDINATES;
+                    $item["marker"] = $marker;
+                    $item["marker-reference"] = $markerReference;
+                }
+                else { // if the data have changed
+                    $item["status"] = self::STATUS_MODIFIED_ALL;
+                    $item["marker"] = $marker;
+                    $item["marker-reference"] = $markerReference;
+                }
+            }
+        }
+        else {
+            $item["status"] = self::STATUS_ADDED;
+            $item["marker"] = $marker;
         }
         
-        return $this->changes;
+        return $item;
     }
     
     /**
@@ -81,19 +138,20 @@ class DiffProcessor {
      * @param $markerTypeReference the marker type from the reference
      * @return an array that represents the result with the status and eventually the marker or/and the marker from the reference
      */
-    protected function searchForMarker($markerReference, $markerGroupID, $markerTypeID) {
+    protected function searchForMarker($markerReference, $markers) {
         
-        $result = array("status" => null, "marker" => null, "marker-reference" => $markerReference);
 
-        foreach($this->modification[$markerGroupID]['markerGroup'] as $k => $markerType) {
+
+        /*foreach($this->modification[$markerGroupID]['markerGroup'] as $k => $markerType) {
             
             if($markerType['slug'] == $markerTypeID) {
                 $markerCollection = $this->modification[$markerGroupID]['markerGroup'][$k]['markers'];
                 break;
             }
-        }
+        }*/
 
-        $marker = self::getMarkerById($markerReference["id"], $markerCollection);
+        $marker = null;
+        //$marker = self::getMarkerById($markerReference["id"], $markerCollection);
 
         // if the marker has been found
         if($marker != null) {
@@ -154,10 +212,10 @@ class DiffProcessor {
      * @param $id a marker's ID
      * @param $collection a collection containing markers
      */
-    static public function getMarkerById($id, $collection) {
+    static public function getMarkerByID($id, $collection) {
 
         foreach($collection as $item) {
-            if($item["id"] == $id) {
+            if($item->getID() == $id) {
                 return $item;
             }
         }
@@ -165,14 +223,18 @@ class DiffProcessor {
         return null;        
     }
     
-    public function hasNoChange() {
-        
-        foreach($this->changes as $markerTypeChanges) {
-            if(!empty($markerTypeChanges)) {
-                return false;
+    public function hasChanges() {
+
+        foreach($this->changes as $mGroup) {
+            foreach($mGroup as $mType) {
+
+                if(!empty($mType)) {
+                    return true;
+                }                
             }
+
         }
         
-        return true;
+        return false;
     }
 }

@@ -34,4 +34,28 @@ class MarkerType {
     public function getAllMarkers() {
         return $this->markers;
     }
+    
+    public function getMarker($markerID) {
+        
+        foreach($this->markers as $k => $marker) {
+
+            if($marker->getID() == $markerID) {
+                return $this->markers[$k];
+            }
+        }
+        
+        return null;
+    }
+    
+    public function removeMarker($markerID) {
+        
+        foreach($this->markers as $k => $marker) {
+
+            if($marker->getID() == $markerID) {
+                unset($this->markers[$k]);
+            }
+        }
+        
+        return null;
+    }
 }
