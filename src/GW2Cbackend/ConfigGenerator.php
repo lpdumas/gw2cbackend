@@ -194,7 +194,7 @@ class ConfigGenerator {
 
         $outputString = 'Metadata = {'.PHP_EOL;
         $outputString.= self::tabs().'"version" : '.$mapVersion.','.PHP_EOL;
-        $outputString.= self::tabs().'"date_generation" : "'.$date.'"'.PHP_EOL;
+        $outputString.= self::tabs().'"date_generation" : "'.$date.'",'.PHP_EOL;
         $outputString.= self::tabs().'"icons_path" : "'.$this->resourcesPath.'",'.PHP_EOL;
         $outputString.= "};".PHP_EOL.PHP_EOL;
         
