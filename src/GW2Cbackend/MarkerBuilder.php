@@ -24,34 +24,34 @@ class MarkerBuilder {
 
         $mapRevision = new MapRevision($revisionID);
         
-        $structure = $this->getMarkersStructure();
-
-        foreach($json as $markerGroupID => $markerGroup) {
-
-            $tData = $structure[$markerGroupID]['translated_data']; // this is an instance of TranslatedData
-            $mGroup = new MarkerGroup($markerGroupID, $tData);
-
-            foreach($markerGroup['markerTypes'] as $markerType) {
-
-                $mTypeData = $structure[$markerGroupID]['marker_types'][$markerType['slug']];
-                $icon = $mTypeData['filename'];
-                $translatedData = array_key_exists('translated_data', $markerType) ? $mTypeData['translated_data']->getAllData() : array();
-                $tData = new TranslatedData($translatedData);
-
-                $mType = new MarkerType($markerType['slug'], $icon, $mTypeData['display_in_area_summary'], $tData);
+        foreach($this->getMarkersStructure() as $mgSlug => $markerGroup) {
+            
+            $mGroup = new MarkerGroup($mgSlug, $markerGroup['translated_data']);
+            
+            foreach($markerGroup['marker_types'] as $mtSlug => $markerType) {
+                
+                $icon = $markerType['filename'];
+                $displayInSummary = $markerType['display_in_area_summary'];
+                $tData = $markerType['translated_data'];
+                
+                $mType = new MarkerType($mtSlug, $icon, $displayInSummary, $tData);
                 $mGroup->addMarkerType($mType);
                 
-                foreach($markerType['markers'] as $marker) {
+                $markers = $json[$mgSlug]['markerTypes'];
 
-                    $area =  $this->getMarkerArea($marker['lat'], $marker['lng']);
-                    $translatedData = array_key_exists('translated_data', $marker) ? $marker['translated_data'] : array();
-                    $tData = new TranslatedData($translatedData);
+                if(array_key_exists($mtSlug, $markers)) {
+                    foreach($markers[$mtSlug]['markers'] as $marker) {
+                    
+                        $area = $this->getMarkerArea($marker['lat'], $marker['lng']);
+                        $translatedData = array_key_exists('translated_data', $marker) ? $marker['translated_data'] : array();
+                        $tData = new TranslatedData($translatedData);
 
-                    $m = new Marker($marker['id'], $marker['lat'], $marker['lng'], $area, $tData);                    
-                    $mType->addMarker($m);
+                        $m = new Marker($marker['id'], $marker['lat'], $marker['lng'], $area, $tData);                    
+                        $mType->addMarker($m);
+                    }
                 }
             }
-
+            
             $mapRevision->addMarkerGroup($mGroup);
         }
 
