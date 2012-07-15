@@ -49,7 +49,7 @@ class ChangeMerger {
                                 break;
                             case DiffProcessor::STATUS_REMOVED:
                                 $markerType->getMarker($change["marker"]->getID())->setStatus($change["status"]);
-                                if($this->forAdmin) {
+                                if(!$this->forAdmin) {
                                     $markerType->removeMarker($change["marker"]->getID());
                                 }
                                 break;

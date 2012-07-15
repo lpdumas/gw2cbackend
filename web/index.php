@@ -182,9 +182,9 @@ $app->get('/refactoring/{revID}', function($revID) use($app) {
     $diff = new GW2CBackend\DiffProcessor($mapModif, $mapRef, $currentReference['max_marker_id']);
     $changes = $diff->process();
     
-    $merger = new GW2CBackend\ChangeMerger($mapRef, $changes);
-    
     $forAdmin = true;
+    $merger = new GW2CBackend\ChangeMerger($mapRef, $changes);
+    $merger->setForAdmin($forAdmin);
     $mergedRevision = $merger->merge();
     
     $generator = new GW2CBackend\ConfigGenerator($mergedRevision, $options["resources-path"], $areasList);
@@ -213,7 +213,7 @@ $app->get('/refactoring/{revID}', function($revID) use($app) {
             }
         }
     }
-    
+
     $params = array("js_generated" => $output, 
                     'revID' => $revID, 
                     'imagePath' => $options["resources-path"], 
