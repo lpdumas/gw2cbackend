@@ -279,10 +279,21 @@ class DatabaseAdapter {
 
     public function editField($fieldID, $fieldName) {
         
-        $query = $this->pdo->query("SELECT id_fieldset FROM fieldset_content WHERE id =".$fieldID);
+        $query = $this->pdo->query("SELECT * FROM fieldset_content WHERE id =".$fieldID);
         $query->setFetchMode(\PDO::FETCH_ASSOC);
-        $fieldsetID = $query->fetch();
-        $fieldsetID = $fieldsetID['id_fieldset'];
+        $fieldset = $query->fetch();
+        $fieldsetID = $fieldset['id_fieldset'];
+
+        $fieldIDs = $this->getTranslatableDataIDsByFieldset($fieldsetID);
+        $ids = "";
+        foreach($fieldIDs as $field) {
+            $ids.= $field["id_translated_data"].",";
+        }
+        $ids = substr($ids, 0, strlen($ids) - 1);
+
+        $qtd = "UPDATE translated_data SET `keyv` = '".$fieldName."' WHERE keyv = '".$fieldset['key_value']."' AND id IN (".$ids.")";
+        $r = $this->pdo->exec($qtd);
+
 
         $q = "UPDATE fieldset_content SET `key_value` = '".$fieldName."' WHERE id = ".$fieldID;
         $r = $this->pdo->exec($q);
@@ -546,8 +557,7 @@ class DatabaseAdapter {
         $l = $this->pdo->query("SELECT MAX(id) as max_id FROM translated_data");
         $l->setFetchMode(\PDO::FETCH_ASSOC);
         $l = $l->fetch();
-        
-        var_dump($l['max_id']);
+
         return $l['max_id'] + 1;
     }
 
