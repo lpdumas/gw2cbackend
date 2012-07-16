@@ -5,13 +5,10 @@ namespace GW2CBackend;
 class InputValidator {
 
     protected $input;
-    protected $areasList;
-    protected $markerTypeList;
 
-    public function __construct($input, $areasList) {
+    public function __construct($input) {
 
         $this->input = $input;
-        $this->areasList = $areasList;
     }
 
     public function validate() {
@@ -19,18 +16,29 @@ class InputValidator {
         if(!is_array($this->input)) {
             return false;
         }
-        
-        foreach($this->input as $markerGroupID => $markerGroup) {
 
-            if(!is_array($markerGroup) || !array_key_exists('markerGroup', $markerGroup) || !is_array($markerGroup['markerGroup']) ||
-                !array_key_exists('name', $markerGroup)) {
+        if(!array_key_exists('version', $this->input) || !is_int($this->input['version'])) {
+            return false;
+        }
+
+        if(!array_key_exists('creation_date', $this->input)) {
+            return false;
+        }
+        
+        if(!array_key_exists('markers', $this->input)) {
+            return false;
+        }
+        
+        foreach($this->input["markers"] as $mgSlug => $markerGroup) {
+
+            if(!is_array($markerGroup) || !array_key_exists('marker_types', $markerGroup) || !is_array($markerGroup['marker_types']) ||
+                !is_string($mgSlug)) {
                 return false;
             }
 
-            foreach($markerGroup['markerGroup'] as $markerTypeID => $markerType) {
+            foreach($markerGroup['marker_types'] as $mtSlug => $markerType) {
 
-                if(!array_key_exists('name', $markerType) || !array_key_exists('slug', $markerType) 
-                    || !array_key_exists('markers', $markerType) || !is_array($markerType['markers'])) {
+                if(!is_string($mtSlug) || !array_key_exists('markers', $markerType) || !is_array($markerType['markers'])) {
                         return false;
                 }
             
@@ -44,14 +52,7 @@ class InputValidator {
                            !array_key_exists("id", $marker) || 
                            !array_key_exists("lat", $marker) ||
                            !array_key_exists("lng", $marker) ||
-                           !array_key_exists("area", $marker) ||
-                           !array_key_exists("title", $marker) ||
-                           !array_key_exists("desc", $marker) ||
-                           !array_key_exists("wikiLink", $marker) ||
-                           !is_int($marker["id"]) || !is_numeric($marker["lat"]) || !is_numeric($marker["lng"]) ||
-                           !is_int($marker["area"]) || (!array_key_exists($marker["area"], $this->areasList) &&
-                           $marker['area'] != 0) ||
-                           !is_string($marker["title"]) || !is_string($marker["desc"]) || !is_string($marker['wikiLink'])
+                           !is_int($marker["id"]) || !is_numeric($marker["lat"]) || !is_numeric($marker["lng"])
                         ) {
                             //echo "a marker is not well formed";
                             //var_dump($marker);

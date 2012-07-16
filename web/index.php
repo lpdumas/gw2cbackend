@@ -72,14 +72,20 @@ $app->post('/submit-modification', function(Request $request) use($app) {
     $json = json_decode($jsonString, true);
 
     $app['database']->retrieveAreasList();
-
     $validator = new GW2CBackend\InputValidator($json, $app['database']->getData("areas-list"));
     $isValid = $validator->validate();
 
     if($isValid == true) {
-        $app['database']->addModification($jsonString);
-
-        $message = array('success' => true, 'message' => 'The modification has been submitted.');        
+        
+        $app['database']->retrieveOptions();
+        $options = $app['database']->getData("options");
+        if(!$options['maintenance-mode']) {
+            $app['database']->addModification($jsonString);
+            $message = array('success' => true, 'message' => 'The modification has been submitted.');
+        }
+        else {
+            $message = array('success' => false, 'message' => 'The crowdsourcing server is currently down for maintenance.');
+        }
     }
     else {
         $message = array('success' => false, 'message' => 'The JSON is invalid.');
