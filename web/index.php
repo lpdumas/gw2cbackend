@@ -97,69 +97,6 @@ $app->get('/admin/', function() use($app) {
 })->bind('admin');
 
 $app->get('/admin/revision/{revID}', function($revID) use($app) {
-    
-    $app['twig.path'] = __DIR__.'/../gw2cread/';
-
-    $app['database']->retrieveOptions();
-    $app['database']->retrieveAreasList();
-    $app['database']->retrieveCurrentReference();
-    $options = $app['database']->getData("options");
-    $areasList = $app['database']->getData("areas-list");
-    
-    // the third step is getting the current version of the map
-    $currentReference = $app['database']->getData("current-reference");
-    $jsonReference = json_decode($currentReference["value"], true);
-    
-    $lastRev = $app['database']->retrieveModification($revID);
-    $jsonLastRev = json_decode($lastRev['value'], true);
-
-    $app['database']->retrieveReferenceAtSubmission($lastRev['id_reference_at_submission']);
-    $referenceAtSubmission = $app['database']->getData('reference-at-submission');
-    $maxReferenceID = $referenceAtSubmission['max_marker_id'];
-
-    // we 'diff' the two versions
-    $differ = new GW2CBackend\DiffProcessor($jsonLastRev, $jsonReference, $maxReferenceID);
-    $changes = $differ->process();
-
-    $markerGroups = $app['database']->getMarkersStructure();
-
-    // the second part of the script is executed when an administrator validates or not the modification. Let say he does validate.
-    $generator = new GW2CBackend\ConfigGenerator($jsonReference, $changes, $markerGroups, 
-                                                 $options["resources-path"], $areasList);
-
-    $mergeForAdmin = true;
-    $generator->generate($mergeForAdmin);
-    $generator->minimize();
-    $output = $generator->getOutput();
-    
-    /*
-        We make an array twig-friendly to easily display the changes in a list
-    */
-    $flatChanges = array();
-    $changeID = 1;
-    foreach($generator->getChanges() as $markerGroupID => $markerGroup) {
-        foreach($markerGroup as $markerTypeID => $markerType) {
-            foreach($markerType as $change) {
-                
-                $id = $change['marker'] != null ? $change['marker']['id'] : $change['marker-reference']['id'];
-                $name = $markerGroups[$markerGroupID]['markerTypes'][$markerTypeID]['name'];
-
-                $image = $markerGroups[$markerGroupID]['markerTypes'][$markerTypeID]['filename'];
-                $flatChanges[] = array('id' => $changeID, 'markerID' => $id, 'name' => $name, 'image' => $image, 'change' => $change);
-                $changeID++;
-            }
-        }
-    }
-
-    //$generator->save(__DIR__.'/config.js', false); // for debug purpose
-
-    $params = array("js_generated" => $output, 'revID' => $revID, 'imagePath' => $options["resources-path"], 'changes' => $flatChanges);
-
-    return $app['twig']->render('index.html', $params);
- 
-})->bind('admin_revision');
-
-$app->get('/refactoring/{revID}', function($revID) use($app) {
 
     $app['twig.path'] = __DIR__.'/../gw2cread/';
 
@@ -177,7 +114,7 @@ $app->get('/refactoring/{revID}', function($revID) use($app) {
     $builder = new GW2CBackend\MarkerBuilder($app['database']);
     $mapModif = $builder->build(-1, $modification);
     $mapRef = $builder->build($currentReference['id'], $reference);
-    
+
     // the max id will have to come from the JSON
     $diff = new GW2CBackend\DiffProcessor($mapModif, $mapRef, $currentReference['max_marker_id']);
     $changes = $diff->process();
@@ -220,7 +157,7 @@ $app->get('/refactoring/{revID}', function($revID) use($app) {
                     'changes' => $flatChanges);
 
     return $app['twig']->render('index.html', $params);
-});
+})->bind('admin_revision');
 
 $app->get('/admin/organize', function() use($app) {
     
@@ -509,71 +446,3 @@ $app->get('/format', function() use($app) {
 });
 
 $app->run();
-
-/*
-// first we receive the JSON string and we transform it to a PHP array
-// we mock the database
-$jsonString = file_get_contents('test.json');
-$modification = $pdo->getData('first-modification');
-$modification['reference-at-submission'] = 1;
-$modification['value'] = $jsonString;
-
-$json = json_decode($modification["value"], true);
-
-// then we check the validity of the JSON object regarding the format we want
-$validator = new GW2CBackend\InputValidator($json, $pdo->getData("resources"), $pdo->getData("areas-list"));
-$isValid = $validator->validate();
-
-if($isValid === true) {
-
-    // the third step is getting the current version of the map
-    $currentReference = $pdo->getData("current-reference");
-    $jsonReference = json_decode($currentReference["value"], true);
-
-    // when we replace the mock, put it in DatabaseAdapter::retrieveAll()
-    $pdo->retrieveReferenceAtSubmission($modification['reference-at-submission']);
-    $referenceAtSubmission = $pdo->getData('reference-at-submission');
-    $maxReferenceID = $referenceAtSubmission['max_marker_id'];
-
-    // we 'diff' the two versions
-    $differ = new GW2CBackend\DiffProcessor($json, $jsonReference, $maxReferenceID);
-    $changes = $differ->process();
-
-    if($differ->hasNoChange()) {
-        echo "No change detected from this modification.";
-    }
-    else {
-        
-        echo "Changes have been detected.";
-        
-        var_dump($changes['hearts']);
-        
-        // we render the diff version thanks to the map
-        // ------ nothing for now
-
-        $markerGroups = $pdo->getMarkerGroups();
-        $markerTypes = $pdo->getMarkerTypes();
-
-        foreach($markerTypes as $markerType) {
-    
-            $markerGroups[$markerType['id_marker_group']]['markerTypes'][] = $markerType;
-        }
-
-        // the second part of the script is executed when an administrator validates or not the modification. Let say he does validate.
-        $options = $pdo->getData("options");
-        $filepath = __DIR__.$options["output-filepath"];
-        $minimized = (boolean) $options["output-minimization"];
-        $generator = new GW2CBackend\ConfigGenerator($jsonReference, $changes, $markerGroups, 
-                                                     $options["resources-path"], $pdo->getData("areas-list"));
-        $generator->setIDToNewMarkers();
-        $generator->generate();
-        $generator->save($filepath, $minimized);
-
-        $pdo->addReference($generator->getReference(), $generator->getMaxMarkerID(), $modification["id"]);
-    }
-}
-else {
-    echo "The file format in invalid.";
-}
-*/
-?>
