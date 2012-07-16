@@ -1,0 +1,24 @@
+{% extends "layout.twig" %}
+
+{% block title %}{% endblock %}
+
+{% block assets %}
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script>window.jQuery || document.write('<script src="assets/javascripts/libs/jquery.js"><\/script>')</script>
+
+<!-- ugly as hell, will be improved -->
+<style>
+    div.fieldset { display: none; }
+    div.marker-group { margin: 50px 0; }
+    div.marker-type { margin: 15px 0 15px 50px; }
+</style>
+{% endblock %}  
+
+{% block menu %}
+<div id="menu">
+    <a href="{{ path('admin') }}">Home</a> # 
+    <a href="{{ path('admin_organize') }}">Organize config.js</a> # 
+    <a href="{{ path('admin') }}">Options</a> # 
+    <a href="{{ path('logout') }}">Logout</a>
+</ul>
+{% endblock %}

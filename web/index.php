@@ -20,7 +20,7 @@ $app->register(new GW2CBackend\DatabaseServiceProvider(), array(
 ));
 
 $app->register(new Silex\Provider\SessionServiceProvider());
-//$app->register(new Silex\Provider\SecurityServiceProvider());
+$app->register(new Silex\Provider\SecurityServiceProvider());
 $app->register(new Silex\Provider\UrlGeneratorServiceProvider());
 
 $app->register(new Silex\Provider\TwigServiceProvider(), array(
@@ -29,7 +29,7 @@ $app->register(new Silex\Provider\TwigServiceProvider(), array(
 ));
 
 // firewall for admin area
-/*$app['security.firewalls'] = array(
+$app['security.firewalls'] = array(
     'admin' => array(
         'pattern' => '^/admin/',
         'form' => array('login_path' => '/login', 'check_path' => '/admin/login_check'),
@@ -38,13 +38,12 @@ $app->register(new Silex\Provider\TwigServiceProvider(), array(
             'admin' => array('ROLE_ADMIN', '5FZ2Z8QIkA7UTZ4BYkoC+GsReLf569mSKDsfods6LYQ8t+a8EW9oaircfMpmaLbPBh4FOBiiFyLfuZmTSUwzZg=='),
         ),
     ),
-);*/
+);
 
 $app->get('/', function() use($app) {
 
-    return "Welcome on the backend of Guild Wars 2 Cartographers.";
-
-});
+    return $app['twig']->render('home.twig');
+})->bind('home');
 
 // dirty test form to submit JSON
 $app->get('/test-form', function() use($app) {
@@ -81,7 +80,7 @@ $app->post('/submit-modification', function(Request $request) use($app) {
 
 $app->get('/login', function(Request $request) use ($app) {
 
-    return $app['twig']->render('login.html', array(
+    return $app['twig']->render('login.twig', array(
         'error'         => $app['security.last_error']($request),
         'last_username' => $app['session']->get('_security.last_username'),
     ));
@@ -91,7 +90,7 @@ $app->get('/admin/', function() use($app) {
     
     $list = $app['database']->retrieveModificationList();
     
-    return $app['twig']->render('admin.twig', array(
+    return $app['twig']->render('admin_home.twig', array(
             'modifList' => $list
         ));
 })->bind('admin');
@@ -434,6 +433,11 @@ $app->post('/admin/merge-changes', function(Request $request) use($app) {
 $app->get('/admin/options', function() use ($app) {
     return $app->redirect('/admin/');
 })->bind('admin_options');
+
+$app->get('/logout', function() use($app) {
+   
+   return $app->redirect('/');
+});
 
 $app->get('/format', function() use($app) {
    
