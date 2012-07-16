@@ -438,8 +438,8 @@ $app->post('/admin/merge-changes', function(Request $request) use($app) {
     $generator->setForAdmin($forAdmin);
     
     // This must be done before generation so the config.js file has the right ID.
-    //$newID = $app['database']->saveNewRevisionAsReference($mergedRevision);
-    //$mergedRevision->setID($newID);
+    $newID = $app['database']->saveNewRevisionAsReference($mergedRevision, $currentReference['id'], $merger->getMaximumID());
+    $mergedRevision->setID($newID);
     
     $output = $generator->generate();
     if($options['output-minimization']['value']) {

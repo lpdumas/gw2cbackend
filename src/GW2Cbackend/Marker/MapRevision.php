@@ -33,6 +33,38 @@ class MapRevision {
         return null;
     }
     
+    public function toJSON() {
+        
+        $json = array('version' => (int)$this->getID(), 'creation_date' => date('Y-m-d'), 'markers' => array());
+        
+        foreach($this->markerGroups as $mg) {
+            
+            $json['markers'][$mg->getSlug()] = array('marker_types' => array());
+            
+            foreach($mg->getAllMarkerTypes() as $mt) {
+                
+                $json['markers'][$mg->getSlug()]['marker_types'][$mt->getSlug()] = array('markers' => array());
+                
+                foreach($mt->getAllMarkers() as $m) {
+                    
+                    $marker = array();
+                    $dataMarker = $m->getData()->getAllData();
+                    if(!empty($dataMarker)) {
+                        $marker['data_translation'] = $dataMarker;
+                    }
+                    
+                    $marker['id'] = $m->getID();
+                    $marker['lat'] = $m->getLat();
+                    $marker['lng'] = $m->getLng();
+                    
+                    $json['markers'][$mg->getSlug()]['marker_types'][$mt->getSlug()]['markers'][] = $marker;
+                }
+            }
+        }
+        
+        return $json;
+    }
+    
     public function d() {
         foreach($this->getAllMarkerGroups() as $markerGroup) {
             foreach($markerGroup->getAllMarkerTypes() as $markerType) {

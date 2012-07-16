@@ -24,34 +24,28 @@ class DatabaseAdapter {
     public function addModification($json) {
         
         $date = date('Y-m-d H:i:s');
-        
-        if(!array_key_exists("current-reference", $this->data)) {
-            $this->retrieveCurrentReference();
-        }
-
-        $idReference = $this->data["current-reference"]["id"];
-        
         $json = addslashes($json);
 
-        $q = "INSERT INTO modification_list (date_added, value, id_reference_at_submission) 
-                         VALUES ('".$date."', '".$json."', '".$idReference."')";
+        $q = "INSERT INTO modification_list (date_added, value) 
+                         VALUES ('".$date."', '".$json."')";
 
         $r = $this->pdo->exec($q);
     }
     
-    public function addReference($reference, $maxMarkerID, $idModification) {
-        
+    public function saveNewRevisionAsReference($newRevision, $modificationSourceID, $maxID) {
         $date = date('Y-m-d H:i:s');
-        $jsonReference = json_encode($reference);
         
-        if(!array_key_exists("current-reference", $this->data)) {
-            $this->retrieveCurrentReference();
-        }
-
+        $json = $newRevision->toJSON();
+        $validator = new InputValidator($json);
+        $isValid = $validator->validate();
+        $json = json_encode($json);
+        
         $q = "INSERT INTO reference_list (value, date_added, id_merged_modification, max_marker_id) 
-                         VALUES ('".$jsonReference."', '".$date."', '".$idModification."', '".$maxMarkerID."')";
+                         VALUES ('".$json."', '".$date."', '".$modificationSourceID."', '".$maxID."')";
 
-        $this->pdo->exec($q);
+        $r = $this->pdo->exec($q);
+        
+        return $this->pdo->lastInsertId();
     }
 
     public function retrieveAll() {

@@ -66,7 +66,7 @@ class ChangeMerger {
     
     public function setIDToNewMarkers() {
         
-        $this->maxID = $this->getMaximumID();
+        $this->maxID = $this->computeMaximumID();
 
         foreach($this->changes as $gSlug => $mGroup) {
             
@@ -87,6 +87,10 @@ class ChangeMerger {
     }
     
     public function getMaximumID() {
+        return $this->maxID;
+    }
+    
+    protected function computeMaximumID() {
 
         $maxID = 0;
 
