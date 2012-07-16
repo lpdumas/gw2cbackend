@@ -93,7 +93,7 @@ class DatabaseAdapter {
 
         foreach($result->fetchAll() as $row) {
             
-            $this->data["options"][$row["id"]] = $row["value"];
+            $this->data["options"][$row["id"]] = array('value' => $row["value"], 'desc' => $row['desc']);
         }
     }
     
@@ -708,6 +708,13 @@ class DatabaseAdapter {
     public function removeUser($username) {
         
         $this->pdo->exec("DELETE FROM user WHERE username = '".$username."'");
+    }
+    
+    public function editOptions(array $options) {
+        
+        foreach($options as $key => $value) {
+            $this->pdo->exec("UPDATE options SET `value` = '".$value."' WHERE id = '".$key."'");
+        }
     }
 
     public function handleError(\Exception $e) {

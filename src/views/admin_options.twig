@@ -1,0 +1,21 @@
+{% extends "admin_layout.twig" %}
+{% block title %}Options management{% endblock %}
+
+{% block content %}
+{% if feedback is defined %}
+<p>{{ feedback }}</p>
+{% endif %}
+
+<form method="post" action="{{ path('admin_options_edit') }}">
+    <ul>
+    {% for key, opt in options %}
+        <li>
+            <label>{{ key }}</label> <input type="text" name="{{ key }}" value="{{ opt.value }}" /> ({{ opt.desc }})
+        </li>
+    {% endfor %}
+    </ul>
+    
+    <input type="submit" value="Update" />
+</form>
+
+{% endblock %}

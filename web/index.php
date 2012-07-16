@@ -79,7 +79,7 @@ $app->post('/submit-modification', function(Request $request) use($app) {
         
         $app['database']->retrieveOptions();
         $options = $app['database']->getData("options");
-        if(!$options['maintenance-mode']) {
+        if(!$options['maintenance-mode']['value']) {
             $app['database']->addModification($jsonString);
             $message = array('success' => true, 'message' => 'The modification has been submitted.');
         }
@@ -139,7 +139,7 @@ $app->get('/admin/revision/{revID}', function($revID) use($app) {
     $merger->setForAdmin($forAdmin);
     $mergedRevision = $merger->merge();
     
-    $generator = new GW2CBackend\ConfigGenerator($mergedRevision, $options["resources-path"], $areasList);
+    $generator = new GW2CBackend\ConfigGenerator($mergedRevision, $options["resources-path"]['value'], $areasList);
     $generator->setForAdmin($forAdmin);
     
     $output = $generator->generate();
@@ -164,7 +164,7 @@ $app->get('/admin/revision/{revID}', function($revID) use($app) {
 
     $params = array("js_generated" => $output, 
                     'revID' => $revID, 
-                    'imagePath' => $options["resources-path"], 
+                    'imagePath' => $options["resources-path"]['value'],
                     'changes' => $flatChanges);
 
     return $app['twig']->render('index.html', $params);
@@ -434,7 +434,7 @@ $app->post('/admin/merge-changes', function(Request $request) use($app) {
     $merger->setForAdmin($forAdmin);
     $mergedRevision = $merger->merge($changesToMerge);
     
-    $generator = new GW2CBackend\ConfigGenerator($mergedRevision, $options["resources-path"], $areasList);
+    $generator = new GW2CBackend\ConfigGenerator($mergedRevision, $options["resources-path"]['value'], $areasList);
     $generator->setForAdmin($forAdmin);
     
     // This must be done before generation so the config.js file has the right ID.
@@ -442,16 +442,29 @@ $app->post('/admin/merge-changes', function(Request $request) use($app) {
     //$mergedRevision->setID($newID);
     
     $output = $generator->generate();
-    if($options['output-minimization']) {
+    if($options['output-minimization']['value']) {
         $generator->minimize();
     }
-    $generator->save(__DIR__.'/../'.$options['output-filepath']);
+    $generator->save(__DIR__.'/../'.$options['output-filepath']['value']);
     
 })->bind('admin_merge_changes');
 
 $app->get('/admin/options', function() use ($app) {
-    return $app->redirect('/admin/');
+    
+    $app['database']->retrieveOptions();
+    $options = $app['database']->getData("options");
+    
+    return $app['twig']->render('admin_options.twig', array('options' => $options));
+
 })->bind('admin_options');
+
+$app->post('/admin/options/edit', function(Request $request) use($app) {
+
+    $app['database']->editOptions($request->request->all());
+
+    return $app->redirect('/admin/options');
+    
+})->bind('admin_options_edit');
 
 $app->get('/admin/users', function() use($app) {
    
