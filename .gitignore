@@ -1,5 +1,4 @@
 .DS_Store
-output/
 db-config.php
 vendor/
 composer.phar
