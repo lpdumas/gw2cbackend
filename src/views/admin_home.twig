@@ -2,8 +2,13 @@
 
 {% block content %}
     <ul>
-        {% for item in modifList %}
-            <li><a href="{{ path('admin_revision', { 'revID' : item.id }) }}">Preview ID#{{ item.id }}</a></li>
-        {% endfor %}
+    {% for item in modifList %}
+        <li><a href="{{ path('admin_revision', { 'revID' : item.id }) }}">Preview ID#{{ item.id }}</a></li>
+    {% endfor %}
     </ul>
+    
+    {% if modifList is empty %}
+    <p>No modification in the pending queue.</p>
+    {% endif %}
+    
 {% endblock %}
