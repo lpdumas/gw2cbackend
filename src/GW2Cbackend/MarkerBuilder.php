@@ -37,17 +37,19 @@ class MarkerBuilder {
                 $mType = new MarkerType($mtSlug, $icon, $displayInSummary, $tData);
                 $mGroup->addMarkerType($mType);
                 
-                $markers = $json[$mgSlug]['markerTypes'];
+                if(array_key_exists($mgSlug, $json)) {
+                    $markers = $json[$mgSlug]['markerTypes'];
 
-                if(array_key_exists($mtSlug, $markers)) {
-                    foreach($markers[$mtSlug]['markers'] as $marker) {
+                    if(array_key_exists($mtSlug, $markers)) {
+                        foreach($markers[$mtSlug]['markers'] as $marker) {
                     
-                        $area = $this->getMarkerArea($marker['lat'], $marker['lng']);
-                        $translatedData = array_key_exists('translated_data', $marker) ? $marker['translated_data'] : array();
-                        $tData = new TranslatedData($translatedData);
+                            $area = $this->getMarkerArea($marker['lat'], $marker['lng']);
+                            $translatedData = array_key_exists('translated_data', $marker) ? $marker['translated_data'] : array();
+                            $tData = new TranslatedData($translatedData);
 
-                        $m = new Marker($marker['id'], $marker['lat'], $marker['lng'], $area, $tData);                    
-                        $mType->addMarker($m);
+                            $m = new Marker($marker['id'], $marker['lat'], $marker['lng'], $area, $tData);                    
+                            $mType->addMarker($m);
+                        }
                     }
                 }
             }
