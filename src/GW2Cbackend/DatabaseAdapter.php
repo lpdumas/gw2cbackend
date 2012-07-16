@@ -393,8 +393,8 @@ class DatabaseAdapter {
         }
         
         $slug = strtolower($slug);
-        $q = "INSERT INTO marker_group (slug, name, id_translated_data, id_fieldset) 
-                VALUES ('".$slug."', '', ".$tDataID.", ".$fieldsetID.")";
+        $q = "INSERT INTO marker_group (slug, id_translated_data, id_fieldset) 
+                VALUES ('".$slug."', ".$tDataID.", ".$fieldsetID.")";
         $r = $this->pdo->exec($q);
     }
     
@@ -523,8 +523,8 @@ class DatabaseAdapter {
             }
         }
         
-        $q = "INSERT INTO marker_type (id, name, filename, slug_marker_group, id_translated_data, id_fieldset) 
-                VALUES ('".$slug."', '', '".$filename."', '".$markerGroupID."', ".$tDataID.", ".$fieldsetID.")";
+        $q = "INSERT INTO marker_type (id, filename, slug_marker_group, id_translated_data, id_fieldset) 
+                VALUES ('".$slug."', '".$filename."', '".$markerGroupID."', ".$tDataID.", ".$fieldsetID.")";
 
         $r = $this->pdo->exec($q);
     }
