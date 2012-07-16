@@ -2,6 +2,8 @@
 
 namespace GW2CBackend;
 
+use Symfony\Component\Security\Core\User\User;
+
 class DatabaseAdapter {
 
     protected $pdo;
@@ -660,6 +662,43 @@ class DatabaseAdapter {
         }
         
         return $langs;
+    }
+    
+    public function getUserByUsername($username) {
+        
+        $q = $this->pdo->query("SELECT * FROM user WHERE username = '".$username."'");
+        if(!$q) return null;
+
+        $q->setFetchMode(\PDO::FETCH_ASSOC);
+        return $q->fetch();
+        
+    }
+    
+    public function getAllUsers() {
+        $q = $this->pdo->query("SELECT * FROM user");
+        if(!$q) return null;
+
+        $q->setFetchMode(\PDO::FETCH_ASSOC);
+        return $q->fetchAll();
+    }
+
+    public function createUser($username, $password, $role, $service) {
+        
+        $username = strtolower($username);
+        $user = new User($username, '', explode(',', $role), true, true, true, true);
+
+        $encoder = $service->getEncoder($user);
+        $password = $encoder->encodePassword($password, $user->getSalt());
+
+        $q = "INSERT INTO user(username, password, roles) 
+                VALUES ('".$username."', '".$password."', '".$role."')";
+
+        $r = $this->pdo->exec($q);
+    }
+    
+    public function removeUser($username) {
+        
+        $this->pdo->exec("DELETE FROM user WHERE username = '".$username."'");
     }
 
     public function handleError(\Exception $e) {

@@ -1,0 +1,22 @@
+{% extends "admin_layout.twig" %}
+{% block title %}Users management{% endblock %}
+
+{% block content %}
+{% if feedback is defined %}
+<p>{{ feedback }}</p>
+{% endif %}
+
+<form method="post" action="{{ path('admin_user_add') }}">
+    <label>Username:</label> <input type="text" name="username" /><br />
+    <label>Password:</label> <input type="password" name="password" /><br />
+    <label>Role:</label> <input type="text" name="role" /> (among ROLE_ADMIN and ROLE_SUPER_ADMIN)<br />
+    <input type="submit" value="Create a new user" />
+</form>
+
+<ul>
+{% for user in users %}
+<li>{{ user.username }} - <a href="{{ path('admin_user_remove', { 'username' : user.username }) }}">remove</a></li>
+{% endfor %}
+</ul>
+
+{% endblock %}

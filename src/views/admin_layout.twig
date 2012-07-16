@@ -19,6 +19,9 @@
     <a href="{{ path('admin') }}">Home</a> # 
     <a href="{{ path('admin_organize') }}">Organize config.js</a> # 
     <a href="{{ path('admin') }}">Options</a> # 
+    {% if is_granted('ROLE_SUPER_ADMIN') %}
+    <a href="{{ path('admin_users') }}">Users management</a> # 
+    {% endif %}
     <a href="{{ path('admin_logout') }}">Logout</a>
 </ul>
 {% endblock %}

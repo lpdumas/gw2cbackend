@@ -5,6 +5,7 @@ require_once __DIR__.'/../db-config.php';
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use GW2CBackend\UserProvider;
 
 $app = new Silex\Application();
 
@@ -33,11 +34,20 @@ $app['security.firewalls'] = array(
         'pattern' => '^/admin/',
         'form' => array('login_path' => '/login', 'check_path' => '/admin/login_check'),
         'logout' => array('logout_path' => '/admin/logout'),
-
-        'users' => array(
-            'admin' => array('ROLE_ADMIN', '5FZ2Z8QIkA7UTZ4BYkoC+GsReLf569mSKDsfods6LYQ8t+a8EW9oaircfMpmaLbPBh4FOBiiFyLfuZmTSUwzZg=='),
-        ),
+        'users' => $app->share(function () use ($app) {
+            return new UserProvider($app['database']);
+        }),
     ),
+);
+
+$app['security.role_hierarchy'] = array(
+    'ROLE_SUPER_ADMIN' => array('ROLE_ADMIN'),
+);
+
+// Order is important
+$app['security.access_rules'] = array(
+    array('^/admin/users.*$', 'ROLE_SUPER_ADMIN'),
+    array('^/admin', 'ROLE_ADMIN'),
 );
 
 $app->get('/', function() use($app) {
@@ -434,6 +444,50 @@ $app->get('/admin/options', function() use ($app) {
     return $app->redirect('/admin/');
 })->bind('admin_options');
 
+$app->get('/admin/users', function() use($app) {
+   
+   $users = $app['database']->getAllUsers();
+   
+   return $app['twig']->render('admin_users.twig', array('users' => $users));
+
+})->bind('admin_users');
+
+$app->post('/admin/user/add', function(Request $request) use($app) {
+    
+    $username = $request->request->get('username');
+    $password = $request->request->get('password');
+    $role = $request->request->get('role');
+
+    if(!$username || !$password || !$role) {
+        $message = "All the fields must be filled.";
+    }
+    else {
+        
+        $app['database']->createUser($username, $password, $role, $app['security.encoder_factory']);
+        $message = "User '".$username."' has been created.";
+    }
+
+    $app['session']->set('feedback', $message);
+    
+    return $app->redirect('/admin/users');
+    
+})->bind('admin_user_add');
+
+
+$app->get('/admin/user/remove/{username}', function($username) use($app) {
+    
+    $username = strtolower($username);
+    
+    $app['database']->removeUser($username);
+    
+    if($app['security']->getToken()->getUser()->getUsername() == $username) {
+        return $app->redirect('/admin/logout');
+    }
+    else {
+        return $app->redirect('/admin/users');
+    }
+    
+})->bind('admin_user_remove');
 
 $app->get('/format', function() use($app) {
    
