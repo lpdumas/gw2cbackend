@@ -250,8 +250,8 @@ class DatabaseAdapter {
     
     public function getTranslatableDataIDsByFieldset($fieldsetID) {
         
-        $qg = "SELECT id_translated_data FROM marker_group WHERE id_fieldset = ".$fieldsetID;
-        $qt = "SELECT id_translated_data FROM marker_type WHERE id_fieldset = ".$fieldsetID;
+        $qg = "SELECT id_translated_data FROM marker_group WHERE id_translated_data IS NOT NULL AND id_fieldset = ".$fieldsetID;
+        $qt = "SELECT id_translated_data FROM marker_type WHERE id_translated_data IS NOT NULL AND id_fieldset = ".$fieldsetID;
 
         $rg = $this->pdo->query($qg);
         $rg->setFetchMode(\PDO::FETCH_ASSOC);
@@ -271,6 +271,16 @@ class DatabaseAdapter {
         $tdf = $this->getTranslatableDataIDsByFieldset($fieldsetID);
         foreach($tdf as $td) {
             $this->updateTranslatedDataFieldsRange($td['id_translated_data'], $fieldsetID);
+        }
+        
+        $mgs = $this->getMarkerGroupIDsIfNoTranslatedData($fieldsetID);
+        foreach($mgs as $mg) {
+            $this->editMarkerGroup($mg['slug'], $mg['slug'], $fieldsetID);
+        }
+        
+        $mts = $this->getMarkerTypeIDsIfNoTranslatedData($fieldsetID);
+        foreach($mts as $mt) {
+            $this->editMarkerType($mt['id'], $mt['id'], $mt['filename'], $fieldsetID);
         }
 
         $result = $this->getFieldset($fieldsetID);
@@ -317,9 +327,53 @@ class DatabaseAdapter {
             $this->updateTranslatedDataFieldsRange($td['id_translated_data'], $fieldsetID);
         }
 
+        $mgs = $this->getMarkerGroupByFieldset($fieldsetID);
+        foreach($mgs as $mg) {
+            $this->editMarkerGroup($mg['slug'], $mg['slug'], $fieldsetID);
+        }
+        
+        $mts = $this->getMarkerTypeByFieldset($fieldsetID);
+        foreach($mts as $mt) {
+            $this->editMarkerType($mt['id'], $mt['id'], $mt['filename'], $fieldsetID);
+        }
+
         $result = $this->getFieldset($fieldsetID);
         return $result['name'];
     }
+    
+    public function getMarkerGroupIDsIfNoTranslatedData($fieldsetID) {
+        
+        $q = "SELECT * FROM marker_group WHERE id_translated_data is NULL AND id_fieldset = ".$fieldsetID;
+        $r = $this->pdo->query($q);
+        $r->setFetchMode(\PDO::FETCH_ASSOC);
+        
+        return $r->fetchAll();
+    }
+    
+    public function getMarkerGroupByFieldset($fieldsetID) {
+        $q = "SELECT * FROM marker_group WHERE id_fieldset = ".$fieldsetID;
+        $r = $this->pdo->query($q);
+        $r->setFetchMode(\PDO::FETCH_ASSOC);
+        
+        return $r->fetchAll();
+    }
+
+    public function getMarkerTypeByFieldset($fieldsetID) {
+        $q = "SELECT * FROM marker_type WHERE id_fieldset = ".$fieldsetID;
+        $r = $this->pdo->query($q);
+        $r->setFetchMode(\PDO::FETCH_ASSOC);
+        
+        return $r->fetchAll();
+    }
+
+    public function getMarkerTypeIDsIfNoTranslatedData($fieldsetID) {
+        
+        $q = "SELECT * FROM marker_type WHERE id_translated_data is NULL AND id_fieldset = ".$fieldsetID;
+        $r = $this->pdo->query($q);
+        $r->setFetchMode(\PDO::FETCH_ASSOC);
+        
+        return $r->fetchAll();
+    }    
     
     public function addMarkerGroup($slug, $fieldsetID) {
 
@@ -330,7 +384,12 @@ class DatabaseAdapter {
         else {
             $fieldsetID = "'".$fieldsetID."'";
             $id = $this->addTranslatedDataFieldsFromFieldset($fieldsetID);
-            $tDataID = "'".$id."'";
+            if($id == null) {
+                $tDataID = "NULL";
+            }
+            else {
+                $tDataID = "'".$id."'";
+            }
         }
         
         $slug = strtolower($slug);
@@ -345,13 +404,16 @@ class DatabaseAdapter {
         $mg = $this->pdo->query($mgQ);
         $mg = $mg->fetch();
 
-        if($fieldsetID != $mg['id_fieldset']) {
-            if(!is_null($mg['id_translated_data'])) {
-                $this->updateTranslatedDataFieldsRange($mg['id_translated_data'], $fieldsetID);
+        if(!is_null($mg['id_translated_data'])) {
+
+            $nbFields = $this->updateTranslatedDataFieldsRange($mg['id_translated_data'], $fieldsetID);
+            // we set the id_translated_data to null since there are no fields in the fieldset
+            if($nbFields == 0) {
+                $mg['id_translated_data'] = null;
             }
-            else {
-                $id = $this->addTranslatedDataFieldsFromFieldset($fieldsetID);
-            }
+        }
+        else {
+            $id = $this->addTranslatedDataFieldsFromFieldset($fieldsetID);
         }
 
         if($fieldsetID == 'default') {
@@ -360,8 +422,14 @@ class DatabaseAdapter {
         }
         else {
             $fieldsetID = "'".$fieldsetID."'";
+
             if(!isset($id)) {
-                $id = "'".$mg['id_translated_data']."'";
+                if(is_null($mg['id_translated_data'])) {
+                    $id = "NULL";
+                }
+                else {
+                    $id = "'".$mg['id_translated_data']."'";
+                }
             }
             else {
                 $id = "'".$id."'";
@@ -416,6 +484,9 @@ class DatabaseAdapter {
             }
         }
         
+        $fieldset = $this->getFieldset($fieldsetID);
+        
+        return count($fieldset['fields']);
     }
     
     public function removeMarkerGroup($slug) {
@@ -444,7 +515,12 @@ class DatabaseAdapter {
         else {
             $fieldsetID = "'".$fieldsetID."'";
             $id = $this->addTranslatedDataFieldsFromFieldset($fieldsetID);
-            $tDataID = "'".$id."'";
+            if($id == null) {
+                $tDataID = "NULL";
+            }
+            else {
+                $tDataID = "'".$id."'";
+            }
         }
         
         $q = "INSERT INTO marker_type (id, name, filename, slug_marker_group, id_translated_data, id_fieldset) 
@@ -474,13 +550,15 @@ class DatabaseAdapter {
         $mt = $this->pdo->query($mtQ);
         $mt = $mt->fetch();
 
-        if($fieldsetID != $mt['id_fieldset']) {
-            if(!is_null($mt['id_translated_data'])) {
-                $this->updateTranslatedDataFieldsRange($mt['id_translated_data'], $fieldsetID);
+        if(!is_null($mt['id_translated_data'])) {
+            $nbFields = $this->updateTranslatedDataFieldsRange($mt['id_translated_data'], $fieldsetID);
+
+            if($nbFields == 0) {
+                $mt['id_translated_data'] = null;
             }
-            else {
-                $id = $this->addTranslatedDataFieldsFromFieldset($fieldsetID);
-            }
+        }
+        else {
+            $id = $this->addTranslatedDataFieldsFromFieldset($fieldsetID);
         }
 
         if($fieldsetID == 'default') {
@@ -489,8 +567,14 @@ class DatabaseAdapter {
         }
         else {
             $fieldsetID = "'".$fieldsetID."'";
+
             if(!isset($id)) {
-                $id = "'".$mt['id_translated_data']."'";
+                if(is_null($mt['id_translated_data'])) {
+                    $id = "NULL";
+                }
+                else {
+                    $id = "'".$mt['id_translated_data']."'";
+                }
             }
             else {
                 $id = "'".$id."'";
@@ -515,6 +599,10 @@ class DatabaseAdapter {
                     $this->addTranslatedDataField($id, $lang, $field['key_value']);
                 }
             }
+        }
+        
+        if(empty($fieldset['fields'])) {
+            return null;
         }
 
         return $id;
