@@ -44,7 +44,7 @@ class MarkerBuilder {
                         foreach($markers[$mtSlug]['markers'] as $marker) {
                     
                             $area = $this->getMarkerArea($marker['lat'], $marker['lng']);
-                            $translatedData = array_key_exists('translated_data', $marker) ? $marker['translated_data'] : array();
+                            $translatedData = array_key_exists('data_translation', $marker) ? $marker['data_translation'] : array();
                             $tData = new TranslatedData($translatedData);
 
                             $m = new Marker($marker['id'], $marker['lat'], $marker['lng'], $area, $tData);                    

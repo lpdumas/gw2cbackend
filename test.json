@@ -18,7 +18,7 @@
         "markers":[
             {"id":2,"lng":-44.384765625,"lat":29.19053283229458,
             
-                "translated_data" : {
+                "data_translation" : {
                     "en" : {
                         "name" : "Help farmer Diah",
                         "desc" : "Help Diah by watering corn.",
@@ -32,7 +32,7 @@
                 }},
             {"id":3,"lng":-46.636962890625,"lat":29.439597566602927,
                 
-                "translated_data" : {
+                "data_translation" : {
                     "en" : {
                         "name" : "Help farmer George",
                         "desc" : "",
@@ -45,7 +45,7 @@
                     }    
                 }},
             {"id":5,"lng":-37.430419921875,"lat":28.832746799225905,
-                "translated_data" : {
+                "data_translation" : {
                     "en" : {
                         "name" : "Assist the Seraph at Shaemoor Garrison",
                         "desc" : "",
@@ -58,7 +58,7 @@
                     }    
                 }},
             {"id": -1,"lng":-36.430419921875,"lat":29.832746799225905,
-                "translated_data" : {
+                "data_translation" : {
                     "en" : {
                         "name" : "new heart",
                         "desc" : "",
