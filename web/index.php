@@ -91,10 +91,10 @@ $app->get('/admin/', function() use($app) {
     
     $list = $app['database']->retrieveModificationList();
     
-    return $app['twig']->render('admin.html.twig', array(
+    return $app['twig']->render('admin.twig', array(
             'modifList' => $list
         ));
-});
+})->bind('admin');
 
 $app->get('/admin/revision/{revID}', function($revID) use($app) {
     
@@ -243,8 +243,8 @@ $app->get('/admin/organize', function() use($app) {
         "markers_structure" => $structure,
     );
 
-    return $app['twig']->render('organize.html', $params);
-});
+    return $app['twig']->render('organize.twig', $params);
+})->bind('admin_organize');
 
 $app->post('admin/organize/add-fieldset', function(Request $request) use($app) {
     
@@ -493,6 +493,10 @@ $app->post('/admin/merge-changes', function(Request $request) use($app) {
     $generator->save(__DIR__.'/config.js');
     
 })->bind('admin_merge_changes');
+
+$app->get('/admin/options', function() use ($app) {
+    return $app->redirect('/admin/');
+})->bind('admin_options');
 
 $app->get('/format', function() use($app) {
    

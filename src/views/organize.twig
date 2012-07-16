@@ -1,17 +1,7 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Organize</title>
-    <meta charset="UTF-8" />
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
-    <style>
-        div.fieldset { display: none; }
-        div.marker-group { margin: 50px 0; }
-        div.marker-type { margin: 15px 0 15px 50px; }
-    </style>
-</head>
-<body>
+{% extends "layout.twig" %}
+{% block title %}Organize{% endblock %}
 
+{% block content %}
 {% if feedback is defined %}
 <p>{{ feedback }}</p>
 {% endif %}
@@ -152,5 +142,4 @@
   });
 </script>
 
-</body>
-</html>
+{% endblock %}
