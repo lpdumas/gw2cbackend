@@ -47,6 +47,11 @@ class DatabaseAdapter {
         
         return $this->pdo->lastInsertId();
     }
+    
+    public function markAsMerged($revID) {
+        
+        $this->pdo->exec("UPDATE modification_list SET `is_merged` = 1 WHERE id = ".$revID);
+    }
 
     public function retrieveAll() {
         $this->retrieveOptions();
