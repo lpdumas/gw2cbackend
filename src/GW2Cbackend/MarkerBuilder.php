@@ -37,8 +37,8 @@ class MarkerBuilder {
                 $mType = new MarkerType($mtSlug, $icon, $displayInSummary, $tData);
                 $mGroup->addMarkerType($mType);
                 
-                if(array_key_exists($mgSlug, $json)) {
-                    $markers = $json[$mgSlug]['markerTypes'];
+                if(array_key_exists($mgSlug, $json['markers'])) {
+                    $markers = $json['markers'][$mgSlug]['markerTypes'];
 
                     if(array_key_exists($mtSlug, $markers)) {
                         foreach($markers[$mtSlug]['markers'] as $marker) {

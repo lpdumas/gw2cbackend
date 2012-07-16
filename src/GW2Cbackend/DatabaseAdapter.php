@@ -629,6 +629,15 @@ class DatabaseAdapter {
         $r = $this->pdo->exec($q);
     }
     
+    public function getReference($referenceID) {
+        $q = $this->pdo->query("SELECT * FROM reference_list WHERE id = ".$referenceID);
+        if(!$q) return null;
+
+        $q->setFetchMode(\PDO::FETCH_ASSOC);
+        return $q->fetch();
+    }
+    
+    
     public function editTranslatedData($tDataID, $values, $fieldsetID) {
         
         $fieldset = $this->getFieldset($fieldsetID);

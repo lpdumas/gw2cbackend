@@ -117,15 +117,15 @@ $app->get('/admin/revision/{revID}', function($revID) use($app) {
     $currentReference = $app['database']->getData('current-reference');
     
     $lastRev = $app['database']->retrieveModification($revID);
-    $modification = json_decode($lastRev['value'], true);
+    $modification = json_decode($lastRev['value'], true); 
     $reference = json_decode($currentReference['value'], true);
-    
+
     $builder = new GW2CBackend\MarkerBuilder($app['database']);
     $mapModif = $builder->build(-1, $modification);
     $mapRef = $builder->build($currentReference['id'], $reference);
 
-    // the max id will have to come from the JSON
-    $diff = new GW2CBackend\DiffProcessor($mapModif, $mapRef, $currentReference['max_marker_id']);
+    $baseReference = $app['database']->getReference($modification['version']);
+    $diff = new GW2CBackend\DiffProcessor($mapModif, $mapRef, $baseReference['max_marker_id']);
     $changes = $diff->process();
     
     $forAdmin = true;
@@ -137,10 +137,6 @@ $app->get('/admin/revision/{revID}', function($revID) use($app) {
     $generator->setForAdmin($forAdmin);
     
     $output = $generator->generate();
-    //$generator->minimize();
-    //$output = $generator->getOutput();
-    $generator->save(__DIR__.'/config.js');
-    //echo nl2br(str_replace("\t", "&nbsp;&nbsp;&nbsp;&nbsp;", $output));
     
     /*
         We make an array twig-friendly to easily display the changes in a list
@@ -166,6 +162,7 @@ $app->get('/admin/revision/{revID}', function($revID) use($app) {
                     'changes' => $flatChanges);
 
     return $app['twig']->render('index.html', $params);
+
 })->bind('admin_revision');
 
 $app->get('/admin/organize', function() use($app) {
@@ -415,28 +412,34 @@ $app->post('/admin/merge-changes', function(Request $request) use($app) {
     $currentReference = $app['database']->getData('current-reference');
     
     $lastRev = $app['database']->retrieveModification($revID);
-    $modification = json_decode($lastRev['value'], true);
+    $modification = json_decode($lastRev['value'], true); 
     $reference = json_decode($currentReference['value'], true);
-    
+
     $builder = new GW2CBackend\MarkerBuilder($app['database']);
     $mapModif = $builder->build(-1, $modification);
     $mapRef = $builder->build($currentReference['id'], $reference);
-    
-    // the max id will have to come from the JSON
-    $diff = new GW2CBackend\DiffProcessor($mapModif, $mapRef, $currentReference['max_marker_id']);
+
+    $baseReference = $app['database']->getReference($modification['version']);
+    $diff = new GW2CBackend\DiffProcessor($mapModif, $mapRef, $baseReference['max_marker_id']);
     $changes = $diff->process();
     
+    $forAdmin = false;
     $merger = new GW2CBackend\ChangeMerger($mapRef, $changes);
-    
-    $forAdmin = true;
+    $merger->setForAdmin($forAdmin);
     $mergedRevision = $merger->merge($changesToMerge);
     
     $generator = new GW2CBackend\ConfigGenerator($mergedRevision, $options["resources-path"], $areasList);
     $generator->setForAdmin($forAdmin);
     
+    // This must be done before generation so the config.js file has the right ID.
+    //$newID = $app['database']->saveNewRevisionAsReference($mergedRevision);
+    //$mergedRevision->setID($newID);
+    
     $output = $generator->generate();
-    //$generator->minimize();
-    $generator->save(__DIR__.'/config.js');
+    if($options['output-minimization']) {
+        $generator->minimize();
+    }
+    $generator->save(__DIR__.'/../'.$options['output-filepath']);
     
 })->bind('admin_merge_changes');
 
