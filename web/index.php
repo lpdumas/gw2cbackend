@@ -463,6 +463,20 @@ $app->get('/admin/options', function() use ($app) {
 
 })->bind('admin_options');
 
+$app->get('/admin/options/dump', function() use($app) {
+    $content = $app['database']->dumpDatabase();
+    
+    $date = date('Y-m-d-H:i:s');
+    
+    $headers = array(
+        'Content-Type' => 'text/plain',
+        'Content-Disposition' => 'attachment; filename="'.$date.'-dump.sql',
+    );
+    
+    return new Response($content, 200, $headers);
+
+})->bind('admin_options_dumpdb');
+
 $app->post('/admin/options/edit', function(Request $request) use($app) {
 
     $app['database']->editOptions($request->request->all());

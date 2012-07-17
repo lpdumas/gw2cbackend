@@ -7,6 +7,7 @@ use Symfony\Component\Security\Core\User\User;
 class DatabaseAdapter {
 
     protected $pdo;
+    protected $database;
     protected $data = array();
 
     public function connect($host, $port, $database, $user, $pword) {
@@ -15,6 +16,7 @@ class DatabaseAdapter {
         
         try {
             $this->pdo = new \PDO('mysql:host='.$host.';port='.$port.';dbname='.$database, $user, $pword);
+            $this->database = $database;
         }
         catch(\Exception $e) {
             $this->handleError($e);
@@ -714,6 +716,63 @@ class DatabaseAdapter {
         foreach($options as $key => $value) {
             $this->pdo->exec("UPDATE options SET `value` = '".$value."' WHERE id = '".$key."'");
         }
+    }
+    
+    public function dumpDatabase() {
+
+        $sQuery = "SHOW tables FROM " . $this->database;
+        $sResult = $this->pdo->query($sQuery);
+        $sData = "
+        -- PDO SQL Dump --
+
+        SET SQL_MODE=\"NO_AUTO_VALUE_ON_ZERO\";
+
+        --
+        -- Database: `$this->database`
+        --
+
+        -- --------------------------------------------------------
+        ";
+
+        while ($aTable = $sResult->fetch(\PDO::FETCH_ASSOC)) {
+
+          $sTable = $aTable['Tables_in_' . $this->database];
+
+          $sQuery = "SHOW CREATE TABLE $sTable";
+
+          $sResult2 = $this->pdo->query($sQuery);
+
+          $aTableInfo = $sResult2->fetch(\PDO::FETCH_ASSOC);
+
+          $sData .= "\n\n--
+        -- Tabel structuur voor tabel `$sTable`
+        --\n\n";
+          $sData .= $aTableInfo['Create Table'] . ";\n";
+
+          $sData .= "\n\n--
+        -- Gegevens worden uitgevoerd voor tabel `$sTable`
+        --\n\n";
+
+
+          $sQuery = "SELECT * FROM $sTable\n";
+
+          $sResult3 = $this->pdo->query($sQuery);
+
+          while ($aRecord = $sResult3->fetch(\PDO::FETCH_ASSOC)) {
+
+            // Insert query per record
+            $sData .= "INSERT INTO $sTable VALUES (";
+            $sRecord = "";
+            foreach( $aRecord as $sField => $sValue ) {
+              $sRecord .= "'$sValue',";
+            }
+            $sData .= substr( $sRecord, 0, -1 );
+            $sData .= ");\n";
+          }
+
+        }
+        
+        return $sData;
     }
 
     public function handleError(\Exception $e) {
