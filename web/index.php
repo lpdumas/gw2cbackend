@@ -182,7 +182,7 @@ $app->get('/admin/organize', function() use($app) {
         $feedback = $app['session']->get('feedback');
         $app['session']->remove('feedback');
     }
-    
+
     // fieldset list
     $fieldsets = $app['database']->getAllFieldsets();
 
@@ -293,7 +293,7 @@ $app->post('/admin/organize/add-marker-group', function(Request $request) use($a
     
     $app['session']->set('feedback', $message);
 
-    return $app->redirect('/admin/organize');
+    return $app->redirect('/admin/organize#'.$slug);
 
 })->bind('admin_add_marker_group');
 
@@ -314,7 +314,7 @@ $app->post('/admin/organize/add-marker-type', function(Request $request) use($ap
     
     $app['session']->set('feedback', $message);
 
-    return $app->redirect('/admin/organize');
+    return $app->redirect('/admin/organize#'.$slug);
 
 })->bind('admin_add_marker_type');
 
@@ -344,7 +344,7 @@ $app->post('/admin/organize/edit-marker-group', function(Request $request) use($
     
     $app['session']->set('feedback', $message);
 
-    return $app->redirect('/admin/organize');
+    return $app->redirect('/admin/organize#'.$slug);
 
 })->bind('admin_edit_marker_group');
 
@@ -375,7 +375,7 @@ $app->post('/admin/organize/edit-marker-type', function(Request $request) use($a
     
     $app['session']->set('feedback', $message);
 
-    return $app->redirect('/admin/organize');
+    return $app->redirect('/admin/organize#'.$slug);
 
 })->bind('admin_edit_marker_type');
 

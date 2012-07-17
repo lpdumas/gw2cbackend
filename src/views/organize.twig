@@ -1,5 +1,47 @@
 {% extends "admin_layout.twig" %}
 {% block title %}Organize{% endblock %}
+{% block assets %}
+    {{ parent() }}
+    
+    <style>
+        ul#list-marker-group{
+            position: relative;
+            text-align: center;
+        }
+        ul#list-marker-group li {
+            float: left;
+            border: 1px solid #000;
+            list-style-type: none;
+            width: 180px;
+        }
+        
+        ul#list-marker-group li a {
+            margin: 5px;
+        }
+        
+        #list-marker-group .list-marker-type {
+            display: none;
+            list-style-type: none;
+            background: #DDD;
+            margin: 0;
+            padding: 0;
+            border: 1px solid #000;
+        }
+        
+        #list-marker-group li:hover .list-marker-type {
+            display: block;
+            overflow: auto;
+            position: absolute;            
+        }
+        
+        #list-marker-group .list-marker-type li {
+            border: 0;
+            clear: left;
+            display: block;
+            margin: 5px;
+        }
+    </style>
+{% endblock %}
 
 {% block content %}
 {% if feedback is defined %}
@@ -42,7 +84,35 @@
 {% endfor %}
 
 <h1>Manage marker groups and marker types</h1>
-<p></p>
+
+<ul id="list-marker-group">
+    {% for mg in markers_structure %}
+    <li>
+        <a href="#{{ mg['slug'] }}">
+            {% if mg['translated_data'].getData('en', 'name') != null %}
+                {{ mg['translated_data'].getData('en', 'name') }}
+            {% else %}
+                {{ mg['slug'] }}
+            {% endif %}
+        </a>
+        <ul class="list-marker-type">
+            {% for mt in mg['marker_types'] %}
+            <li>
+                <a href="#{{ mt['id'] }}">
+                    {% if mt['translated_data'].getData('en', 'name') != null %}
+                        {{ mt['translated_data'].getData('en', 'name') }}
+                    {% else %}
+                        {{ mt['id'] }}
+                    {% endif %}
+                </a>
+            </li>
+            {% endfor %}
+        </ul>
+    </li>
+    {% endfor %}
+</ul>
+<br style="clear: both" />
+
 <form method="post" action="{{ path('admin_add_marker_group') }}">
     <p>Add a new marker group:</p>
     <label >Slug</label>
@@ -57,7 +127,7 @@
 </form>
 
 {% for mg in markers_structure %}
-<div class="marker-group">
+<div id="{{ mg['slug'] }}" class="marker-group">
 <form method="post" action="{{ path('admin_edit_marker_group') }}">
     <input type="text" name="slug" value="{{ mg['slug'] }}" />
     <select name="fieldset">
@@ -98,7 +168,7 @@
     </form>
 
     {% for mt in mg['marker_types'] %}
-    <div class="marker-type">
+    <div id="{{ mt['id'] }}" class="marker-type">
         <form method="post" action="{{ path('admin_edit_marker_type') }}">
             <input type="text" name="slug" value="{{ mt['id'] }}" />
             <input type="text" name="filename" value="{{ mt['filename'] }}" />
