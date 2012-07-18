@@ -117,6 +117,8 @@
     <p>Add a new marker group:</p>
     <label >Slug</label>
     <input type="text" name="slug" value="" />
+    <label>Icon prefix</label>
+    <input type="text" name="icon-prefix" value="" />
     <select name="fieldset">
         <option value="default"></option>
         {% for fieldset in fieldsets %}
@@ -130,6 +132,7 @@
 <div id="{{ mg['slug'] }}" class="marker-group">
 <form method="post" action="{{ path('admin_edit_marker_group') }}">
     <input type="text" name="slug" value="{{ mg['slug'] }}" />
+    <input type="text" name="icon-prefix" value="{{ mg['icon_prefix'] }}" />
     <select name="fieldset">
         <option value="default"></option>
         {% for fieldset in fieldsets %}

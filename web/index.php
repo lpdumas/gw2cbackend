@@ -143,6 +143,7 @@ $app->get('/admin/revision/{revID}', function($revID) use($app) {
     $generator->setForAdmin($forAdmin);
     
     $output = $generator->generate();
+        $generator->save(__DIR__.'/../'.$options['output-filepath']['value']);
     
     /*
         We make an array twig-friendly to easily display the changes in a list
@@ -282,12 +283,13 @@ $app->post('/admin/organize/edit-field', function(Request $request) use($app) {
 $app->post('/admin/organize/add-marker-group', function(Request $request) use($app) {
 
     $slug = $request->request->get('slug');
+    $iconPrefix = $request->request->get('icon-prefix');
     $fieldsetID = $request->request->get('fieldset');
     if(!$fieldsetID || !$slug || empty($slug) || empty($fieldsetID)) {
         $message = "All the fields must be filled.";
     }
     else {
-        $app['database']->addMarkerGroup($slug, $fieldsetID);
+        $app['database']->addMarkerGroup($slug, $iconPrefix, $fieldsetID);
         $message = "The marker group \"".$slug."\" has been successfully created.";
     }
     
@@ -321,16 +323,17 @@ $app->post('/admin/organize/add-marker-type', function(Request $request) use($ap
 // handle edition AND deletion
 $app->post('/admin/organize/edit-marker-group', function(Request $request) use($app) {
     
-    $slug = $request->request->get('slug');
     $slugReference = $request->request->get('slug-reference');
+    $slug = $request->request->get('slug');
+    $iconPrefix = $request->request->get('icon-prefix');
     $fieldsetID = $request->request->get('fieldset');
 
     if(!$fieldsetID || !$slug || !$slugReference || empty($slugReference) || empty($slug) || empty($fieldsetID)) {
-        $message = "All the fields must be filled.";
+        $message = "All the fields must be filled (except icon prefix).";
     }
     else {
         if($request->request->has('edit')) {
-            $app['database']->editMarkerGroup($slugReference, $slug, $fieldsetID);
+            $app['database']->editMarkerGroup($slugReference, $slug, $iconPrefix, $fieldsetID);
             $message = "The marker group \"".$slug."\" has been successfully updated.";
         }
         else if($request->request->has('remove')) {

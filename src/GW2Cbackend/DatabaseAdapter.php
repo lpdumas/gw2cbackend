@@ -378,7 +378,7 @@ class DatabaseAdapter {
         return $r->fetchAll();
     }    
     
-    public function addMarkerGroup($slug, $fieldsetID) {
+    public function addMarkerGroup($slug, $iconPrefix, $fieldsetID) {
 
         $tDataID = "NULL";
         if(!ctype_digit($fieldsetID)) {
@@ -396,12 +396,12 @@ class DatabaseAdapter {
         }
         
         $slug = strtolower($slug);
-        $q = "INSERT INTO marker_group (slug, id_translated_data, id_fieldset) 
-                VALUES ('".$slug."', ".$tDataID.", ".$fieldsetID.")";
+        $q = "INSERT INTO marker_group (slug, icon_prefix, id_translated_data, id_fieldset) 
+                VALUES ('".$slug."', '".$iconPrefix."', ".$tDataID.", ".$fieldsetID.")";
         $r = $this->pdo->exec($q);
     }
     
-    public function editMarkerGroup($slugReference, $slug, $fieldsetID) {
+    public function editMarkerGroup($slugReference, $slug, $iconPrefix, $fieldsetID) {
         
         $mgQ = "SELECT id_translated_data, id_fieldset FROM marker_group WHERE slug = '".$slugReference."'";
         $mg = $this->pdo->query($mgQ);
@@ -441,7 +441,8 @@ class DatabaseAdapter {
 
         $slug = strtolower($slug);
         $qMT = "UPDATE marker_type SET `slug_marker_group` = '".$slug."' WHERE slug_marker_group = '".$slugReference."'";
-        $q = "UPDATE marker_group SET `slug` = '".$slug."', `id_translated_data` = ".$id.", `id_fieldset` = ".$fieldsetID." 
+        $q = "UPDATE marker_group SET `slug` = '".$slug."', `icon_prefix` = '".$iconPrefix."',
+                `id_translated_data` = ".$id.", `id_fieldset` = ".$fieldsetID." 
                 WHERE slug = '".$slugReference."'";
 
         $this->pdo->exec($qMT);        

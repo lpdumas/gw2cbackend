@@ -26,7 +26,7 @@ class MarkerBuilder {
         
         foreach($this->getMarkersStructure() as $mgSlug => $markerGroup) {
             
-            $mGroup = new MarkerGroup($mgSlug, $markerGroup['translated_data']);
+            $mGroup = new MarkerGroup($mgSlug, $markerGroup['icon_prefix'], $markerGroup['translated_data']);
             
             foreach($markerGroup['marker_types'] as $mtSlug => $markerType) {
                 
