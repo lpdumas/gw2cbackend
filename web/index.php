@@ -143,7 +143,6 @@ $app->get('/admin/revision/{revID}', function($revID) use($app) {
     $generator->setForAdmin($forAdmin);
     
     $output = $generator->generate();
-        $generator->save(__DIR__.'/../'.$options['output-filepath']['value']);
     
     /*
         We make an array twig-friendly to easily display the changes in a list
@@ -162,6 +161,8 @@ $app->get('/admin/revision/{revID}', function($revID) use($app) {
             }
         }
     }
+    
+    //$generator->save(__DIR__.'/config.js'); // for debug purpose
 
     $params = array("js_generated" => $output, 
                     'revID' => $revID, 
@@ -539,8 +540,18 @@ $app->get('/format', function() use($app) {
    
    $formatter = new GW2CBackend\FormatJSON($json);
    $json = $formatter->format();
+   $je = json_encode($json['json']);
+   $de = json_decode($je, true);
+   
+   $builder = new GW2CBackend\MarkerBuilder($app['database']);
+   $map = $builder->build(1, $de);
+   var_dump(strlen(addslashes($je)));
+   //$app['database']->saveNewRevisionAsReference($map, 1, $json['max_id']);
 
-   echo json_encode($json);
+   $response = new Response($je, 200);
+   $response->setCharset("UTF-8");
+   
+   return $response;
 });
 
 $app->run();

@@ -40,12 +40,13 @@ class DatabaseAdapter {
         $json = $newRevision->toJSON();
         $validator = new InputValidator($json);
         $isValid = $validator->validate();
-        $json = json_encode($json);
+        $json = addslashes(json_encode($json));
         
         $q = "INSERT INTO reference_list (value, date_added, id_merged_modification, max_marker_id) 
                          VALUES ('".$json."', '".$date."', '".$modificationSourceID."', '".$maxID."')";
 
         $r = $this->pdo->exec($q);
+        var_dump($r, $this->pdo->errorInfo());
         
         return $this->pdo->lastInsertId();
     }
