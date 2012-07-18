@@ -75,7 +75,7 @@ $app->post('/submit-modification', function(Request $request) use($app) {
     $validator = new GW2CBackend\InputValidator($json, $app['database']->getData("areas-list"));
     $isValid = $validator->validate();
 
-    if($isValid == true) {
+    if($isValid === true) {
         
         $app['database']->retrieveOptions();
         $options = $app['database']->getData("options");
@@ -88,10 +88,14 @@ $app->post('/submit-modification', function(Request $request) use($app) {
         }
     }
     else {
-        $message = array('success' => false, 'message' => 'The JSON is invalid.');
+        $message = array('success' => false, 'message' => 'The JSON is invalid: '.$isValid);
     }
-    
-    return $app->json($message , 200);
+
+    $headers = array(
+        'Content-Type' => 'application/json',
+        'Access-Control-Allow-Origin' => '*',
+    );
+    return new Response(json_encode($message), 200, $headers);
 });
 
 $app->get('/login', function(Request $request) use ($app) {

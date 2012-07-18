@@ -18,28 +18,28 @@ class InputValidator {
         }
 
         if(!array_key_exists('version', $this->input) || !is_int($this->input['version'])) {
-            return false;
+            return 'version field is missing';
         }
 
         if(!array_key_exists('creation_date', $this->input)) {
-            return false;
+            return 'creation_date field is missing';
         }
         
         if(!array_key_exists('markers', $this->input)) {
-            return false;
+            return 'main markers field is missing';
         }
         
         foreach($this->input["markers"] as $mgSlug => $markerGroup) {
 
             if(!is_array($markerGroup) || !array_key_exists('marker_types', $markerGroup) || !is_array($markerGroup['marker_types']) ||
                 !is_string($mgSlug)) {
-                return false;
+                return 'marker group not well formed';
             }
 
             foreach($markerGroup['marker_types'] as $mtSlug => $markerType) {
 
                 if(!is_string($mtSlug) || !array_key_exists('markers', $markerType) || !is_array($markerType['markers'])) {
-                        return false;
+                        return 'marker type not well formed';
                 }
             
                 foreach($markerType['markers'] as $key => $marker) {
@@ -54,9 +54,8 @@ class InputValidator {
                            !array_key_exists("lng", $marker) ||
                            !is_int($marker["id"]) || !is_numeric($marker["lat"]) || !is_numeric($marker["lng"])
                         ) {
-                            //echo "a marker is not well formed";
                             //var_dump($marker);
-                            return false;
+                            return 'marker is not correctly formed';
                         }
                 }
             }
