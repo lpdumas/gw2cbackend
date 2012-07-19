@@ -76,19 +76,37 @@ $app->post('/submit-modification', function(Request $request) use($app) {
     $isValid = $validator->validate();
 
     if($isValid === true) {
+
+        $app['database']->retrieveCurrentReference();
+        $currentReference = $app['database']->getData('current-reference');
+ 
+        $reference = json_decode($currentReference['value'], true);
+
+        $builder = new GW2CBackend\MarkerBuilder($app['database']);
+        $mapModif = $builder->build(-1, $json);
+        $mapRef = $builder->build($currentReference['id'], $reference);
+
+        $baseReference = $app['database']->getReference($json['version']);
+        $diff = new GW2CBackend\DiffProcessor($mapModif, $mapRef, $baseReference['max_marker_id']);
+        $changes = $diff->process();
         
-        $app['database']->retrieveOptions();
-        $options = $app['database']->getData("options");
-        if(!$options['maintenance-mode']['value']) {
-            $app['database']->addModification($jsonString);
-            $message = array('success' => true, 'message' => 'The modification has been submitted.');
+        if(!$diff->hasChanges()) {
+            $message = array('success' => false, 'message' => '<h1>Ooops...</h1><p>It seems that you haven\'t made any change !</p>');
         }
         else {
-            $message = array('success' => false, 'message' => 'The crowdsourcing server is currently down for maintenance.');
+            $app['database']->retrieveOptions();
+            $options = $app['database']->getData("options");
+            if(!$options['maintenance-mode']['value']) {
+                $app['database']->addModification($jsonString);
+                $message = array('success' => true, 'message' => '<h1>Thank you !</h1><p>A team of dedicated grawls will sort that out.</p>');
+            }
+            else {
+                $message = array('success' => false, 'message' => '<h1>Ooops...</h1><p>The crowdsourcing server is currently down for maintenance.</p>');
+            }
         }
     }
     else {
-        $message = array('success' => false, 'message' => 'The JSON is invalid: '.$isValid);
+        $message = array('success' => false, 'message' => '<h1>Ooops...</h1><p>The JSON is invalid: '.$isValid.'. This can be a bug,do not hesitate to let us know !</p>');
     }
 
     $headers = array(
