@@ -177,7 +177,8 @@ $app->get('/admin/revision/{revID}', function($revID) use($app) {
                 
                 $id = $change['marker'] != null ? $change['marker']->getID() : $change['marker-reference']->getID();
                 $name = $mergedRevision->getMarkerGroup($gSlug)->getMarkerType($tSlug)->getData()->getData('en', 'name');
-                $image = $mergedRevision->getMarkerGroup($gSlug)->getMarkerType($tSlug)->getIcon();
+                $prefixIcon = $mergedRevision->getMarkerGroup($gSlug)->getIconPrefix();
+                $image = $prefixIcon.'/'.$mergedRevision->getMarkerGroup($gSlug)->getMarkerType($tSlug)->getIcon();
                 $flatChanges[] = array('id' => $changeID, 'markerID' => $id, 'name' => $name, 'image' => $image, 'change' => $change);
                 $changeID++;
             }
