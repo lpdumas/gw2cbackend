@@ -766,7 +766,7 @@ class DatabaseAdapter {
             $sData .= "INSERT INTO $sTable VALUES (";
             $sRecord = "";
             foreach( $aRecord as $sField => $sValue ) {
-              $sRecord .= "'$sValue',";
+              $sRecord .= "'".addslashes($sValue)."',";
             }
             $sData .= substr( $sRecord, 0, -1 );
             $sData .= ");\n";
