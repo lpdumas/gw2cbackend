@@ -50,6 +50,33 @@ $app['security.access_rules'] = array(
     array('^/admin', 'ROLE_ADMIN'),
 );
 
+$generateConfigFile = function() use($app) {
+    $app['database']->retrieveCurrentReference();
+    $app['database']->retrieveOptions();
+    $app['database']->retrieveAreasList();
+    $options = $app['database']->getData("options");
+    $areasList = $app['database']->getData("areas-list");
+    $currentReference = $app['database']->getData('current-reference');
+
+    $reference = json_decode($currentReference['value'], true);
+
+    $builder = new GW2CBackend\MarkerBuilder($app['database']);
+    $mapRef = $builder->build($currentReference['id'], $reference);
+    
+    $forAdmin = false;
+    $generator = new GW2CBackend\ConfigGenerator($mapRef, $options["resources-path"]['value'], $areasList);
+    $generator->setForAdmin($forAdmin);
+    
+    $output = $generator->generate();
+    if($options['output-minimization']['value']) {
+        $generator->minimize();
+    }
+
+    $generator->save(__DIR__.'/../'.$options['output-filepath']['value']);
+    
+    return null;
+};
+
 $app->get('/', function() use($app) {
 
     return $app['twig']->render('home.twig');
@@ -556,6 +583,8 @@ $app->get('/admin/user/remove/{username}', function($username) use($app) {
     }
     
 })->bind('admin_user_remove');
+
+$app->get('/admin/generate', $generateConfigFile);
 
 $app->get('/format', function() use($app) {
    
