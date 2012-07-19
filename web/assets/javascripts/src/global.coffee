@@ -1,4 +1,4 @@
-App = {}
+window.App = {}
 App.opacity = false
 App.pointerEvents = false
 App.localStorageAvailable = (()->
@@ -7,6 +7,13 @@ App.localStorageAvailable = (()->
   else
     return false
 )()
+App.extractUrlParams = ()->
+  parameters = location.search.substring(1).split('&')
+  urlArray = {}
+  for element in parameters
+    x = element.split('=')      
+    urlArray[x[0]] = x[1]
+  urlArray
 
 html = document.documentElement
 attToCheck = ["pointerEvents", "opacity"]
@@ -102,13 +109,24 @@ class CustomMap
     @exportWindow     = $('#export-windows')
     @markersOptionsMenu = $('#markers-options')
     @mapOptions    = $('#edition-tools a')
-    # @defaultLat = 15.919073517982465
-    @defaultLat = 26.765230565697536
-    # @defaultLng = 18.28125
-    @defaultLng = -36.32080078125
-    
-    @defaultCat = "explore"
-    window.LANG = "en"
+    # @defaultLat = 15.919073517982465    # @defaultLng = 18.28125
+    @urlParams = App.extractUrlParams()
+    @startLat = if @urlParams['lat']? then @urlParams['lat'] else 26.765230565697536
+    @startLng = if @urlParams['lgn']? then @urlParams['lng'] else -36.32080078125
+    @defaultCat = (()=>
+      dcat = "explore"
+      if @urlParams['cat']?
+        for cat, catObject of Markers
+          if cat is @urlParams['cat']
+            dcat = @urlParams['cat']
+      dcat
+    )()
+    window.LANG = (()=>
+      if @urlParams['lang']? and (@urlParams['lang'] is 'fr' or @urlParams['lang'] is 'en')
+        return @urlParams['lang']
+      else
+        return "en"
+    )()
     @areaSummaryBoxes = []
     @markersImages = {}
     
@@ -117,7 +135,7 @@ class CustomMap
     @canToggleMarkers = true
     @currentOpenedInfoWindow = false
     @gMapOptions   = 
-      center: new google.maps.LatLng(@getStartLat(), @getStartLng())
+      center: new google.maps.LatLng(@startLat, @startLng)
       zoom: 6
       minZoom: 3
       maxZoom: @maxZoom
@@ -147,20 +165,6 @@ class CustomMap
     @map = new google.maps.Map($(id)[0], @gMapOptions)
     @map.mapTypes.set('custom', @customMapType)
     @map.setMapTypeId('custom')
-    
-    $('#change-menu .marker-type-link').click((e) =>
-        
-        markerID = parseInt($(e.currentTarget).attr('data-markerID'))
-        marker = _this.getMarkerByID(markerID)
-        
-        if marker?
-            coordinates = new google.maps.LatLng(marker.lat, marker.lng);
-            _this.map.panTo(coordinates);
-    )
-    
-    $('input#submit-changes').click(() =>
-       $('#changes-to-merge').submit();
-    )
 
     $.get('assets/javascripts/templates/confirmBox._', (e)=>
       template = _.template(e);
@@ -197,6 +201,7 @@ class CustomMap
     
         #marker
         @gMarker = {}
+        @currentMapVersion = 1;
 
         @editInfoWindowTemplate = ""
         $.get('assets/javascripts/templates/customInfoWindow._', (e)=>
@@ -204,7 +209,9 @@ class CustomMap
           
           @setAllMarkers()
           @initializeAreaSummaryBoxes()
-          
+          google.maps.event.addListener(@map, 'click', (e)=>
+            console.log "Lat : #{e.latLng.lat()}, Lng : #{e.latLng.lng()}"
+          )
           # UI
           $('#destroy').bind('click', @destroyLocalStorage)
           $('#send').bind('click', @sendMapForApproval)
@@ -215,12 +222,12 @@ class CustomMap
     
   handleLocalStorageLoad: (callback)->
     if App.localStorageAvailable and @getConfigFromLocalStorage()
-      confirmMessage = "I have detected data stored locally, Do you want to load it?"
+      confirmMessage = Traduction["notice"]["localDetected"][window.LANG]
       @confirmBox.initConfirmation(confirmMessage, (e)=>
         if e
           @MarkersConfig = @getConfigFromLocalStorage()
         else
-            @MarkersConfig = Markers
+          @MarkersConfig = Markers
         callback()
       )
     else
@@ -238,7 +245,7 @@ class CustomMap
         id : marker.__gm_id
         title: marker["data_translation"][window.LANG]["title"]
         desc: marker["data_translation"][window.LANG]["desc"]
-        wikiLink  : marker["data_translation"][window.LANG]["wikiLink"]
+        wikiLink  : marker["data_translation"][window.LANG]["link_wiki"]
         hasDefaultValue : marker["hasDefaultValue"]
         type  : marker.type
         lat   : marker.position.lat()
@@ -300,9 +307,15 @@ class CustomMap
       title: if defaultValue? then defaultValue[window.LANG]["title"] else markerInfo["data_translation"][window.LANG]["title"]
       animation: if isNew then google.maps.Animation.DROP else no
     )
-    
+
     if shadow?
         marker.setShadow(shadow);
+    
+    marker["title"] = "#{markerInfo.title}"
+    marker["desc"]  = "#{markerInfo.desc}"
+    marker["wikiLink"]  = "#{markerInfo.wikiLink}"
+    marker["type"]  = "#{markersType}"
+    marker["cat"]  = "#{markersCat}"
 
     if defaultValue?
       marker["data_translation"] = defaultValue
@@ -311,10 +324,11 @@ class CustomMap
       marker["data_translation"] = markerInfo["data_translation"]
       marker["hasDefaultValue"] = false
 
+    marker["id_marker"] = markerInfo["id"]
     marker["type"]  = markersType
     marker["cat"]  = markersCat
 
-    if markerInfo.lat.toString() is @getStartLat() and markerInfo.lng.toString() is @getStartLng()
+    if markerInfo.lat.toString() is @startLat and markerInfo.lng.toString() is @startLng
       if not marker["infoWindow"]?
         createInfoWindow(marker)
         marker["infoWindow"].open()
@@ -345,6 +359,9 @@ class CustomMap
     marker
           
   setAllMarkers: () ->
+
+    @currentMapVersion = Metadata.version;
+      
     for markersCat, markersObjects of @MarkersConfig
       if not @gMarker[markersCat]?
         @gMarker[markersCat] = {}
@@ -384,7 +401,7 @@ class CustomMap
       marker.setVisible(isVisible) for marker in markerTypeObject.markers
 
   destroyLocalStorage: (e) =>
-    confirmMessage = "This action will destroy you local change to the map. Are you sure you want to proceed?"
+    confirmMessage = Traduction["notice"]["dataDestruction"][window.LANG]
     @confirmBox.initConfirmation(confirmMessage, (e)=>
       if e and @getConfigFromLocalStorage()
         localStorage.removeItem(@localStorageKey);
@@ -395,40 +412,24 @@ class CustomMap
     ajaxUrl = this_.attr('data-ajaxUrl')
     modal = new Modalbox()
     modal.setContent('<img class="loading" src="/assets/images/loading-black.gif">')
-    confirmMessage = "Are you ready to send your map for approval?"
+    confirmMessage = Traduction["notice"]["dataApproval"][window.LANG]
     @confirmBox.initConfirmation(confirmMessage, (e)=>
-      modal.open()
-      
-      # request = $.ajax(
-      #   url: ajaxUrl
-      #   type: "GET"
-      #   dataType: "json"
-      #   data: @handleExport()
-      #   )
-      # 
-      # request.done((response) =>
-      #   modal.close(()=>
-      #     modal.setContent('<h1>Thank you!</h1>')
-      #     modal.open()
-      #   )
-      # )
-      # 
-      # request.fail((jqXHR, textStatus)=>
-      #   console.log 'fail'
-      # )
-      
-      # Simulating ajax call latency
-      t = setTimeout(()=>
-        modal.close(()=>
-          msg = """
-          <h1>Thank you!</h1>
-          <p>A team of dedicated grawls will sort that out.</p>
-          """
-          modal.setContent(msg)
-          modal.open()
-        )
         
-      , 500)
+        if(e == true)
+            request = $.ajax({
+              url: ajaxUrl,
+              type: "POST",
+              dataType: 'json',
+              crossDomain: true,
+              data: { "json" : _this.handleExport() },
+              beforeSend: (x) =>
+                  if x && x.overrideMimeType
+                      x.overrideMimeType("application/json;charset=UTF-8")
+               ,
+               success: (result) =>
+                   modal.setContent(result.message)
+                   modal.open()
+            })
     )
     
   handleExport:(e)=>
@@ -453,10 +454,17 @@ class CustomMap
             nm = 
               "lng" : marker.getPosition().lng()
               "lat" : marker.getPosition().lat()
-              
+ 
           exportMarkerObject[markersCat]["marker_types"][markerType]["markers"].push(nm)
+          nm["id"] = marker["id_marker"];
 
-    jsonString = JSON.stringify(exportMarkerObject)
+    finalExport = {};
+    finalExport["version"] = @currentMapVersion;
+    finalExport["creation_date"] = "null";
+    finalExport["markers"] = exportMarkerObject;
+
+    jsonString = JSON.stringify(finalExport);
+    # console.log jsonString
     return jsonString
     # @exportWindow.find('.content').html(jsonString)
     # @exportWindow.show();
@@ -483,11 +491,13 @@ class CustomMap
     
     if defaultValue
       newMarkerInfo =
+        id        : -1
         lat       : coord.lat()
         lng       : coord.lng()
         draggable : true
     else
       newMarkerInfo =
+        id        : -1
         lat       : coord.lat()
         lng       : coord.lng()
         data_translation : 
@@ -504,34 +514,8 @@ class CustomMap
     newMarker = @addMarker(newMarkerInfo, otherInfo, true, defaultValue)
     @gMarker[markerCat]["marker_types"][markerType]["markers"].push(newMarker)
     
-  getStartLat:()->
-    params = extractUrlParams()
-    if params['lat']?
-        params['lat']
-    else
-        @defaultLat
-    
-  getStartLng:()->
-      params = extractUrlParams()
-      if params['lng']?
-          params['lng']
-      else
-          @defaultLng
-    
-  removeMarkerFromType:(mType, mCat)->
-    confirmMessage = "Delete all «#{mType}» markers on the map?"
-    @confirmBox.initConfirmation(confirmMessage, (e)=>
-      if e
-        for marker, markerKey in @gMarker[mCat]["marker_types"][mType]["markers"]
-          marker.setMap(null)
-          @gMarker[mCat]["marker_types"][typeKey]['markers'] = _.reject(markerType.markers, (m)=>
-            return m == marker
-          )
-          @saveToLocalStorage()
-    )
-  
   removeMarker:(id, mType, mCat)->
-    confirmMessage = "Are you sure you want to delete this marker?"
+    confirmMessage = Traduction["notice"]["deleteMarker"][window.LANG]
     @confirmBox.initConfirmation(confirmMessage, (e)=>
       if e
         for marker, markerKey in @gMarker[mCat]["marker_types"][mType]["markers"] when marker.__gm_id is id
@@ -551,7 +535,7 @@ class CustomMap
       if marker["data_translation"]?
         marker["data_translation"][window.LANG]["desc"] = newInfo.desc
         marker["data_translation"][window.LANG]["title"] = newInfo.title
-        marker["data_translation"][window.LANG]["wikiLink"] = newInfo.wikiLink 
+        marker["data_translation"][window.LANG]["link_wiki"] = newInfo.wikiLink 
       else
         marker.desc = newInfo.desc
         marker.title = newInfo.title
@@ -571,18 +555,11 @@ class CustomMap
     for markersCat, markersObjects of @MarkersConfig
       for markerTypeObject, key in markersObjects.marker_types
         return marker for marker in markerTypeObject.markers when marker.lat is lat and marker.lng is lng
-    return false
-
-  getMarkerByID:(markerID)->
-    for markersCat, markersObjects of @MarkersConfig
-        for markerTypeObject, key in markersObjects.markerGroup
-            return marker for marker in markerTypeObject.markers when marker.id is markerID
-    return null
+    return false  
       
   turnOfMenuIconsFromCat:(markerCat)->
     menu = $(".menu-item[data-markerCat='#{markerCat}']")
     menu.addClass('off')
-    console.log menu
     menu.find('.group-toggling').addClass('off')
     menu.find('.trigger').addClass('off')
   
@@ -844,13 +821,6 @@ class CustomInfoWindow
 # }}}
 ###
 
-extractUrlParams = ()->
-    parameters = location.search.substring(1).split('&')
-    f = []
-    for element in parameters
-        x = element.split('=')
-        f[x[0]]=x[1]
-    f
     
 $ ()->
   myCustomMap = new CustomMap('#map')

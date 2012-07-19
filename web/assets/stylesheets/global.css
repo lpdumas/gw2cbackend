@@ -667,6 +667,8 @@ p.marker-permalink { text-align: right; }
   margin: 0 0 12px 0;
 }
 .confirm-box img {
+  float: left;
+  margin-right: 20px;
 /*  margin-top: 20px;*/
 }
 .confirm-box .right {
