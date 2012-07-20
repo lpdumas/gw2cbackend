@@ -32,6 +32,8 @@ class Marker {
     public function setStatus($status) { $this->status = $status; }
     public function getLat() { return $this->lat; }
     public function getLng() { return $this->lng; }
+    public function setLat($lat) { return $this->lat = $lat; }
+    public function setLng($lng) { return $this->lng = $lng; }
     public function getArea() { return $this->area; }
     public function getData() { return $this->translatedData; }
     public function setData(TranslatedData $tData) { $this->translatedData = $tData; }

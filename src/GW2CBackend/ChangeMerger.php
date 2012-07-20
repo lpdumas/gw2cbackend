@@ -42,6 +42,9 @@ class ChangeMerger {
                             case DiffProcessor::STATUS_MODIFIED_ALL:
                                 $markerType->getMarker($change["marker"]->getID())->setStatus($change["status"]);
                                 $markerType->getMarker($change["marker"]->getID())->setData($change["marker"]->getData());
+                                $markerType->getMarker($change["marker"]->getID())->setLat($change["marker"]->getLat());
+                                $markerType->getMarker($change["marker"]->getID())->setLng($change["marker"]->getLng());                                
+                                
                                 break;
                             case DiffProcessor::STATUS_ADDED:
                                 $change["marker"]->setStatus($change["status"]);
