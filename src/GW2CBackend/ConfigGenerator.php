@@ -260,7 +260,8 @@ class ConfigGenerator {
      */
     protected function generateOneAreaOutput($area, $summary) {
         
-        $outputString = '{ id : '.$area['id'].', name : "'.$area['name'].'", rangeLvl : "'.$area['rangeLvl'].'",'.PHP_EOL;
+        $outputString = '{ id : '.$area['id'].', ';
+        $outputString.= 'data_translation : { en : { name : "'.$area['name'].'" }, fr : { name : "'.$area['name'].'" } }, rangeLvl : "'.$area['rangeLvl'].'",'.PHP_EOL;
         
         $outputString.= self::tabs(2).'summary : {'.PHP_EOL;
         foreach($summary as $markerType => $value) {
