@@ -640,6 +640,10 @@ class DatabaseAdapter {
         return $q->fetch();
     }
     
+    public function removeModification($idModification) {
+        $this->pdo->exec("DELETE FROM modification_list WHERE id = ".$idModification);
+    }
+    
     
     public function editTranslatedData($tDataID, $values, $fieldsetID) {
         
