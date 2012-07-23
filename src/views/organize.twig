@@ -159,6 +159,7 @@
     <form method="post" action="{{ path('admin_add_marker_type') }}">
         <p>Add a new marker type:
         <label>slug</label> <input type="text" name="slug" value="" />
+        <label>display in area summary</label> <input type="checkbox" name="displayInAreaSum" />
         <label>filename</label> <input type="text" name="filename" value="" />
         <input type="hidden" name="marker-group" value="{{ mg.slug }}" />
         <select name="fieldset">
@@ -175,6 +176,8 @@
         <form method="post" action="{{ path('admin_edit_marker_type') }}">
             <input type="text" name="slug" value="{{ mt['id'] }}" />
             <input type="text" name="filename" value="{{ mt['filename'] }}" />
+            <label>display in area summary</label> <input type="checkbox" name="displayInAreaSum" 
+                                                    {% if mt['display_in_area_summary'] %}checked{% endif %} />
             <select name="fieldset">
                 <option value="default"></option>
                 {% for fieldset in fieldsets %}

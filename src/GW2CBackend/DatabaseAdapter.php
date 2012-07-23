@@ -511,7 +511,7 @@ class DatabaseAdapter {
         $this->pdo->exec($rmg);
     }
 
-    public function addMarkerType($slug, $filename, $fieldsetID, $markerGroupID) {
+    public function addMarkerType($slug, $filename, $displayInAreaSum, $fieldsetID, $markerGroupID) {
 
         $tDataID = "NULL";
         if(!ctype_digit($fieldsetID)) {
@@ -528,9 +528,10 @@ class DatabaseAdapter {
             }
         }
         
-        $q = "INSERT INTO marker_type (id, filename, slug_marker_group, id_translated_data, id_fieldset) 
-                VALUES ('".$slug."', '".$filename."', '".$markerGroupID."', ".$tDataID.", ".$fieldsetID.")";
-
+        if($displayInAreaSum == 'on') $displayInAreaSum = 1;
+        
+        $q = "INSERT INTO marker_type (id, filename, display_in_area_summary, slug_marker_group, id_translated_data, id_fieldset) 
+                VALUES ('".$slug."', '".$filename."', '".$displayInAreaSum."', '".$markerGroupID."', ".$tDataID.", ".$fieldsetID.")";
         $r = $this->pdo->exec($q);
     }
     
@@ -549,7 +550,7 @@ class DatabaseAdapter {
         $this->pdo->exec($rmt);
     }
     
-    public function editMarkerType($slugReference, $slug, $filename, $fieldsetID) {
+    public function editMarkerType($slugReference, $slug, $filename, $displayInAreaSum, $fieldsetID) {
         
         $mtQ = "SELECT id_translated_data, id_fieldset FROM marker_type WHERE id = '".$slugReference."'";
         $mt = $this->pdo->query($mtQ);
@@ -586,10 +587,11 @@ class DatabaseAdapter {
             }
         }
 
+        if($displayInAreaSum == 'on') $displayInAreaSum = 1;
+
         $slug = strtolower($slug);
         $q = "UPDATE marker_type SET `id` = '".$slug."', `id_translated_data` = ".$id.", `id_fieldset` = ".$fieldsetID.",
-                `filename` = '".$filename."' WHERE id = '".$slugReference."'";
-       
+                `filename` = '".$filename."', `display_in_area_summary` = '".$displayInAreaSum."' WHERE id = '".$slugReference."'";
         $this->pdo->exec($q);
     }
     
