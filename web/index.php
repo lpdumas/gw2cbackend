@@ -154,9 +154,12 @@ $app->get('/login', function(Request $request) use ($app) {
 $app->get('/admin/', function() use($app) {
     
     $list = $app['database']->retrieveModificationList();
+    foreach($list as $k => $item) {
+        $json = json_decode($item['value'], true);
+        $list[$k]['reference_id'] = $json['version'];
+    }
     
     $mergedList = $app['database']->retrieveMergedModificationList();
-    
     foreach($mergedList as $k => $item) {
         $json = json_decode($item['value'], true);
         $mergedList[$k]['reference_id'] = $json['version'];
