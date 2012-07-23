@@ -482,6 +482,9 @@ $app->post('/admin/merge-changes', function(Request $request) use($app) {
     $currentReference = $app['database']->getData('current-reference');
     
     $lastRev = $app['database']->retrieveModification($revID);
+    
+    if($lastRev['is_merged']) return $app->redirect('/admin/');
+    
     $modification = json_decode($lastRev['value'], true); 
     $reference = json_decode($currentReference['value'], true);
 
