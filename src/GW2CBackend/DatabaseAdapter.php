@@ -74,7 +74,7 @@ class DatabaseAdapter {
     }
     
     public function retrieveMergedModificationList() {
-        $result = $this->pdo->query("SELECT * FROM modification_list WHERE is_merged = 1 ORDER BY date_merge, id DESC");
+        $result = $this->pdo->query("SELECT * FROM modification_list WHERE is_merged = 1 ORDER BY date_merge DESC");
         $result->setFetchMode(\PDO::FETCH_ASSOC);
         
         return $result->fetchAll();
