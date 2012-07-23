@@ -157,6 +157,11 @@ $app->get('/admin/', function() use($app) {
     
     $mergedList = $app['database']->retrieveMergedModificationList();
     
+    foreach($mergedList as $k => $item) {
+        $json = json_decode($item['value'], true);
+        $mergedList[$k]['reference_id'] = $json['version'];
+    }
+    
     return $app['twig']->render('admin_home.twig', array(
             'modifList' => $list,
             'mergedModifList' => $mergedList,
@@ -233,6 +238,67 @@ $app->get('/admin/revision/{revID}', function($revID) use($app) {
     return $app['twig']->render('index.html', $params);
 
 })->bind('admin_revision');
+
+$app->get('/admin/revision/{revID}/compare/{referenceID}', function($revID, $referenceID) use($app) {
+    $app['twig.path'] = __DIR__.'/../gw2cread/';
+
+    $app['database']->retrieveOptions();
+    $app['database']->retrieveAreasList();
+    $options = $app['database']->getData("options");
+    $areasList = $app['database']->getData("areas-list");
+    
+    $lastRev = $app['database']->retrieveModification($revID);
+    $modification = json_decode($lastRev['value'], true);
+
+    $currentReference = $app['database']->getReference($referenceID);
+    $reference = json_decode($currentReference['value'], true);
+
+    $builder = new GW2CBackend\MarkerBuilder($app['database']);
+    $mapModif = $builder->build($revID, $modification);
+    $mapRef = $builder->build($currentReference['id'], $reference);
+
+    $baseReference = $app['database']->getReference($modification['version']);
+    $diff = new GW2CBackend\DiffProcessor($mapModif, $mapRef, $baseReference['max_marker_id']);
+    $changes = $diff->process();
+    
+    $forAdmin = true;
+    $merger = new GW2CBackend\ChangeMerger($mapRef, $changes);
+    $merger->setForAdmin($forAdmin);
+    $mergedRevision = $merger->merge();
+    
+    $generator = new GW2CBackend\ConfigGenerator($mergedRevision, $options["resources-path"]['value'], $areasList);
+    $generator->setForAdmin($forAdmin);
+    
+    $output = $generator->generate();
+    
+    /*
+        We make an array twig-friendly to easily display the changes in a list
+    */
+    $flatChanges = array();
+    $changeID = 1;
+    foreach($changes as $gSlug => $mGroup) {
+        foreach($mGroup as $tSlug => $mType) {
+            foreach($mType as $change) {
+                
+                $id = $change['marker'] != null ? $change['marker']->getID() : $change['marker-reference']->getID();
+                $name = $mergedRevision->getMarkerGroup($gSlug)->getMarkerType($tSlug)->getData()->getData('en', 'name');
+                $prefixIcon = $mergedRevision->getMarkerGroup($gSlug)->getIconPrefix();
+                $image = $prefixIcon.'/'.$mergedRevision->getMarkerGroup($gSlug)->getMarkerType($tSlug)->getIcon();
+                $flatChanges[] = array('id' => $changeID, 'markerID' => $id, 'name' => $name, 'image' => $image, 'change' => $change);
+                $changeID++;
+            }
+        }
+    }
+    
+    //$generator->save(__DIR__.'/config.js'); // for debug purpose
+
+    $params = array("js_generated" => $output, 
+                    'revID' => $revID, 
+                    'imagePath' => $options["resources-path"]['value'],
+                    'changes' => $flatChanges);
+
+    return $app['twig']->render('index.html', $params);
+})->bind('admin_revision_compare');
 
 $app->get('/admin/organize', function() use($app) {
     
