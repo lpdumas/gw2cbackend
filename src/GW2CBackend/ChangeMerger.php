@@ -37,6 +37,7 @@ class ChangeMerger {
                     if(in_array($changeID, $changesToMerge) || $this->forAdmin) {
                     
                         switch($change['status']) {
+                            case DiffProcessor::STATUS_POTENTIAL_DATA_LOSS:
                             case DiffProcessor::STATUS_MODIFIED_COORDINATES:
                             case DiffProcessor::STATUS_MODIFIED_DATA:
                             case DiffProcessor::STATUS_MODIFIED_ALL:
