@@ -91,9 +91,12 @@ class ConfigGenerator {
 
                 $outputString.= self::tabs(2).'"'.$markerType->getSlug().'" : {'.PHP_EOL;
                 
-                $icon = '"'.$markerType->getIcon().'"';
+                $icon = $markerType->getIcon();
                 if($markerGroup->getIconPrefix() != "") {
-                    $icon = $markerGroup->getIconPrefix().'/'.$icon;
+                    $icon = '"'.$markerGroup->getIconPrefix().'/'.$icon.'"';
+                }
+                else {
+                    $icon = '"'.$icon.'"';
                 }
                 
                 $outputString.= self::tabs(3).'icon : '.$icon.','.PHP_EOL;
