@@ -139,6 +139,11 @@ class ConfigGenerator {
 
         if($this->forAdmin && !is_null($marker->getStatus())) {
             $outputString.=', status : "'.$marker->getStatus().'"';
+            
+            if(!is_null($marker->getReference())) {
+                
+                $outputString.= ', reference : '.$this->generateMarkerOutput($marker->getReference(), $numTabs + 1);
+            }
         }
 
         $outputString.= PHP_EOL.self::tabs($numTabs)."},".PHP_EOL;
