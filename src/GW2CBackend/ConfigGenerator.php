@@ -221,8 +221,7 @@ class ConfigGenerator {
 
         $outputString = substr($outputString, 0, strlen($outputString) - 2).PHP_EOL; // remove the last comma
         $outputString.= "];".PHP_EOL.PHP_EOL;
-         
-         return $outputString;
+        return $outputString;
     }
     
     /**
@@ -246,8 +245,8 @@ class ConfigGenerator {
 
                     foreach($markerType->getAllMarkers() as $marker) {
 
-                        if(array_key_exists("area", $marker) && $marker["area"] == $areaID) {
-                            $summary[$markerType]++;
+                        if($marker->getArea() == $areaID) {
+                            $summary[$markerType->getSlug()]++;
                         }
                     }
                 }
