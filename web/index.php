@@ -155,8 +155,11 @@ $app->get('/admin/', function() use($app) {
     
     $list = $app['database']->retrieveModificationList();
     
+    $mergedList = $app['database']->retrieveMergedModificationList();
+    
     return $app['twig']->render('admin_home.twig', array(
-            'modifList' => $list
+            'modifList' => $list,
+            'mergedModifList' => $mergedList,
         ));
 })->bind('admin');
 

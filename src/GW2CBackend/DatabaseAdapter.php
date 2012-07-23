@@ -46,14 +46,15 @@ class DatabaseAdapter {
                          VALUES ('".$json."', '".$date."', '".$modificationSourceID."', '".$maxID."')";
 
         $r = $this->pdo->exec($q);
-        var_dump($r, $this->pdo->errorInfo());
         
         return $this->pdo->lastInsertId();
     }
     
     public function markAsMerged($revID) {
         
-        $this->pdo->exec("UPDATE modification_list SET `is_merged` = 1 WHERE id = ".$revID);
+        $date = date('Y-m-d H:i:s');
+        
+        $this->pdo->exec("UPDATE modification_list SET `is_merged` = 1, `date_merge` = '".$date."' WHERE id = ".$revID);
     }
 
     public function retrieveAll() {
@@ -67,6 +68,13 @@ class DatabaseAdapter {
     
     public function retrieveModificationList() {
         $result = $this->pdo->query("SELECT * FROM modification_list WHERE is_merged = 0");
+        $result->setFetchMode(\PDO::FETCH_ASSOC);
+        
+        return $result->fetchAll();
+    }
+    
+    public function retrieveMergedModificationList() {
+        $result = $this->pdo->query("SELECT * FROM modification_list WHERE is_merged = 1 ORDER BY date_merge DESC");
         $result->setFetchMode(\PDO::FETCH_ASSOC);
         
         return $result->fetchAll();
