@@ -3,7 +3,10 @@
 {% block content %}
     <ul>
     {% for item in modifList %}
-        <li><a href="{{ path('admin_revision', { 'revID' : item.id }) }}">Preview ID#{{ item.id }}</a></li>
+        <li>
+            <a href="{{ path('admin_revision', { 'revID' : item.id }) }}">Preview ID#{{ item.id }}</a> - 
+            <a href="{{ path('admin_revision_delete', { 'revID' : item.id }) }}">delete</a>
+        </li>
     {% endfor %}
     </ul>
     

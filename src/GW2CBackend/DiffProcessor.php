@@ -3,6 +3,7 @@
 namespace GW2CBackend;
 
 use \GW2CBackend\Marker\MapRevision;
+use \GW2CBackend\Marker\Marker;
 
 class DiffProcessor {
     
@@ -12,6 +13,7 @@ class DiffProcessor {
     const STATUS_MODIFIED_ALL = "status_modified_all";
     const STATUS_MODIFIED_COORDINATES = "status_modified_coordinates";
     const STATUS_MODIFIED_DATA = "status_modified_data";
+    const STATUS_POTENTIAL_DATA_LOSS = "status_potential_data_loss";
     
     protected $modificationDefault;
     protected $modification;
@@ -103,6 +105,11 @@ class DiffProcessor {
                 if($markerReference->compare($marker)) {
                     $item["status"] = self::STATUS_OK;
                 }
+                elseif(self::isPotentialDataLoss($markerReference, $marker)) {
+                    $item["status"] = self::STATUS_POTENTIAL_DATA_LOSS;
+                    $item["marker"] = $marker;
+                    $item["marker-reference"] = $markerReference;
+                }
                 else { // if the data have changed
                     $item["status"] = self::STATUS_MODIFIED_DATA;
                     $item["marker"] = $marker;
@@ -113,6 +120,11 @@ class DiffProcessor {
                 // if the data are the same
                 if($markerReference->compare($marker)) {
                     $item["status"] = self::STATUS_MODIFIED_COORDINATES;
+                    $item["marker"] = $marker;
+                    $item["marker-reference"] = $markerReference;
+                }
+                elseif(self::isPotentialDataLoss($markerReference, $marker)) {
+                    $item["status"] = self::STATUS_POTENTIAL_DATA_LOSS;
                     $item["marker"] = $marker;
                     $item["marker-reference"] = $markerReference;
                 }
@@ -222,7 +234,25 @@ class DiffProcessor {
 
         return null;        
     }
-    
+
+    static protected function isPotentialDataLoss(Marker $reference, Marker $changedMarker) {
+        $dRef = $reference->getData();
+        $dCh = $changedMarker->getData();
+        
+        foreach($dRef->getAllData() as $lang => $langs) {
+            
+            foreach($langs as $field => $value) {
+                
+                $changedValue = $dCh->getData($lang, $field);
+                if(!empty($value) && !is_null($changedValue) && empty($changedValue)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
     public function hasChanges() {
 
         foreach($this->changes as $mGroup) {

@@ -160,6 +160,14 @@ $app->get('/admin/', function() use($app) {
         ));
 })->bind('admin');
 
+$app->get('/admin/revision/delete/{revID}', function($revID) use($app) {
+   
+   
+   $app['database']->removeModification($revID);
+    
+   return $app->redirect('/admin/');
+})->bind('admin_revision_delete');
+
 $app->get('/admin/revision/{revID}', function($revID) use($app) {
 
     $app['twig.path'] = __DIR__.'/../gw2cread/';
@@ -354,6 +362,7 @@ $app->post('/admin/organize/add-marker-type', function(Request $request) use($ap
 
     $slug = $request->request->get('slug');
     $filename = $request->request->get('filename');
+    $displayInAreaSum = $request->request->get('displayInAreaSum');
     $mgID = $request->request->get('marker-group');
     $fieldsetID = $request->request->get('fieldset');
 
@@ -361,7 +370,7 @@ $app->post('/admin/organize/add-marker-type', function(Request $request) use($ap
         $message = "The slug field must be filled.";
     }
     else {
-        $app['database']->addMarkerType($slug, $filename, $fieldsetID, $mgID);
+        $app['database']->addMarkerType($slug, $filename, $displayInAreaSum, $fieldsetID, $mgID);
         $message = "The marker type \"".$slug."\" has been successfully created.";
     }
     
@@ -407,6 +416,7 @@ $app->post('/admin/organize/edit-marker-type', function(Request $request) use($a
     
     $slug = $request->request->get('slug');
     $filename = $request->request->get('filename');
+    $displayInAreaSum = $request->request->get('displayInAreaSum');
     $slugReference = $request->request->get('slug-reference');
     $fieldsetID = $request->request->get('fieldset');
 
@@ -415,7 +425,7 @@ $app->post('/admin/organize/edit-marker-type', function(Request $request) use($a
     }
     else {
         if($request->request->has('edit')) {
-            $app['database']->editMarkerType($slugReference, $slug, $filename, $fieldsetID);
+            $app['database']->editMarkerType($slugReference, $slug, $filename, $displayInAreaSum, $fieldsetID);
             $message = "The marker type \"".$slug."\" has been successfully updated.";
         }
         else if($request->request->has('remove')) {

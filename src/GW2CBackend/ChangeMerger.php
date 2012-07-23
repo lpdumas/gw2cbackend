@@ -37,11 +37,17 @@ class ChangeMerger {
                     if(in_array($changeID, $changesToMerge) || $this->forAdmin) {
                     
                         switch($change['status']) {
+                            case DiffProcessor::STATUS_POTENTIAL_DATA_LOSS:
                             case DiffProcessor::STATUS_MODIFIED_COORDINATES:
                             case DiffProcessor::STATUS_MODIFIED_DATA:
                             case DiffProcessor::STATUS_MODIFIED_ALL:
+                                if($this->forAdmin) {
+                                    $markerType->getMarker($change["marker"]->getID())->setAsReference();
+                                }
                                 $markerType->getMarker($change["marker"]->getID())->setStatus($change["status"]);
                                 $markerType->getMarker($change["marker"]->getID())->setData($change["marker"]->getData());
+                                $markerType->getMarker($change["marker"]->getID())->setLat($change["marker"]->getLat());
+                                $markerType->getMarker($change["marker"]->getID())->setLng($change["marker"]->getLng());                                
                                 break;
                             case DiffProcessor::STATUS_ADDED:
                                 $change["marker"]->setStatus($change["status"]);

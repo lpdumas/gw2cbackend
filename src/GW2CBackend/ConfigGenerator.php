@@ -139,6 +139,11 @@ class ConfigGenerator {
 
         if($this->forAdmin && !is_null($marker->getStatus())) {
             $outputString.=', status : "'.$marker->getStatus().'"';
+            
+            if(!is_null($marker->getReference())) {
+                
+                $outputString.= ', reference : '.$this->generateMarkerOutput($marker->getReference(), $numTabs + 1);
+            }
         }
 
         $outputString.= PHP_EOL.self::tabs($numTabs)."},".PHP_EOL;
@@ -216,8 +221,7 @@ class ConfigGenerator {
 
         $outputString = substr($outputString, 0, strlen($outputString) - 2).PHP_EOL; // remove the last comma
         $outputString.= "];".PHP_EOL.PHP_EOL;
-         
-         return $outputString;
+        return $outputString;
     }
     
     /**
@@ -241,8 +245,8 @@ class ConfigGenerator {
 
                     foreach($markerType->getAllMarkers() as $marker) {
 
-                        if(array_key_exists("area", $marker) && $marker["area"] == $areaID) {
-                            $summary[$markerType]++;
+                        if($marker->getArea() == $areaID) {
+                            $summary[$markerType->getSlug()]++;
                         }
                     }
                 }
@@ -260,7 +264,8 @@ class ConfigGenerator {
      */
     protected function generateOneAreaOutput($area, $summary) {
         
-        $outputString = '{ id : '.$area['id'].', name : "'.$area['name'].'", rangeLvl : "'.$area['rangeLvl'].'",'.PHP_EOL;
+        $outputString = '{ id : '.$area['id'].', ';
+        $outputString.= 'data_translation : { en : { name : "'.$area['name'].'" }, fr : { name : "'.$area['name'].'" } }, rangeLvl : "'.$area['rangeLvl'].'",'.PHP_EOL;
         
         $outputString.= self::tabs(2).'summary : {'.PHP_EOL;
         foreach($summary as $markerType => $value) {
