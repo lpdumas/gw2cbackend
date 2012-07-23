@@ -175,6 +175,27 @@ class DatabaseAdapter {
         return $this->data["areas-list"];
     }
     
+    public function createArea($name, $rangeLvl, $swLat, $swLng, $neLat, $neLng) {
+        
+        $q = "INSERT INTO areas_list (`name`, `rangeLvl`, `swLat`, `swLng`, `neLat`, `neLng`)
+                VALUES ('".$name."', '".$rangeLvl."', '".$swLat."', '".$swLng."','".$neLat."', '".$neLng."')";
+        $this->pdo->exec($q);
+    }
+    
+    public function editArea($areaID, $name, $rangeLvl, $swLat, $swLng, $neLat, $neLng) {
+        
+        $q = "UPDATE areas_list SET `name` = '".$name."', `rangeLvl` = '".$rangeLvl."', 
+                                    `swLat` = '".$swLat."', `swLng` = '".$swLng."',
+                                    `neLat` = '".$neLat."', `neLng` = '".$neLng."'
+                WHERE id = ".$areaID;
+        $this->pdo->exec($q);
+    }
+    
+    public function removeArea($areaID) {
+        
+        $this->pdo->exec("DELETE FROM areas_list WHERE id = ".$areaID);
+    }
+    
     public function retrieveModification($idModification) {
         $result = $this->pdo->query("SELECT * FROM modification_list WHERE id = ".$idModification);
         $result->setFetchMode(\PDO::FETCH_ASSOC);

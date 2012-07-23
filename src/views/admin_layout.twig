@@ -18,6 +18,7 @@
 <div id="menu">
     <a href="{{ path('admin') }}">Home</a> # 
     <a href="{{ path('admin_organize') }}">Organize config.js</a> # 
+    <a href="{{ path('admin_areas') }}">Manage Areas</a> # 
     <a href="{{ path('admin_options') }}">Options</a> # 
     {% if is_granted('ROLE_SUPER_ADMIN') %}
     <a href="{{ path('admin_users') }}">Users management</a> # 
