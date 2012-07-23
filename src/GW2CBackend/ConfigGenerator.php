@@ -90,7 +90,13 @@ class ConfigGenerator {
             foreach($markerTypes as $markerType) {
 
                 $outputString.= self::tabs(2).'"'.$markerType->getSlug().'" : {'.PHP_EOL;
-                $outputString.= self::tabs(3).'icon : "'.$markerGroup->getIconPrefix().'/'.$markerType->getIcon().'",'.PHP_EOL;
+                
+                $icon = '"'.$markerType->getIcon().'"';
+                if($markerGroup->getIconPrefix() != "") {
+                    $icon = $markerGroup->getIconPrefix().'/'.$icon;
+                }
+                
+                $outputString.= self::tabs(3).'icon : '.$icon.','.PHP_EOL;
                 $outputString.= $this->generateTranslatedDataOutput($markerType->getData(), 3);
                 $outputString.= self::tabs(3).'markers : ['.PHP_EOL;
 
