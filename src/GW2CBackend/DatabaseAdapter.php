@@ -192,6 +192,8 @@ class DatabaseAdapter {
     
     public function editArea($areaID, $name, $rangeLvl, $swLat, $swLng, $neLat, $neLng) {
         
+        $name = $this->pdo->quote($name);
+        
         $q = "UPDATE areas_list SET `name` = '".$name."', `rangeLvl` = '".$rangeLvl."', 
                                     `swLat` = '".$swLat."', `swLng` = '".$swLng."',
                                     `neLat` = '".$neLat."', `neLng` = '".$neLng."'
