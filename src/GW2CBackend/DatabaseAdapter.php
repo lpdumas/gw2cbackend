@@ -194,7 +194,7 @@ class DatabaseAdapter {
         
         $name = $this->pdo->quote($name);
         
-        $q = "UPDATE areas_list SET `name` = '".$name."', `rangeLvl` = '".$rangeLvl."', 
+        $q = "UPDATE areas_list SET `name` = ".$name.", `rangeLvl` = '".$rangeLvl."', 
                                     `swLat` = '".$swLat."', `swLng` = '".$swLng."',
                                     `neLat` = '".$neLat."', `neLng` = '".$neLng."'
                 WHERE id = ".$areaID;
