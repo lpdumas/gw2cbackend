@@ -18,7 +18,7 @@ class UserControllerProvider implements ControllerProviderInterface {
 
            $users = $app['database']->getAllUsers();
 
-           return $app['twig']->render('admin_users.twig', array('users' => $users));
+           $app['twig']->render('admin_users.twig', array('users' => $users));
 
         })->bind('admin_users');
 
@@ -39,7 +39,7 @@ class UserControllerProvider implements ControllerProviderInterface {
 
             $app['session']->set('feedback', $message);
 
-            return $app->redirect('/admin/users');
+            return $app->redirect($app['url_generator']->generate('admin_users'));
 
         })->bind('admin_user_add');
 
@@ -54,7 +54,7 @@ class UserControllerProvider implements ControllerProviderInterface {
                 return $app->redirect('/admin/logout');
             }
             else {
-                return $app->redirect('/admin/users');
+                return $app->redirect($app['url_generator']->generate('admin_users'));
             }
 
         })->bind('admin_user_remove');

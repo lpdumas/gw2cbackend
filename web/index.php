@@ -79,12 +79,13 @@ $generateConfigFile = function() use($app) {
 
 $app->mount('/admin/organize', new GW2CBackend\Controller\OrganizeControllerProvider());
 $app->mount('/admin/user', new GW2CBackend\Controller\UserControllerProvider());
-$app->mount('/admin/options', new GW2CBackend\Controller\OptionControllerProvider());
+$app->mount('/admin/options', new GW2CBackend\Controller\OptionsControllerProvider());
 $app->mount('/admin/area', new GW2CBackend\Controller\AreaControllerProvider());
 
 $app->get('/', function() use($app) {
 
     return $app['twig']->render('home.twig');
+
 })->bind('home');
 
 // dirty test form to submit JSON

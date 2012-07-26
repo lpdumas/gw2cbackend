@@ -52,7 +52,7 @@ class OrganizeControllerProvider implements ControllerProviderInterface {
 
             $app['session']->set('feedback', $message);
 
-            return $app->redirect('/admin/organize');
+            return $app->redirect($app['url_generator']->generate('admin_organize'));
 
         })->bind('admin_add_fieldset');
 
@@ -70,7 +70,7 @@ class OrganizeControllerProvider implements ControllerProviderInterface {
 
             $app['session']->set('feedback', $message);
 
-            return $app->redirect('/admin/organize');
+            return $app->redirect($app['url_generator']->generate('admin_organize'));
 
         })->bind('admin_remove_fieldset');
 
@@ -89,7 +89,7 @@ class OrganizeControllerProvider implements ControllerProviderInterface {
 
             $app['session']->set('feedback', $message);
 
-            return $app->redirect('/admin/organize');
+            return $app->redirect($app['url_generator']->generate('admin_organize'));
 
         })->bind('admin_add_field');
 
@@ -118,7 +118,7 @@ class OrganizeControllerProvider implements ControllerProviderInterface {
 
             $app['session']->set('feedback', $message);
 
-            return $app->redirect('/admin/organize');
+            return $app->redirect($app['url_generator']->generate('admin_organize'));
 
         })->bind('admin_edit_field');
 
@@ -137,7 +137,7 @@ class OrganizeControllerProvider implements ControllerProviderInterface {
 
             $app['session']->set('feedback', $message);
 
-            return $app->redirect('/admin/organize#'.$slug);
+            return $app->redirect($app['url_generator']->generate('admin_organize').'#'.$slug);
 
         })->bind('admin_add_marker_group');
 
@@ -159,7 +159,7 @@ class OrganizeControllerProvider implements ControllerProviderInterface {
 
             $app['session']->set('feedback', $message);
 
-            return $app->redirect('/admin/organize#'.$slug);
+            return $app->redirect($app['url_generator']->generate('admin_organize').'#'.$slug);
 
         })->bind('admin_add_marker_type');
 
@@ -190,7 +190,7 @@ class OrganizeControllerProvider implements ControllerProviderInterface {
 
             $app['session']->set('feedback', $message);
 
-            return $app->redirect('/admin/organize#'.$slug);
+            return $app->redirect($app['url_generator']->generate('admin_organize').'#'.$slug);
 
         })->bind('admin_edit_marker_group');
 
@@ -222,7 +222,7 @@ class OrganizeControllerProvider implements ControllerProviderInterface {
 
             $app['session']->set('feedback', $message);
 
-            return $app->redirect('/admin/organize#'.$slug);
+            return $app->redirect($app['url_generator']->generate('admin_organize').'#'.$slug);
 
         })->bind('admin_edit_marker_type');
 
@@ -243,7 +243,7 @@ class OrganizeControllerProvider implements ControllerProviderInterface {
 
            $app['session']->set('feedback', $message);
 
-           return $app->redirect('/admin/organize');
+           return $app->redirect($app['url_generator']->generate('admin_organize'));
 
         })->bind('admin_edit_translated_data');
 

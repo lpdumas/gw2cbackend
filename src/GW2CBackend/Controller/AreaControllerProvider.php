@@ -55,7 +55,7 @@ class AreaControllerProvider implements ControllerProviderInterface {
 
             $app['session']->set('feedback', $message);
 
-            return $app->redirect('/admin/areas');
+            return $app->redirect($app['url_generator']->generate('admin_areas'));
 
         })->bind('admin_areas_add');
 
@@ -89,7 +89,7 @@ class AreaControllerProvider implements ControllerProviderInterface {
 
             $app['session']->set('feedback', $message);
 
-            return $app->redirect('/admin/areas');
+            return $app->redirect($app['url_generator']->generate('admin_areas'));
 
         })->bind('admin_areas_edit');
 

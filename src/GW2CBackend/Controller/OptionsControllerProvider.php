@@ -41,7 +41,7 @@ class OptionControllerProvider implements ControllerProviderInterface {
 
             $app['database']->editOptions($request->request->all());
 
-            return $app->redirect('/admin/options');
+            return $app->redirect($app['url_generator']->generate('admin_options'));
 
         })->bind('admin_options_edit');
 
