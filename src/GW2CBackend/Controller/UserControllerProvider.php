@@ -18,7 +18,7 @@ class UserControllerProvider implements ControllerProviderInterface {
 
            $users = $app['database']->getAllUsers();
 
-           $app['twig']->render('admin_users.twig', array('users' => $users));
+           return $app['twig']->render('admin_users.twig', array('users' => $users));
 
         })->bind('admin_users');
 

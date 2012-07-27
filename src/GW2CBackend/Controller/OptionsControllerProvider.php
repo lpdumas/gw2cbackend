@@ -8,7 +8,7 @@ use Silex\ControllerCollection;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class OptionControllerProvider implements ControllerProviderInterface {
+class OptionsControllerProvider extends ControllerProvider implements ControllerProviderInterface {
 
     public function connect(Application $app) {
         // creates a new controller based on the default route
@@ -43,7 +43,7 @@ class OptionControllerProvider implements ControllerProviderInterface {
 
             return $app->redirect($app['url_generator']->generate('admin_options'));
 
-        })->bind('admin_options_edit');
+        })->after($this->getClosure('generate_config'))->bind('admin_options_edit');
 
         return $controllers;
     }

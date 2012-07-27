@@ -77,10 +77,12 @@ $generateConfigFile = function() use($app) {
     return null;
 };
 
-$app->mount('/admin/organize', new GW2CBackend\Controller\OrganizeControllerProvider());
-$app->mount('/admin/user', new GW2CBackend\Controller\UserControllerProvider());
-$app->mount('/admin/options', new GW2CBackend\Controller\OptionsControllerProvider());
-$app->mount('/admin/area', new GW2CBackend\Controller\AreaControllerProvider());
+$closuresForControllers = array('generate_config' => $generateConfigFile);
+
+$app->mount('/admin/organize', new GW2CBackend\Controller\OrganizeControllerProvider($closuresForControllers));
+$app->mount('/admin/user', new GW2CBackend\Controller\UserControllerProvider($closuresForControllers));
+$app->mount('/admin/options', new GW2CBackend\Controller\OptionsControllerProvider($closuresForControllers));
+$app->mount('/admin/area', new GW2CBackend\Controller\AreaControllerProvider($closuresForControllers));
 
 $app->get('/', function() use($app) {
 
@@ -365,8 +367,6 @@ $app->post('/admin/merge-changes', function(Request $request) use($app) {
     return $app->redirect('/admin/');
     
 })->bind('admin_merge_changes');
-
-$app->get('/admin/generate', $generateConfigFile);
 
 $app->get('/format', function() use($app) {
    

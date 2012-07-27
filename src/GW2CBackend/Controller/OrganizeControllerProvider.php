@@ -8,7 +8,7 @@ use Silex\ControllerCollection;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class OrganizeControllerProvider implements ControllerProviderInterface {
+class OrganizeControllerProvider extends ControllerProvider implements ControllerProviderInterface {
 
     public function connect(Application $app) {
         // creates a new controller based on the default route
@@ -54,7 +54,7 @@ class OrganizeControllerProvider implements ControllerProviderInterface {
 
             return $app->redirect($app['url_generator']->generate('admin_organize'));
 
-        })->bind('admin_add_fieldset');
+        })->after($this->getClosure('generate_config'))->bind('admin_add_fieldset');
 
         $controllers->post('/remove-fieldset', function(Request $request) use($app) {
 
@@ -72,7 +72,7 @@ class OrganizeControllerProvider implements ControllerProviderInterface {
 
             return $app->redirect($app['url_generator']->generate('admin_organize'));
 
-        })->bind('admin_remove_fieldset');
+        })->after($this->getClosure('generate_config'))->bind('admin_remove_fieldset');
 
         $controllers->post('/add-field', function(Request $request) use($app) {
 
@@ -91,7 +91,7 @@ class OrganizeControllerProvider implements ControllerProviderInterface {
 
             return $app->redirect($app['url_generator']->generate('admin_organize'));
 
-        })->bind('admin_add_field');
+        })->after($this->getClosure('generate_config'))->bind('admin_add_field');
 
         // handle edition AND deletion
         $controllers->post('/edit-field', function(Request $request) use($app) {
@@ -139,7 +139,7 @@ class OrganizeControllerProvider implements ControllerProviderInterface {
 
             return $app->redirect($app['url_generator']->generate('admin_organize').'#'.$slug);
 
-        })->bind('admin_add_marker_group');
+        })->after($this->getClosure('generate_config'))->bind('admin_add_marker_group');
 
         $controllers->post('add-marker-type', function(Request $request) use($app) {
 
@@ -161,7 +161,7 @@ class OrganizeControllerProvider implements ControllerProviderInterface {
 
             return $app->redirect($app['url_generator']->generate('admin_organize').'#'.$slug);
 
-        })->bind('admin_add_marker_type');
+        })->after($this->getClosure('generate_config'))->bind('admin_add_marker_type');
 
         // handle edition AND deletion
         $controllers->post('/edit-marker-group', function(Request $request) use($app) {
@@ -192,7 +192,7 @@ class OrganizeControllerProvider implements ControllerProviderInterface {
 
             return $app->redirect($app['url_generator']->generate('admin_organize').'#'.$slug);
 
-        })->bind('admin_edit_marker_group');
+        })->after($this->getClosure('generate_config'))->bind('admin_edit_marker_group');
 
         // handle edition AND deletion
         $controllers->post('/edit-marker-type', function(Request $request) use($app) {
@@ -224,7 +224,7 @@ class OrganizeControllerProvider implements ControllerProviderInterface {
 
             return $app->redirect($app['url_generator']->generate('admin_organize').'#'.$slug);
 
-        })->bind('admin_edit_marker_type');
+        })->after($this->getClosure('generate_config'))->bind('admin_edit_marker_type');
 
         $controllers->post('/edit-translated-data', function(Request $request) use($app) {
 
@@ -245,7 +245,7 @@ class OrganizeControllerProvider implements ControllerProviderInterface {
 
            return $app->redirect($app['url_generator']->generate('admin_organize'));
 
-        })->bind('admin_edit_translated_data');
+        })->after($this->getClosure('generate_config'))->bind('admin_edit_translated_data');
 
         return $controllers;
     }

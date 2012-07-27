@@ -7,8 +7,9 @@ use Silex\ControllerProviderInterface;
 use Silex\ControllerCollection;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 
-class AreaControllerProvider implements ControllerProviderInterface {
+class AreaControllerProvider extends ControllerProvider implements ControllerProviderInterface {
 
     public function connect(Application $app) {
         // creates a new controller based on the default route
@@ -57,7 +58,7 @@ class AreaControllerProvider implements ControllerProviderInterface {
 
             return $app->redirect($app['url_generator']->generate('admin_areas'));
 
-        })->bind('admin_areas_add');
+        })->after($this->getClosure('generate_config'))->bind('admin_areas_add');
 
         $controllers->post('/edit', function(Request $request) use($app) {
             $name = $request->request->get('name');
@@ -91,7 +92,7 @@ class AreaControllerProvider implements ControllerProviderInterface {
 
             return $app->redirect($app['url_generator']->generate('admin_areas'));
 
-        })->bind('admin_areas_edit');
+        })->after($this->getClosure('generate_config'))->bind('admin_areas_edit');
 
         return $controllers;
     }
