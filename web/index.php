@@ -50,6 +50,13 @@ $app['security.access_rules'] = array(
     array('^/admin', 'ROLE_ADMIN'),
 );
 
+$routeForDebugOnly = function() use($app) {
+
+    if($app['debug'] === false) {
+        return $app->redirect('/');
+    }
+};
+
 $generateConfigFile = function() use($app) {
     $app['database']->retrieveCurrentReference();
     $app['database']->retrieveOptions();
@@ -77,7 +84,10 @@ $generateConfigFile = function() use($app) {
     return null;
 };
 
-$closuresForControllers = array('generate_config' => $generateConfigFile);
+$closuresForControllers = array(
+                            'generate_config' => $generateConfigFile,
+                            'route_for_debug' => $routeForDebugOnly,
+                          );
 
 $app->mount('/admin/organize', new GW2CBackend\Controller\OrganizeControllerProvider($closuresForControllers));
 $app->mount('/admin/user', new GW2CBackend\Controller\UserControllerProvider($closuresForControllers));
@@ -98,7 +108,7 @@ $app->get('/test-form', function() use($app) {
    return $app['twig']->render('test-form.html.twig', array(
            'jsonString' => $jsonString
        ));
-});
+})->before($closuresForControllers['route_for_debug']);
 
 $app->post('/submit-modification', function(Request $request) use($app) {
 
@@ -369,23 +379,23 @@ $app->post('/admin/merge-changes', function(Request $request) use($app) {
 })->bind('admin_merge_changes');
 
 $app->get('/format', function() use($app) {
-   
-   $json = file_get_contents(__DIR__.'/../test.json');
-   
-   $formatter = new GW2CBackend\FormatJSON($json);
-   $json = $formatter->format();
-   $je = json_encode($json['json']);
-   $de = json_decode($je, true);
-   
-   $builder = new GW2CBackend\MarkerBuilder($app['database']);
-   $map = $builder->build(1, $de);
-   var_dump(strlen(addslashes($je)));
-   //$app['database']->saveNewRevisionAsReference($map, 1, $json['max_id']);
 
-   $response = new Response($je, 200);
-   $response->setCharset("UTF-8");
-   
-   return $response;
-});
+    $json = file_get_contents(__DIR__.'/../test.json');
+
+    $formatter = new GW2CBackend\FormatJSON($json);
+    $json = $formatter->format();
+    $je = json_encode($json['json']);
+    $de = json_decode($je, true);
+
+    $builder = new GW2CBackend\MarkerBuilder($app['database']);
+    $map = $builder->build(1, $de);
+    var_dump(strlen(addslashes($je)));
+    //$app['database']->saveNewRevisionAsReference($map, 1, $json['max_id']);
+
+    $response = new Response($je, 200);
+    $response->setCharset("UTF-8");
+
+    return $response;
+})->before($closuresForControllers['route_for_debug']);
 
 $app->run();
