@@ -10,4 +10,6 @@ To update the submodule, just run ```git submodule update --init --recursive``` 
 
 Then you must install the database. Import the structure.sql file to your database.
 
+Run ```cp db-config.php.dist db-config.php``` and edit the db-config.php file with your personal information.
+
 Now go to /admin/users you should be able to log in with gw2c/gw2c. We strongly recommend you to create a new user and to delete the gw2c user.
