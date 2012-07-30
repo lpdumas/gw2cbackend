@@ -1,0 +1,339 @@
+<!DOCTYPE html><html xmlns:date="http://exslt.org/dates-and-times" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+<meta charset="utf-8">
+<title>Guild Wars 2 Cartographers: Crowdsourcing tools » \GW2CBackend\ConfigGenerator</title>
+<meta name="author" content="Mike van Riel">
+<meta name="description" content="">
+<link href="../css/template.css" rel="stylesheet" media="all">
+<script src="../js/jquery-1.7.1.min.js" type="text/javascript"></script><script src="../js/jquery-ui-1.8.2.custom.min.js" type="text/javascript"></script><script src="../js/jquery.mousewheel.min.js" type="text/javascript"></script><script src="../js/bootstrap.js" type="text/javascript"></script><script src="../js/template.js" type="text/javascript"></script><script src="../js/prettify/prettify.min.js" type="text/javascript"></script><link rel="shortcut icon" href="../img/favicon.ico">
+<link rel="apple-touch-icon" href="../img/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="72x72" href="../img/apple-touch-icon-72x72.png">
+<link rel="apple-touch-icon" sizes="114x114" href="../img/apple-touch-icon-114x114.png">
+</head>
+<body>
+<div class="navbar navbar-fixed-top">
+<div class="navbar-inner"><div class="container">
+<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></a><a class="brand" href="../index.html">Guild Wars 2 Cartographers: Crowdsourcing tools</a><div class="nav-collapse"><ul class="nav">
+<li class="dropdown">
+<a href="#api" class="dropdown-toggle" data-toggle="dropdown">
+                                    API Documentation <b class="caret"></b></a><ul class="dropdown-menu">
+<li><a>Namespaces</a></li>
+<li><a href="../namespaces/GW2CBackend.html"><i class="icon-th"></i> GW2CBackend</a></li>
+</ul>
+</li>
+<li class="dropdown" id="charts-menu">
+<a href="#charts" class="dropdown-toggle" data-toggle="dropdown">
+                                    Charts <b class="caret"></b></a><ul class="dropdown-menu"><li><a href="../graph_class.html"><i class="icon-list-alt"></i> Class hierarchy diagram</a></li></ul>
+</li>
+<li class="dropdown" id="reports-menu">
+<a href="#reports" class="dropdown-toggle" data-toggle="dropdown">
+                                    Reports <b class="caret"></b></a><ul class="dropdown-menu">
+<li><a href="../errors.html"><i class="icon-remove-sign"></i> Errors 
+                <span class="label label-info">19</span></a></li>
+<li><a href="../markers.html"><i class="icon-map-marker"></i> Markers 
+                <ul><li>todo 
+                <span class="label label-info">4</span>
+</li></ul></a></li>
+<li><a href="../deprecated.html"><i class="icon-stop"></i> Deprecated elements 
+                <span class="label label-info">1</span></a></li>
+</ul>
+</li>
+</ul></div>
+</div></div>
+<div class="go_to_top"><a href="#___" style="color: inherit">Back to top  <i class="icon-upload icon-white"></i></a></div>
+</div>
+<div id="___" class="container">
+<noscript><div class="alert alert-warning">
+                            Javascript is disabled; several features are only available
+                            if Javascript is enabled.
+                        </div></noscript>
+<div class="row">
+<div class="span4">
+<span class="btn-group visibility" data-toggle="buttons-checkbox"><button class="btn public active" title="Show public elements">Public</button><button class="btn protected" title="Show protected elements">Protected</button><button class="btn private" title="Show private elements">Private</button><button class="btn inherited active" title="Show inherited elements">Inherited</button></span><div class="btn-group view pull-right" data-toggle="buttons-radio">
+<button class="btn details" title="Show descriptions and method names"><i class="icon-list"></i></button><button class="btn simple" title="Show only method names"><i class="icon-align-justify"></i></button>
+</div>
+<ul class="side-nav nav nav-list">
+<li class="nav-header">
+<i class="icon-custom icon-method"></i> Methods</li>
+<li class="method public "><a href="#__construct" title="__construct :: Constructor."><span class="description">Constructor.</span><pre>__construct()</pre></a></li>
+<li class="method public "><a href="#generate" title="generate :: Trigger the generation process."><span class="description">Trigger the generation process.</span><pre>generate()</pre></a></li>
+<li class="method public "><a href="#getOutput" title="getOutput :: Returns the output."><span class="description">Returns the output.</span><pre>getOutput()</pre></a></li>
+<li class="method public "><a href="#minimize" title="minimize :: Minimizes the output."><span class="description">Minimizes the output.</span><pre>minimize()</pre></a></li>
+<li class="method public "><a href="#save" title="save :: Saves the output to a file."><span class="description">Saves the output to a file.</span><pre>save()</pre></a></li>
+<li class="method public "><a href="#setForAdmin" title="setForAdmin :: Set the indicator that will determine if the output will be used by gw2c-backend's merging environment."><span class="description">Set the indicator that will determine if the output will be used by gw2c-backend's merging environment.</span><pre>setForAdmin()</pre></a></li>
+<li class="nav-header protected">» Protected</li>
+<li class="method protected "><a href="#generateAreasOutput" title="generateAreasOutput :: Generator subprocess."><span class="description">Generator subprocess.</span><pre>generateAreasOutput()</pre></a></li>
+<li class="method protected "><a href="#generateMarkerOutput" title="generateMarkerOutput :: Generator subprocess."><span class="description">Generator subprocess.</span><pre>generateMarkerOutput()</pre></a></li>
+<li class="method protected "><a href="#generateMarkersOutput" title="generateMarkersOutput :: Generator Subprocess."><span class="description">Generator Subprocess.</span><pre>generateMarkersOutput()</pre></a></li>
+<li class="method protected "><a href="#generateMetadataOutput" title="generateMetadataOutput :: Generator subprocess."><span class="description">Generator subprocess.</span><pre>generateMetadataOutput()</pre></a></li>
+<li class="method protected "><a href="#generateOneAreaOutput" title="generateOneAreaOutput :: Generator subprocess."><span class="description">Generator subprocess.</span><pre>generateOneAreaOutput()</pre></a></li>
+<li class="method protected "><a href="#generateTranslatedDataOutput" title="generateTranslatedDataOutput :: Generator subprocess."><span class="description">Generator subprocess.</span><pre>generateTranslatedDataOutput()</pre></a></li>
+<li class="method protected "><a href="#getAreaSummary" title="getAreaSummary :: Calculates the area summary (number of markers) for each relevant MarkerType."><span class="description">Calculates the area summary (number of markers) for each relevant MarkerType.</span><pre>getAreaSummary()</pre></a></li>
+<li class="method protected "><a href="#tabs" title="tabs :: Creates a string of tabs."><span class="description">Creates a string of tabs.</span><pre>tabs()</pre></a></li>
+<li class="nav-header">
+<i class="icon-custom icon-property"></i> Properties</li>
+<li class="nav-header protected">» Protected</li>
+<li class="property protected "><a href="#%24areas" title="$areas :: Contains all the area information."><span class="description">Contains all the area information.</span><pre>$areas</pre></a></li>
+<li class="property protected "><a href="#%24forAdmin" title="$forAdmin :: Indicates if the generation is for gw2c or gw2c-backend's merging envrionment."><span class="description">Indicates if the generation is for gw2c or gw2c-backend's merging envrionment.</span><pre>$forAdmin</pre></a></li>
+<li class="property protected "><a href="#%24output" title="$output :: Contains the generator's output."><span class="description">Contains the generator's output.</span><pre>$output</pre></a></li>
+<li class="property protected "><a href="#%24resourcesPath" title="$resourcesPath :: The path of the marker types' icons."><span class="description">The path of the marker types' icons.</span><pre>$resourcesPath</pre></a></li>
+<li class="property protected "><a href="#%24revision" title="$revision :: Contains the source of the generation."><span class="description">Contains the source of the generation.</span><pre>$revision</pre></a></li>
+</ul>
+</div>
+<div class="span8">
+<a name="%5CGW2CBackend%5CConfigGenerator" id="\GW2CBackend\ConfigGenerator"></a><ul class="breadcrumb">
+<li>
+<a href="../index.html"><i class="icon-custom icon-class"></i></a><span class="divider">\</span>
+</li>
+<li><a href="../namespaces/GW2CBackend.html">GW2CBackend</a></li>
+<li class="active">
+<span class="divider">\</span><a href="../classes/GW2CBackend.ConfigGenerator.html">ConfigGenerator</a>
+</li>
+</ul>
+<div href="../classes/GW2CBackend.ConfigGenerator.html" class="element class">
+<p class="short_description">Generator of the configuration file.</p>
+<div class="details">
+<p class="long_description"></p>
+<h3>
+<i class="icon-custom icon-method"></i> Methods</h3>
+<a name="__construct" id="__construct"></a><div class="element clickable method public __construct" data-toggle="collapse" data-target=".__construct .collapse">
+<h2>Constructor.</h2>
+<pre>__construct(\GW2CBackend\Marker\MapRevision $revision, string $resourcesPath, array $areas) </pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$revision</h4>
+<code><a href="../classes/GW2CBackend.Marker.MapRevision.html">\GW2CBackend\Marker\MapRevision</a></code><p>the source of the generation.</p></div>
+<div class="subelement argument">
+<h4>$resourcesPath</h4>
+<code>string</code><p>the path to the marker's icons.</p>
+</div>
+<div class="subelement argument">
+<h4>$areas</h4>
+<code>array</code><p>contains arrays that describe areas.</p></div>
+</div></div>
+</div>
+<a name="generate" id="generate"></a><div class="element clickable method public generate" data-toggle="collapse" data-target=".generate .collapse">
+<h2>Trigger the generation process.</h2>
+<pre>generate() : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Returns</h3>
+<div class="subelement response">
+<code>string</code>the generated output.</div>
+</div></div>
+</div>
+<a name="getOutput" id="getOutput"></a><div class="element clickable method public getOutput" data-toggle="collapse" data-target=".getOutput .collapse">
+<h2>Returns the output.</h2>
+<pre>getOutput() : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Returns</h3>
+<div class="subelement response">
+<code>string</code>the output.</div>
+</div></div>
+</div>
+<a name="minimize" id="minimize"></a><div class="element clickable method public minimize" data-toggle="collapse" data-target=".minimize .collapse">
+<h2>Minimizes the output.</h2>
+<pre>minimize() : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Returns</h3>
+<div class="subelement response">
+<code>string</code>the minimized output.</div>
+</div></div>
+</div>
+<a name="save" id="save"></a><div class="element clickable method public save" data-toggle="collapse" data-target=".save .collapse">
+<h2>Saves the output to a file.</h2>
+<pre>save(string $path) </pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$path</h4>
+<code>string</code><p>the path where the file will be saved.</p></div>
+</div></div>
+</div>
+<a name="setForAdmin" id="setForAdmin"></a><div class="element clickable method public setForAdmin" data-toggle="collapse" data-target=".setForAdmin .collapse">
+<h2>Set the indicator that will determine if the output will be used by gw2c-backend's merging environment.</h2>
+<pre>setForAdmin(boolean $forAdmin) </pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$forAdmin</h4>
+<code>boolean</code>
+</div>
+</div></div>
+</div>
+<a name="generateAreasOutput" id="generateAreasOutput"></a><div class="element clickable method protected generateAreasOutput" data-toggle="collapse" data-target=".generateAreasOutput .collapse">
+<h2>Generator subprocess.</h2>
+<pre>generateAreasOutput() : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"><p>Generates the output of all areas.</p></p>
+<h3>Returns</h3>
+<div class="subelement response">
+<code>string</code>the generated output.</div>
+</div></div>
+</div>
+<a name="generateMarkerOutput" id="generateMarkerOutput"></a><div class="element clickable method protected generateMarkerOutput" data-toggle="collapse" data-target=".generateMarkerOutput .collapse">
+<h2>Generator subprocess.</h2>
+<pre>generateMarkerOutput(\GW2CBackend\Marker\Marker $marker, integer $numTabs) : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"><p>Generates the output of ONE marker.</p></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$marker</h4>
+<code><a href="../classes/GW2CBackend.Marker.Marker.html">\GW2CBackend\Marker\Marker</a></code><p>the marker source of the generation.</p></div>
+<div class="subelement argument">
+<h4>$numTabs</h4>
+<code>integer</code><p>the number of tabs to put in front of the output.</p></div>
+<h3>Returns</h3>
+<div class="subelement response">
+<code>string</code>the generated output.</div>
+</div></div>
+</div>
+<a name="generateMarkersOutput" id="generateMarkersOutput"></a><div class="element clickable method protected generateMarkersOutput" data-toggle="collapse" data-target=".generateMarkersOutput .collapse">
+<h2>Generator Subprocess.</h2>
+<pre>generateMarkersOutput() : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"><p>Generates the output of the markers.</p></p>
+<h3>Returns</h3>
+<div class="subelement response">
+<code>string</code>the generated output.</div>
+</div></div>
+</div>
+<a name="generateMetadataOutput" id="generateMetadataOutput"></a><div class="element clickable method protected generateMetadataOutput" data-toggle="collapse" data-target=".generateMetadataOutput .collapse">
+<h2>Generator subprocess.</h2>
+<pre>generateMetadataOutput() : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"><p>Generates the output of file's metadata.</p></p>
+<h3>Returns</h3>
+<div class="subelement response">
+<code>string</code>the generated output.</div>
+</div></div>
+</div>
+<a name="generateOneAreaOutput" id="generateOneAreaOutput"></a><div class="element clickable method protected generateOneAreaOutput" data-toggle="collapse" data-target=".generateOneAreaOutput .collapse">
+<h2>Generator subprocess.</h2>
+<pre>generateOneAreaOutput(array $area, array $summary) : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"><p>Generates the output of ONE area.</p></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$area</h4>
+<code>array</code><p>describes an area.</p></div>
+<div class="subelement argument">
+<h4>$summary</h4>
+<code>array</code><p>where the key is marker type's slug and the value the number of associated markers.</p>
+</div>
+<h3>Returns</h3>
+<div class="subelement response">
+<code>string</code>the generated output.</div>
+</div></div>
+</div>
+<a name="generateTranslatedDataOutput" id="generateTranslatedDataOutput"></a><div class="element clickable method protected generateTranslatedDataOutput" data-toggle="collapse" data-target=".generateTranslatedDataOutput .collapse">
+<h2>Generator subprocess.</h2>
+<pre>generateTranslatedDataOutput(\GW2CBackend\TranslatedData $tData, integer $numTabs) : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"><p>Generates the output of ONE translated data field.</p></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$tData</h4>
+<code><a href="../classes/GW2CBackend.TranslatedData.html">\GW2CBackend\TranslatedData</a></code><p>the data source of the generation.</p></div>
+<div class="subelement argument">
+<h4>$numTabs</h4>
+<code>integer</code><p>the number of tabs to put in front of the output.</p></div>
+<h3>Returns</h3>
+<div class="subelement response">
+<code>string</code>the generated output.</div>
+</div></div>
+</div>
+<a name="getAreaSummary" id="getAreaSummary"></a><div class="element clickable method protected getAreaSummary" data-toggle="collapse" data-target=".getAreaSummary .collapse">
+<h2>Calculates the area summary (number of markers) for each relevant MarkerType.</h2>
+<pre>getAreaSummary(integer $areaID) : array</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$areaID</h4>
+<code>integer</code><p>the area's ID.</p>
+</div>
+<h3>Returns</h3>
+<div class="subelement response">
+<code>array</code>of values where the key is the marker type's slug and the value the number of associated markers.</div>
+</div></div>
+</div>
+<a name="tabs" id="tabs"></a><div class="element clickable method protected tabs" data-toggle="collapse" data-target=".tabs .collapse">
+<h2>Creates a string of tabs.</h2>
+<pre>tabs(integer $numTabs) : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$numTabs</h4>
+<code>integer</code><p>the number of tabs. Default is 1.</p></div>
+<h3>Returns</h3>
+<div class="subelement response">
+<code>string</code>with $numTabs tabs.</div>
+</div></div>
+</div>
+<h3>
+<i class="icon-custom icon-property"></i> Properties</h3>
+<a name="%24areas" id="$areas"> </a><div class="element clickable property protected $areas" data-toggle="collapse" data-target=".$areas .collapse">
+<h2>Contains all the area information.</h2>
+<pre>$areas : array</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
+</div>
+<a name="%24forAdmin" id="$forAdmin"> </a><div class="element clickable property protected $forAdmin" data-toggle="collapse" data-target=".$forAdmin .collapse">
+<h2>Indicates if the generation is for gw2c or gw2c-backend's merging envrionment.</h2>
+<pre>$forAdmin : boolean</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
+</div>
+<a name="%24output" id="$output"> </a><div class="element clickable property protected $output" data-toggle="collapse" data-target=".$output .collapse">
+<h2>Contains the generator's output.</h2>
+<pre>$output : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
+</div>
+<a name="%24resourcesPath" id="$resourcesPath"> </a><div class="element clickable property protected $resourcesPath" data-toggle="collapse" data-target=".$resourcesPath .collapse">
+<h2>The path of the marker types' icons.</h2>
+<pre>$resourcesPath : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
+</div>
+<a name="%24revision" id="$revision"> </a><div class="element clickable property protected $revision" data-toggle="collapse" data-target=".$revision .collapse">
+<h2>Contains the source of the generation.</h2>
+<pre>$revision : <a href="../classes/GW2CBackend.Marker.MapRevision.html">\GW2CBackend\Marker\MapRevision</a></pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="row"><footer class="span12">
+            Template is built using <a href="http://twitter.github.com/bootstrap/">Twitter Bootstrap 2</a> and icons provided by <a href="http://glyphicons.com/">Glyphicons</a>.<br>
+            Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor 2.0.0a8</a> and<br>
+            generated on 2012-07-30T17:09:27+02:00.<br></footer></div>
+</div>
+</body>
+</html>

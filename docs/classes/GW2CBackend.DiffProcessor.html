@@ -1,0 +1,306 @@
+<!DOCTYPE html><html xmlns:date="http://exslt.org/dates-and-times" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+<meta charset="utf-8">
+<title>Guild Wars 2 Cartographers: Crowdsourcing tools » \GW2CBackend\DiffProcessor</title>
+<meta name="author" content="Mike van Riel">
+<meta name="description" content="">
+<link href="../css/template.css" rel="stylesheet" media="all">
+<script src="../js/jquery-1.7.1.min.js" type="text/javascript"></script><script src="../js/jquery-ui-1.8.2.custom.min.js" type="text/javascript"></script><script src="../js/jquery.mousewheel.min.js" type="text/javascript"></script><script src="../js/bootstrap.js" type="text/javascript"></script><script src="../js/template.js" type="text/javascript"></script><script src="../js/prettify/prettify.min.js" type="text/javascript"></script><link rel="shortcut icon" href="../img/favicon.ico">
+<link rel="apple-touch-icon" href="../img/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="72x72" href="../img/apple-touch-icon-72x72.png">
+<link rel="apple-touch-icon" sizes="114x114" href="../img/apple-touch-icon-114x114.png">
+</head>
+<body>
+<div class="navbar navbar-fixed-top">
+<div class="navbar-inner"><div class="container">
+<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></a><a class="brand" href="../index.html">Guild Wars 2 Cartographers: Crowdsourcing tools</a><div class="nav-collapse"><ul class="nav">
+<li class="dropdown">
+<a href="#api" class="dropdown-toggle" data-toggle="dropdown">
+                                    API Documentation <b class="caret"></b></a><ul class="dropdown-menu">
+<li><a>Namespaces</a></li>
+<li><a href="../namespaces/GW2CBackend.html"><i class="icon-th"></i> GW2CBackend</a></li>
+</ul>
+</li>
+<li class="dropdown" id="charts-menu">
+<a href="#charts" class="dropdown-toggle" data-toggle="dropdown">
+                                    Charts <b class="caret"></b></a><ul class="dropdown-menu"><li><a href="../graph_class.html"><i class="icon-list-alt"></i> Class hierarchy diagram</a></li></ul>
+</li>
+<li class="dropdown" id="reports-menu">
+<a href="#reports" class="dropdown-toggle" data-toggle="dropdown">
+                                    Reports <b class="caret"></b></a><ul class="dropdown-menu">
+<li><a href="../errors.html"><i class="icon-remove-sign"></i> Errors 
+                <span class="label label-info">19</span></a></li>
+<li><a href="../markers.html"><i class="icon-map-marker"></i> Markers 
+                <ul><li>todo 
+                <span class="label label-info">4</span>
+</li></ul></a></li>
+<li><a href="../deprecated.html"><i class="icon-stop"></i> Deprecated elements 
+                <span class="label label-info">1</span></a></li>
+</ul>
+</li>
+</ul></div>
+</div></div>
+<div class="go_to_top"><a href="#___" style="color: inherit">Back to top  <i class="icon-upload icon-white"></i></a></div>
+</div>
+<div id="___" class="container">
+<noscript><div class="alert alert-warning">
+                            Javascript is disabled; several features are only available
+                            if Javascript is enabled.
+                        </div></noscript>
+<div class="row">
+<div class="span4">
+<span class="btn-group visibility" data-toggle="buttons-checkbox"><button class="btn public active" title="Show public elements">Public</button><button class="btn protected" title="Show protected elements">Protected</button><button class="btn private" title="Show private elements">Private</button><button class="btn inherited active" title="Show inherited elements">Inherited</button></span><div class="btn-group view pull-right" data-toggle="buttons-radio">
+<button class="btn details" title="Show descriptions and method names"><i class="icon-list"></i></button><button class="btn simple" title="Show only method names"><i class="icon-align-justify"></i></button>
+</div>
+<ul class="side-nav nav nav-list">
+<li class="nav-header">
+<i class="icon-custom icon-method"></i> Methods</li>
+<li class="method public "><a href="#__construct" title="__construct :: Constructor."><span class="description">Constructor.</span><pre>__construct()</pre></a></li>
+<li class="method public "><a href="#getMarkerByID" title="getMarkerByID :: Get a marker in a collection by marker's ID."><span class="description">Get a marker in a collection by marker's ID.</span><pre>getMarkerByID()</pre></a></li>
+<li class="method public "><a href="#hasChanges" title="hasChanges :: Indicates if the DiffProcessor detected changes or not."><span class="description">Indicates if the DiffProcessor detected changes or not.</span><pre>hasChanges()</pre></a></li>
+<li class="method public "><a href="#process" title="process :: Process the DIFF between the modification and the reference config."><span class="description">Process the DIFF between the modification and the reference config.</span><pre>process()</pre></a></li>
+<li class="nav-header protected">» Protected</li>
+<li class="method protected "><a href="#isPotentialDataLoss" title="isPotentialDataLoss :: Detects if a marker presents a potential data loss in comparison with the reference."><span class="description">Detects if a marker presents a potential data loss in comparison with the reference.</span><pre>isPotentialDataLoss()</pre></a></li>
+<li class="method protected "><a href="#lookForMarker" title="lookForMarker :: Looks for a marker in the reference and build the entry result."><span class="description">Looks for a marker in the reference and build the entry result.</span><pre>lookForMarker()</pre></a></li>
+<li class="method protected "><a href="#searchForMarker" title="searchForMarker :: Search for a marker in the modification JSON array."><span class="description">Search for a marker in the modification JSON array.</span><pre>searchForMarker()</pre></a></li>
+<li class="nav-header">
+<i class="icon-custom icon-property"></i> Properties</li>
+<li class="nav-header protected">» Protected</li>
+<li class="property protected "><a href="#%24changes" title="$changes :: The changes detected in the diff process."><span class="description">The changes detected in the diff process.</span><pre>$changes</pre></a></li>
+<li class="property protected "><a href="#%24maxReferenceID" title="$maxReferenceID :: The maximum ID of the reference."><span class="description">The maximum ID of the reference.</span><pre>$maxReferenceID</pre></a></li>
+<li class="property protected "><a href="#%24modification" title="$modification :: The submitted modification."><span class="description">The submitted modification.</span><pre>$modification</pre></a></li>
+<li class="property protected "><a href="#%24reference" title="$reference :: The current reference."><span class="description">The current reference.</span><pre>$reference</pre></a></li>
+<li class="nav-header">
+<i class="icon-custom icon-constant"></i> Constants</li>
+<li class="constant  "><a href="#STATUS_ADDED" title="STATUS_ADDED :: When an entry is a new one."><span class="description">When an entry is a new one.</span><pre>STATUS_ADDED</pre></a></li>
+<li class="constant  "><a href="#STATUS_MODIFIED_ALL" title="STATUS_MODIFIED_ALL :: When an entry has its coordinates and its data modified."><span class="description">When an entry has its coordinates and its data modified.</span><pre>STATUS_MODIFIED_ALL</pre></a></li>
+<li class="constant  "><a href="#STATUS_MODIFIED_COORDINATES" title="STATUS_MODIFIED_COORDINATES :: When an entry has its coordinates modified."><span class="description">When an entry has its coordinates modified.</span><pre>STATUS_MODIFIED_COORDINATES</pre></a></li>
+<li class="constant  "><a href="#STATUS_MODIFIED_DATA" title="STATUS_MODIFIED_DATA :: When an entry has its data modified."><span class="description">When an entry has its data modified.</span><pre>STATUS_MODIFIED_DATA</pre></a></li>
+<li class="constant  "><a href="#STATUS_OK" title="STATUS_OK :: When an entry has no change."><span class="description">When an entry has no change.</span><pre>STATUS_OK</pre></a></li>
+<li class="constant  "><a href="#STATUS_POTENTIAL_DATA_LOSS" title="STATUS_POTENTIAL_DATA_LOSS :: When an entry has potentially a data loss."><span class="description">When an entry has potentially a data loss.</span><pre>STATUS_POTENTIAL_DATA_LOSS</pre></a></li>
+<li class="constant  "><a href="#STATUS_REMOVED" title="STATUS_REMOVED :: When an entry has been removed."><span class="description">When an entry has been removed.</span><pre>STATUS_REMOVED</pre></a></li>
+</ul>
+</div>
+<div class="span8">
+<a name="%5CGW2CBackend%5CDiffProcessor" id="\GW2CBackend\DiffProcessor"></a><ul class="breadcrumb">
+<li>
+<a href="../index.html"><i class="icon-custom icon-class"></i></a><span class="divider">\</span>
+</li>
+<li><a href="../namespaces/GW2CBackend.html">GW2CBackend</a></li>
+<li class="active">
+<span class="divider">\</span><a href="../classes/GW2CBackend.DiffProcessor.html">DiffProcessor</a>
+</li>
+</ul>
+<div href="../classes/GW2CBackend.DiffProcessor.html" class="element class">
+<p class="short_description">This class detects the differences between two version of the map.</p>
+<div class="details">
+<p class="long_description"></p>
+<h3>
+<i class="icon-custom icon-method"></i> Methods</h3>
+<a name="__construct" id="__construct"></a><div class="element clickable method public __construct" data-toggle="collapse" data-target=".__construct .collapse">
+<h2>Constructor.</h2>
+<pre>__construct(\GW2CBackend\Marker\MapRevision $modification, \GW2CBackend\Marker\MapRevision $reference, integer $maxReferenceID) </pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$modification</h4>
+<code><a href="../classes/GW2CBackend.Marker.MapRevision.html">\GW2CBackend\Marker\MapRevision</a></code><p>the modification</p></div>
+<div class="subelement argument">
+<h4>$reference</h4>
+<code><a href="../classes/GW2CBackend.Marker.MapRevision.html">\GW2CBackend\Marker\MapRevision</a></code><p>the current reference</p></div>
+<div class="subelement argument">
+<h4>$maxReferenceID</h4>
+<code>integer</code><p>the current reference's max ID</p>
+</div>
+</div></div>
+</div>
+<a name="getMarkerByID" id="getMarkerByID"></a><div class="element clickable method public getMarkerByID" data-toggle="collapse" data-target=".getMarkerByID .collapse">
+<h2>Get a marker in a collection by marker's ID.</h2>
+<pre>getMarkerByID(integer $id, array $collection) : <a href="../classes/GW2CBackend.Marker.Marker.html">\GW2CBackend\Marker\Marker</a> | null</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$id</h4>
+<code>integer</code><p>a marker's ID.</p>
+</div>
+<div class="subelement argument">
+<h4>$collection</h4>
+<code>array</code><p>a collection containing markers.</p></div>
+<h3>Returns</h3>
+<div class="subelement response">
+<code><a href="../classes/GW2CBackend.Marker.Marker.html">\GW2CBackend\Marker\Marker</a></code><code>null</code>the marker if found, null otherwise.</div>
+</div></div>
+</div>
+<a name="hasChanges" id="hasChanges"></a><div class="element clickable method public hasChanges" data-toggle="collapse" data-target=".hasChanges .collapse">
+<h2>Indicates if the DiffProcessor detected changes or not.</h2>
+<pre>hasChanges() : boolean</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Returns</h3>
+<div class="subelement response"><code>boolean</code></div>
+</div></div>
+</div>
+<a name="process" id="process"></a><div class="element clickable method public process" data-toggle="collapse" data-target=".process .collapse">
+<h2>Process the DIFF between the modification and the reference config.</h2>
+<pre>process() : array</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"><p>This populates the $changes attribute with markers and information about the change.</p></p>
+<table class="table table-bordered"><tr>
+<th>todo</th>
+<td>adding more comments for the algorithm</td>
+</tr></table>
+<h3>Returns</h3>
+<div class="subelement response">
+<code>array</code>$changes with all the changes from the diff</div>
+</div></div>
+</div>
+<a name="isPotentialDataLoss" id="isPotentialDataLoss"></a><div class="element clickable method protected isPotentialDataLoss" data-toggle="collapse" data-target=".isPotentialDataLoss .collapse">
+<h2>Detects if a marker presents a potential data loss in comparison with the reference.</h2>
+<pre>isPotentialDataLoss(\GW2CBackend\Marker\Marker $reference, \GW2CBackend\Marker\Marker $changedMarker) : boolean</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$reference</h4>
+<code><a href="../classes/GW2CBackend.Marker.Marker.html">\GW2CBackend\Marker\Marker</a></code>
+</div>
+<div class="subelement argument">
+<h4>$changedMarker</h4>
+<code><a href="../classes/GW2CBackend.Marker.Marker.html">\GW2CBackend\Marker\Marker</a></code>
+</div>
+<h3>Returns</h3>
+<div class="subelement response"><code>boolean</code></div>
+</div></div>
+</div>
+<a name="lookForMarker" id="lookForMarker"></a><div class="element clickable method protected lookForMarker" data-toggle="collapse" data-target=".lookForMarker .collapse">
+<h2>Looks for a marker in the reference and build the entry result.</h2>
+<pre>lookForMarker(\GW2CBackend\Marker\Marker $marker, array $markersReference) </pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<table class="table table-bordered"><tr>
+<th>todo</th>
+<td>adding comments, refactoring function name</td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$marker</h4>
+<code><a href="../classes/GW2CBackend.Marker.Marker.html">\GW2CBackend\Marker\Marker</a></code><p>the marker being searched</p></div>
+<div class="subelement argument">
+<h4>$markersReference</h4>
+<code>array</code><p>the markers from the reference</p></div>
+</div></div>
+</div>
+<a name="searchForMarker" id="searchForMarker"></a><div class="element clickable method protected searchForMarker" data-toggle="collapse" data-target=".searchForMarker .collapse">
+<h2>Search for a marker in the modification JSON array.</h2>
+<pre>searchForMarker(\GW2CBackend\$markerReference $markerReference, \GW2CBackend\$markerTypeReference $markers) : \GW2CBackend\an</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"><p>We delete the found item from the modification JSON array each time we find it. In the end, the remaining items are the added ones.</p></p>
+<table class="table table-bordered"><tr>
+<th>todo</th>
+<td>removing unused code</td>
+</tr></table>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$markerReference</h4>
+<code>\GW2CBackend\$markerReference</code><p>the marker from the reference</p></div>
+<div class="subelement argument">
+<h4>$markers</h4>
+<code>\GW2CBackend\$markerTypeReference</code><p>the marker type from the reference</p></div>
+<h3>Returns</h3>
+<div class="subelement response">
+<code>\GW2CBackend\an</code>array that represents the result with the status and eventually the marker or/and the marker from the reference</div>
+</div></div>
+</div>
+<h3>
+<i class="icon-custom icon-property"></i> Properties</h3>
+<a name="%24changes" id="$changes"> </a><div class="element clickable property protected $changes" data-toggle="collapse" data-target=".$changes .collapse">
+<h2>The changes detected in the diff process.</h2>
+<pre>$changes : array</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
+</div>
+<a name="%24maxReferenceID" id="$maxReferenceID"> </a><div class="element clickable property protected $maxReferenceID" data-toggle="collapse" data-target=".$maxReferenceID .collapse">
+<h2>The maximum ID of the reference.</h2>
+<pre>$maxReferenceID : integer</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><p class="long_description"><p>This is used to know if the deleted marker has really been deleted or the deletion detection comes from the fact that
+the modification has been made from an older reference than the current one.</p></p></div></div>
+</div>
+<a name="%24modification" id="$modification"> </a><div class="element clickable property protected $modification" data-toggle="collapse" data-target=".$modification .collapse">
+<h2>The submitted modification.</h2>
+<pre>$modification : <a href="../classes/GW2CBackend.Marker.MapRevision.html">\GW2CBackend\Marker\MapRevision</a></pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
+</div>
+<a name="%24reference" id="$reference"> </a><div class="element clickable property protected $reference" data-toggle="collapse" data-target=".$reference .collapse">
+<h2>The current reference.</h2>
+<pre>$reference : <a href="../classes/GW2CBackend.Marker.MapRevision.html">\GW2CBackend\Marker\MapRevision</a></pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
+</div>
+<h3>
+<i class="icon-custom icon-constant"></i> Constants</h3>
+<a name="STATUS_ADDED" id="STATUS_ADDED"> </a><div class="element clickable constant  STATUS_ADDED" data-toggle="collapse" data-target=".STATUS_ADDED .collapse">
+<h2>When an entry is a new one.</h2>
+<pre>STATUS_ADDED : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
+</div>
+<a name="STATUS_MODIFIED_ALL" id="STATUS_MODIFIED_ALL"> </a><div class="element clickable constant  STATUS_MODIFIED_ALL" data-toggle="collapse" data-target=".STATUS_MODIFIED_ALL .collapse">
+<h2>When an entry has its coordinates and its data modified.</h2>
+<pre>STATUS_MODIFIED_ALL : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
+</div>
+<a name="STATUS_MODIFIED_COORDINATES" id="STATUS_MODIFIED_COORDINATES"> </a><div class="element clickable constant  STATUS_MODIFIED_COORDINATES" data-toggle="collapse" data-target=".STATUS_MODIFIED_COORDINATES .collapse">
+<h2>When an entry has its coordinates modified.</h2>
+<pre>STATUS_MODIFIED_COORDINATES : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
+</div>
+<a name="STATUS_MODIFIED_DATA" id="STATUS_MODIFIED_DATA"> </a><div class="element clickable constant  STATUS_MODIFIED_DATA" data-toggle="collapse" data-target=".STATUS_MODIFIED_DATA .collapse">
+<h2>When an entry has its data modified.</h2>
+<pre>STATUS_MODIFIED_DATA : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
+</div>
+<a name="STATUS_OK" id="STATUS_OK"> </a><div class="element clickable constant  STATUS_OK" data-toggle="collapse" data-target=".STATUS_OK .collapse">
+<h2>When an entry has no change.</h2>
+<pre>STATUS_OK : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
+</div>
+<a name="STATUS_POTENTIAL_DATA_LOSS" id="STATUS_POTENTIAL_DATA_LOSS"> </a><div class="element clickable constant  STATUS_POTENTIAL_DATA_LOSS" data-toggle="collapse" data-target=".STATUS_POTENTIAL_DATA_LOSS .collapse">
+<h2>When an entry has potentially a data loss.</h2>
+<pre>STATUS_POTENTIAL_DATA_LOSS : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
+</div>
+<a name="STATUS_REMOVED" id="STATUS_REMOVED"> </a><div class="element clickable constant  STATUS_REMOVED" data-toggle="collapse" data-target=".STATUS_REMOVED .collapse">
+<h2>When an entry has been removed.</h2>
+<pre>STATUS_REMOVED : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="row"><footer class="span12">
+            Template is built using <a href="http://twitter.github.com/bootstrap/">Twitter Bootstrap 2</a> and icons provided by <a href="http://glyphicons.com/">Glyphicons</a>.<br>
+            Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor 2.0.0a8</a> and<br>
+            generated on 2012-07-30T17:09:27+02:00.<br></footer></div>
+</div>
+</body>
+</html>

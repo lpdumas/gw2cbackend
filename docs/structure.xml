@@ -1,0 +1,3331 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project version="2.0.0a8" title="Guild Wars 2 Cartographers: Crowdsourcing tools">
+  <file path="ChangeMerger.php" hash="3da94ef33597f380b025520378b90821" package="Default">
+    <namespace-alias name="MapRevision">GW2CBackend\Marker\MapRevision</namespace-alias>
+    <class final="false" abstract="false" namespace="GW2CBackend" line="15" package="Default">
+      <extends/>
+      <name>ChangeMerger</name>
+      <full_name>\GW2CBackend\ChangeMerger</full_name>
+      <docblock line="12">
+        <description><![CDATA[Merges the changes into a map representation.]]></description>
+        <long-description><![CDATA[]]></long-description>
+      </docblock>
+      <property final="false" static="false" visibility="protected" line="21" namespace="GW2CBackend" package="Default">
+        <name>$reference</name>
+        <default><![CDATA[]]></default>
+        <docblock line="17">
+          <description><![CDATA[Contains the map reference.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="17" name="var" description="" type="\GW2CBackend\Marker\MapRevision">
+            <type by_reference="false">\GW2CBackend\Marker\MapRevision</type>
+          </tag>
+        </docblock>
+      </property>
+      <property final="false" static="false" visibility="protected" line="27" namespace="GW2CBackend" package="Default">
+        <name>$changes</name>
+        <default><![CDATA[]]></default>
+        <docblock line="23">
+          <description><![CDATA[Contains the changes.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="23" name="var" description="" type="array">
+            <type by_reference="false">array</type>
+          </tag>
+        </docblock>
+      </property>
+      <property final="false" static="false" visibility="protected" line="33" namespace="GW2CBackend" package="Default">
+        <name>$newRevision</name>
+        <default><![CDATA[]]></default>
+        <docblock line="29">
+          <description><![CDATA[Contains the map with the merged changes.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="29" name="var" description="" type="\GW2CBackend\Marker\MapRevision">
+            <type by_reference="false">\GW2CBackend\Marker\MapRevision</type>
+          </tag>
+        </docblock>
+      </property>
+      <property final="false" static="false" visibility="protected" line="39" namespace="GW2CBackend" package="Default">
+        <name>$forAdmin</name>
+        <default><![CDATA[]]></default>
+        <docblock line="35">
+          <description><![CDATA[Set the indicator that will determine if the output will be used by gw2c-backend's merging environment.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="35" name="var" description="" type="boolean">
+            <type by_reference="false">boolean</type>
+          </tag>
+        </docblock>
+      </property>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="GW2CBackend" line="47" package="Default">
+        <name>__construct</name>
+        <full_name>__construct</full_name>
+        <docblock line="41">
+          <description><![CDATA[Constructor.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="41" name="param" description="the map reference." type="\GW2CBackend\Marker\MapRevision" variable="$reference">
+            <type by_reference="false">\GW2CBackend\Marker\MapRevision</type>
+          </tag>
+          <tag line="41" name="param" description="the changes." type="array" variable="$changes">
+            <type by_reference="false">array</type>
+          </tag>
+        </docblock>
+        <argument line="47">
+          <name>$reference</name>
+          <default><![CDATA[]]></default>
+          <type>\GW2CBackend\Marker\MapRevision</type>
+        </argument>
+        <argument line="47">
+          <name>$changes</name>
+          <default><![CDATA[]]></default>
+          <type>array</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="GW2CBackend" line="63" package="Default">
+        <name>merge</name>
+        <full_name>merge</full_name>
+        <docblock line="57">
+          <description><![CDATA[Merges the changes to make a new revision.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="57" name="param" description="the list of changes' IDs that must be merged." type="array" variable="$changesToMerge">
+            <type by_reference="false">array</type>
+          </tag>
+          <tag line="57" name="return" description="the map with the changes merged." type="\GW2CBackend\Marker\MapRevision">
+            <type by_reference="false">\GW2CBackend\Marker\MapRevision</type>
+          </tag>
+        </docblock>
+        <argument line="63">
+          <name>$changesToMerge</name>
+          <default><![CDATA[array()]]></default>
+          <type>array</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="GW2CBackend" line="118" package="Default">
+        <name>setIDToNewMarkers</name>
+        <full_name>setIDToNewMarkers</full_name>
+        <docblock line="111">
+          <description><![CDATA[This method sets new IDs to marker that have been created.]]></description>
+          <long-description><![CDATA[<p>The said markers are the ones whose ID are equal to -1.</p>]]></long-description>
+          <tag line="111" name="return" description="" type="\GW2CBackend\void.">
+            <type by_reference="false">\GW2CBackend\void.</type>
+          </tag>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="protected" namespace="GW2CBackend" line="141" package="Default">
+        <name>getNewID</name>
+        <full_name>getNewID</full_name>
+        <docblock line="136">
+          <description><![CDATA[Gets a new ID.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="136" name="return" description="a new ID." type="integer">
+            <type by_reference="false">integer</type>
+          </tag>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="GW2CBackend" line="150" package="Default">
+        <name>getMaximumID</name>
+        <full_name>getMaximumID</full_name>
+        <docblock line="145">
+          <description><![CDATA[Gets the current maximum ID.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="145" name="return" description="the current maximum ID." type="integer">
+            <type by_reference="false">integer</type>
+          </tag>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="protected" namespace="GW2CBackend" line="159" package="Default">
+        <name>computeMaximumID</name>
+        <full_name>computeMaximumID</full_name>
+        <docblock line="154">
+          <description><![CDATA[Gets the maximum ID from the reference.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="154" name="return" description="the maximum ID of the reference." type="integer">
+            <type by_reference="false">integer</type>
+          </tag>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="GW2CBackend" line="180" package="Default">
+        <name>setForAdmin</name>
+        <full_name>setForAdmin</full_name>
+        <docblock line="175">
+          <description><![CDATA[Sets the indicator that will determine if the output will be used by gw2c-backend's merging environment.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="175" name="param" description="" type="boolean" variable="$forAdmin">
+            <type by_reference="false">boolean</type>
+          </tag>
+        </docblock>
+        <argument line="180">
+          <name>$forAdmin</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+    </class>
+    <parse_markers>
+      <error line="0" code="50007">No page-level DocBlock was found in file ChangeMerger.php</error>
+    </parse_markers>
+  </file>
+  <file path="ConfigGenerator.php" hash="dfb5363072948627c49e4fcb0375d6c1" package="Default">
+    <namespace-alias name="MapRevision">GW2CBackend\Marker\MapRevision</namespace-alias>
+    <namespace-alias name="Marker">GW2CBackend\Marker\Marker</namespace-alias>
+    <class final="false" abstract="false" namespace="GW2CBackend" line="16" package="Default">
+      <extends/>
+      <name>ConfigGenerator</name>
+      <full_name>\GW2CBackend\ConfigGenerator</full_name>
+      <docblock line="13">
+        <description><![CDATA[Generator of the configuration file.]]></description>
+        <long-description><![CDATA[]]></long-description>
+      </docblock>
+      <property final="false" static="false" visibility="protected" line="22" namespace="GW2CBackend" package="Default">
+        <name>$output</name>
+        <default><![CDATA[]]></default>
+        <docblock line="18">
+          <description><![CDATA[Contains the generator's output.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="18" name="var" description="" type="string">
+            <type by_reference="false">string</type>
+          </tag>
+        </docblock>
+      </property>
+      <property final="false" static="false" visibility="protected" line="28" namespace="GW2CBackend" package="Default">
+        <name>$revision</name>
+        <default><![CDATA[]]></default>
+        <docblock line="24">
+          <description><![CDATA[Contains the source of the generation.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="24" name="var" description="" type="\GW2CBackend\Marker\MapRevision">
+            <type by_reference="false">\GW2CBackend\Marker\MapRevision</type>
+          </tag>
+        </docblock>
+      </property>
+      <property final="false" static="false" visibility="protected" line="34" namespace="GW2CBackend" package="Default">
+        <name>$areas</name>
+        <default><![CDATA[]]></default>
+        <docblock line="30">
+          <description><![CDATA[Contains all the area information.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="30" name="var" description="" type="array">
+            <type by_reference="false">array</type>
+          </tag>
+        </docblock>
+      </property>
+      <property final="false" static="false" visibility="protected" line="40" namespace="GW2CBackend" package="Default">
+        <name>$resourcesPath</name>
+        <default><![CDATA[]]></default>
+        <docblock line="36">
+          <description><![CDATA[The path of the marker types' icons.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="36" name="var" description="" type="string">
+            <type by_reference="false">string</type>
+          </tag>
+        </docblock>
+      </property>
+      <property final="false" static="false" visibility="protected" line="46" namespace="GW2CBackend" package="Default">
+        <name>$forAdmin</name>
+        <default><![CDATA[]]></default>
+        <docblock line="42">
+          <description><![CDATA[Indicates if the generation is for gw2c or gw2c-backend's merging envrionment.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="42" name="var" description="" type="boolean">
+            <type by_reference="false">boolean</type>
+          </tag>
+        </docblock>
+      </property>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="GW2CBackend" line="55" package="Default">
+        <name>__construct</name>
+        <full_name>__construct</full_name>
+        <docblock line="48">
+          <description><![CDATA[Constructor.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="48" name="param" description="the source of the generation." type="\GW2CBackend\Marker\MapRevision" variable="$revision">
+            <type by_reference="false">\GW2CBackend\Marker\MapRevision</type>
+          </tag>
+          <tag line="48" name="param" description="the path to the marker's icons." type="string" variable="$resourcesPath">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="48" name="param" description="contains arrays that describe areas." type="array" variable="$areas">
+            <type by_reference="false">array</type>
+          </tag>
+        </docblock>
+        <argument line="55">
+          <name>$revision</name>
+          <default><![CDATA[]]></default>
+          <type>\GW2CBackend\Marker\MapRevision</type>
+        </argument>
+        <argument line="55">
+          <name>$resourcesPath</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+        <argument line="55">
+          <name>$areas</name>
+          <default><![CDATA[]]></default>
+          <type>array</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="GW2CBackend" line="69" package="Default">
+        <name>generate</name>
+        <full_name>generate</full_name>
+        <docblock line="64">
+          <description><![CDATA[Trigger the generation process.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="64" name="return" description="the generated output." type="string">
+            <type by_reference="false">string</type>
+          </tag>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="protected" namespace="GW2CBackend" line="87" package="Default">
+        <name>generateMarkersOutput</name>
+        <full_name>generateMarkersOutput</full_name>
+        <docblock line="82">
+          <description><![CDATA[Generator Subprocess.]]></description>
+          <long-description><![CDATA[<p>Generates the output of the markers.</p>]]></long-description>
+          <tag line="82" name="return" description="the generated output." type="string">
+            <type by_reference="false">string</type>
+          </tag>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="protected" namespace="GW2CBackend" line="145" package="Default">
+        <name>generateMarkerOutput</name>
+        <full_name>generateMarkerOutput</full_name>
+        <docblock line="138">
+          <description><![CDATA[Generator subprocess.]]></description>
+          <long-description><![CDATA[<p>Generates the output of ONE marker.</p>]]></long-description>
+          <tag line="138" name="param" description="the marker source of the generation." type="\GW2CBackend\Marker\Marker" variable="$marker">
+            <type by_reference="false">\GW2CBackend\Marker\Marker</type>
+          </tag>
+          <tag line="138" name="param" description="the number of tabs to put in front of the output." type="integer" variable="$numTabs">
+            <type by_reference="false">integer</type>
+          </tag>
+          <tag line="138" name="return" description="the generated output." type="string">
+            <type by_reference="false">string</type>
+          </tag>
+        </docblock>
+        <argument line="145">
+          <name>$marker</name>
+          <default><![CDATA[]]></default>
+          <type>\GW2CBackend\Marker\Marker</type>
+        </argument>
+        <argument line="145">
+          <name>$numTabs</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="protected" namespace="GW2CBackend" line="179" package="Default">
+        <name>generateTranslatedDataOutput</name>
+        <full_name>generateTranslatedDataOutput</full_name>
+        <docblock line="172">
+          <description><![CDATA[Generator subprocess.]]></description>
+          <long-description><![CDATA[<p>Generates the output of ONE translated data field.</p>]]></long-description>
+          <tag line="172" name="param" description="the data source of the generation." type="\GW2CBackend\TranslatedData" variable="$tData">
+            <type by_reference="false">\GW2CBackend\TranslatedData</type>
+          </tag>
+          <tag line="172" name="param" description="the number of tabs to put in front of the output." type="integer" variable="$numTabs">
+            <type by_reference="false">integer</type>
+          </tag>
+          <tag line="172" name="return" description="the generated output." type="string">
+            <type by_reference="false">string</type>
+          </tag>
+        </docblock>
+        <argument line="179">
+          <name>$tData</name>
+          <default><![CDATA[]]></default>
+          <type>\GW2CBackend\TranslatedData</type>
+        </argument>
+        <argument line="179">
+          <name>$numTabs</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="protected" namespace="GW2CBackend" line="214" package="Default">
+        <name>generateMetadataOutput</name>
+        <full_name>generateMetadataOutput</full_name>
+        <docblock line="209">
+          <description><![CDATA[Generator subprocess.]]></description>
+          <long-description><![CDATA[<p>Generates the output of file's metadata.</p>]]></long-description>
+          <tag line="209" name="return" description="the generated output." type="string">
+            <type by_reference="false">string</type>
+          </tag>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="protected" namespace="GW2CBackend" line="234" package="Default">
+        <name>generateAreasOutput</name>
+        <full_name>generateAreasOutput</full_name>
+        <docblock line="229">
+          <description><![CDATA[Generator subprocess.]]></description>
+          <long-description><![CDATA[<p>Generates the output of all areas.</p>]]></long-description>
+          <tag line="229" name="return" description="the generated output." type="string">
+            <type by_reference="false">string</type>
+          </tag>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="protected" namespace="GW2CBackend" line="254" package="Default">
+        <name>getAreaSummary</name>
+        <full_name>getAreaSummary</full_name>
+        <docblock line="248">
+          <description><![CDATA[Calculates the area summary (number of markers) for each relevant MarkerType.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="248" name="param" description="the area's ID." type="integer" variable="$areaID">
+            <type by_reference="false">integer</type>
+          </tag>
+          <tag line="248" name="return" description="of values where the key is the marker type's slug and the value the number of associated markers." type="array">
+            <type by_reference="false">array</type>
+          </tag>
+        </docblock>
+        <argument line="254">
+          <name>$areaID</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="protected" namespace="GW2CBackend" line="288" package="Default">
+        <name>generateOneAreaOutput</name>
+        <full_name>generateOneAreaOutput</full_name>
+        <docblock line="281">
+          <description><![CDATA[Generator subprocess.]]></description>
+          <long-description><![CDATA[<p>Generates the output of ONE area.</p>]]></long-description>
+          <tag line="281" name="param" description="describes an area." type="array" variable="$area">
+            <type by_reference="false">array</type>
+          </tag>
+          <tag line="281" name="param" description="where the key is marker type's slug and the value the number of associated markers." type="array" variable="$summary">
+            <type by_reference="false">array</type>
+          </tag>
+          <tag line="281" name="return" description="the generated output." type="string">
+            <type by_reference="false">string</type>
+          </tag>
+        </docblock>
+        <argument line="288">
+          <name>$area</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+        <argument line="288">
+          <name>$summary</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="GW2CBackend" line="315" package="Default">
+        <name>minimize</name>
+        <full_name>minimize</full_name>
+        <docblock line="310">
+          <description><![CDATA[Minimizes the output.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="310" name="return" description="the minimized output." type="string">
+            <type by_reference="false">string</type>
+          </tag>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="GW2CBackend" line="326" package="Default">
+        <name>save</name>
+        <full_name>save</full_name>
+        <docblock line="321">
+          <description><![CDATA[Saves the output to a file.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="321" name="param" description="the path where the file will be saved." type="string" variable="$path">
+            <type by_reference="false">string</type>
+          </tag>
+        </docblock>
+        <argument line="326">
+          <name>$path</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="GW2CBackend" line="338" package="Default">
+        <name>getOutput</name>
+        <full_name>getOutput</full_name>
+        <docblock line="333">
+          <description><![CDATA[Returns the output.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="333" name="return" description="the output." type="string">
+            <type by_reference="false">string</type>
+          </tag>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="true" visibility="protected" namespace="GW2CBackend" line="346" package="Default">
+        <name>tabs</name>
+        <full_name>tabs</full_name>
+        <docblock line="340">
+          <description><![CDATA[Creates a string of tabs.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="340" name="param" description="the number of tabs. Default is 1." type="integer" variable="$numTabs">
+            <type by_reference="false">integer</type>
+          </tag>
+          <tag line="340" name="return" description="with $numTabs tabs." type="string">
+            <type by_reference="false">string</type>
+          </tag>
+        </docblock>
+        <argument line="346">
+          <name>$numTabs</name>
+          <default><![CDATA[1]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="GW2CBackend" line="359" package="Default">
+        <name>setForAdmin</name>
+        <full_name>setForAdmin</full_name>
+        <docblock line="354">
+          <description><![CDATA[Set the indicator that will determine if the output will be used by gw2c-backend's merging environment.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="354" name="param" description="" type="boolean" variable="$forAdmin">
+            <type by_reference="false">boolean</type>
+          </tag>
+        </docblock>
+        <argument line="359">
+          <name>$forAdmin</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+    </class>
+    <parse_markers>
+      <error line="0" code="50007">No page-level DocBlock was found in file ConfigGenerator.php</error>
+    </parse_markers>
+  </file>
+  <file path="Controller/AreaControllerProvider.php" hash="aa87b8522ebd04666ee34d61bff848ae" package="Default">
+    <namespace-alias name="Application">Silex\Application</namespace-alias>
+    <namespace-alias name="ControllerProviderInterface">Silex\ControllerProviderInterface</namespace-alias>
+    <namespace-alias name="ControllerCollection">Silex\ControllerCollection</namespace-alias>
+    <namespace-alias name="Request">Symfony\Component\HttpFoundation\Request</namespace-alias>
+    <namespace-alias name="Response">Symfony\Component\HttpFoundation\Response</namespace-alias>
+    <namespace-alias name="HttpKernelInterface">Symfony\Component\HttpKernel\HttpKernelInterface</namespace-alias>
+    <class final="false" abstract="false" namespace="GW2CBackend\Controller" line="20" package="Default">
+      <extends>\GW2CBackend\Controller\ControllerProvider</extends>
+      <implements>\Silex\ControllerProviderInterface</implements>
+      <name>AreaControllerProvider</name>
+      <full_name>\GW2CBackend\Controller\AreaControllerProvider</full_name>
+      <docblock line="17">
+        <description><![CDATA[Controllers for areas management.]]></description>
+        <long-description><![CDATA[]]></long-description>
+      </docblock>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="GW2CBackend\Controller" line="27" package="Default">
+        <name>connect</name>
+        <full_name>connect</full_name>
+        <docblock line="22">
+          <description><![CDATA[Connects the controllers to the Silex application.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="22" name="param" description="the Silex application objet." type="\Silex\Application" variable="$app">
+            <type by_reference="false">\Silex\Application</type>
+          </tag>
+        </docblock>
+        <argument line="27">
+          <name>$app</name>
+          <default><![CDATA[]]></default>
+          <type>\Silex\Application</type>
+        </argument>
+      </method>
+    </class>
+    <parse_markers>
+      <error line="0" code="50007">No page-level DocBlock was found in file Controller/AreaControllerProvider.php</error>
+    </parse_markers>
+  </file>
+  <file path="Controller/ControllerProvider.php" hash="3deee9d50f6e071e902a358d83afcd38" package="Default">
+    <class final="false" abstract="false" namespace="GW2CBackend\Controller" line="13" package="Default">
+      <extends/>
+      <name>ControllerProvider</name>
+      <full_name>\GW2CBackend\Controller\ControllerProvider</full_name>
+      <docblock line="10">
+        <description><![CDATA[Super-class for Controller Providers.]]></description>
+        <long-description><![CDATA[]]></long-description>
+      </docblock>
+      <property final="false" static="false" visibility="protected" line="19" namespace="GW2CBackend\Controller" package="Default">
+        <name>$closures</name>
+        <default><![CDATA[]]></default>
+        <docblock line="15">
+          <description><![CDATA[A collection of closures.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="15" name="var" description="" type="array">
+            <type by_reference="false">array</type>
+          </tag>
+        </docblock>
+      </property>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="GW2CBackend\Controller" line="26" package="Default">
+        <name>__construct</name>
+        <full_name>__construct</full_name>
+        <docblock line="21">
+          <description><![CDATA[Constructor.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="21" name="param" description="a collection of closures." type="array" variable="$closures">
+            <type by_reference="false">array</type>
+          </tag>
+        </docblock>
+        <argument line="26">
+          <name>$closures</name>
+          <default><![CDATA[]]></default>
+          <type>array</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="GW2CBackend\Controller" line="38" package="Default">
+        <name>getClosure</name>
+        <full_name>getClosure</full_name>
+        <docblock line="31">
+          <description><![CDATA[Gets a closure.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="31" name="param" description="the closure identifier." type="string" variable="$id">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="31" name="return" description="" type="callback">
+            <type by_reference="false">callback</type>
+          </tag>
+          <tag line="31" name="throws" description="if the identifier is not in the closures collection." type="\GW2CBackend\Controller\BadFunctionCallException">
+            <type by_reference="false">\GW2CBackend\Controller\BadFunctionCallException</type>
+          </tag>
+        </docblock>
+        <argument line="38">
+          <name>$id</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+    </class>
+    <parse_markers>
+      <error line="0" code="50007">No page-level DocBlock was found in file Controller/ControllerProvider.php</error>
+    </parse_markers>
+  </file>
+  <file path="Controller/OptionsControllerProvider.php" hash="2f3955385b0a6d799ffb016771f274ad" package="Default">
+    <namespace-alias name="Application">Silex\Application</namespace-alias>
+    <namespace-alias name="ControllerProviderInterface">Silex\ControllerProviderInterface</namespace-alias>
+    <namespace-alias name="ControllerCollection">Silex\ControllerCollection</namespace-alias>
+    <namespace-alias name="Request">Symfony\Component\HttpFoundation\Request</namespace-alias>
+    <namespace-alias name="Response">Symfony\Component\HttpFoundation\Response</namespace-alias>
+    <class final="false" abstract="false" namespace="GW2CBackend\Controller" line="19" package="Default">
+      <extends>\GW2CBackend\Controller\ControllerProvider</extends>
+      <implements>\Silex\ControllerProviderInterface</implements>
+      <name>OptionsControllerProvider</name>
+      <full_name>\GW2CBackend\Controller\OptionsControllerProvider</full_name>
+      <docblock line="16">
+        <description><![CDATA[Controllers for options management.]]></description>
+        <long-description><![CDATA[]]></long-description>
+      </docblock>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="GW2CBackend\Controller" line="26" package="Default">
+        <name>connect</name>
+        <full_name>connect</full_name>
+        <docblock line="21">
+          <description><![CDATA[Connects the controllers to the Silex application.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="21" name="param" description="the Silex application objet." type="\Silex\Application" variable="$app">
+            <type by_reference="false">\Silex\Application</type>
+          </tag>
+        </docblock>
+        <argument line="26">
+          <name>$app</name>
+          <default><![CDATA[]]></default>
+          <type>\Silex\Application</type>
+        </argument>
+      </method>
+    </class>
+    <parse_markers>
+      <error line="0" code="50007">No page-level DocBlock was found in file Controller/OptionsControllerProvider.php</error>
+    </parse_markers>
+  </file>
+  <file path="Controller/OrganizeControllerProvider.php" hash="41499281b1b2ec1f04ea4985fb01e714" package="Default">
+    <namespace-alias name="Application">Silex\Application</namespace-alias>
+    <namespace-alias name="ControllerProviderInterface">Silex\ControllerProviderInterface</namespace-alias>
+    <namespace-alias name="ControllerCollection">Silex\ControllerCollection</namespace-alias>
+    <namespace-alias name="Request">Symfony\Component\HttpFoundation\Request</namespace-alias>
+    <namespace-alias name="Response">Symfony\Component\HttpFoundation\Response</namespace-alias>
+    <class final="false" abstract="false" namespace="GW2CBackend\Controller" line="19" package="Default">
+      <extends>\GW2CBackend\Controller\ControllerProvider</extends>
+      <implements>\Silex\ControllerProviderInterface</implements>
+      <name>OrganizeControllerProvider</name>
+      <full_name>\GW2CBackend\Controller\OrganizeControllerProvider</full_name>
+      <docblock line="16">
+        <description><![CDATA[Controllers for the organization of the map structure.]]></description>
+        <long-description><![CDATA[]]></long-description>
+      </docblock>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="GW2CBackend\Controller" line="26" package="Default">
+        <name>connect</name>
+        <full_name>connect</full_name>
+        <docblock line="21">
+          <description><![CDATA[Connects the controllers to the Silex application.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="21" name="param" description="the Silex application objet." type="\Silex\Application" variable="$app">
+            <type by_reference="false">\Silex\Application</type>
+          </tag>
+        </docblock>
+        <argument line="26">
+          <name>$app</name>
+          <default><![CDATA[]]></default>
+          <type>\Silex\Application</type>
+        </argument>
+      </method>
+    </class>
+    <parse_markers>
+      <error line="0" code="50007">No page-level DocBlock was found in file Controller/OrganizeControllerProvider.php</error>
+    </parse_markers>
+  </file>
+  <file path="Controller/UserControllerProvider.php" hash="e8d8f960a41037602bedd890d146aceb" package="Default">
+    <namespace-alias name="Application">Silex\Application</namespace-alias>
+    <namespace-alias name="ControllerProviderInterface">Silex\ControllerProviderInterface</namespace-alias>
+    <namespace-alias name="ControllerCollection">Silex\ControllerCollection</namespace-alias>
+    <namespace-alias name="Request">Symfony\Component\HttpFoundation\Request</namespace-alias>
+    <namespace-alias name="Response">Symfony\Component\HttpFoundation\Response</namespace-alias>
+    <class final="false" abstract="false" namespace="GW2CBackend\Controller" line="19" package="Default">
+      <extends/>
+      <implements>\Silex\ControllerProviderInterface</implements>
+      <name>UserControllerProvider</name>
+      <full_name>\GW2CBackend\Controller\UserControllerProvider</full_name>
+      <docblock line="16">
+        <description><![CDATA[Controllers for the user management.]]></description>
+        <long-description><![CDATA[]]></long-description>
+      </docblock>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="GW2CBackend\Controller" line="26" package="Default">
+        <name>connect</name>
+        <full_name>connect</full_name>
+        <docblock line="21">
+          <description><![CDATA[Connects the controllers to the Silex application.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="21" name="param" description="the Silex application objet." type="\Silex\Application" variable="$app">
+            <type by_reference="false">\Silex\Application</type>
+          </tag>
+        </docblock>
+        <argument line="26">
+          <name>$app</name>
+          <default><![CDATA[]]></default>
+          <type>\Silex\Application</type>
+        </argument>
+      </method>
+    </class>
+    <parse_markers>
+      <error line="0" code="50007">No page-level DocBlock was found in file Controller/UserControllerProvider.php</error>
+    </parse_markers>
+  </file>
+  <file path="DatabaseAdapter.php" hash="6ab1e99acfd1fab6a34d2490f505ab3b" package="Default">
+    <namespace-alias name="User">Symfony\Component\Security\Core\User\User</namespace-alias>
+    <class final="false" abstract="false" namespace="GW2CBackend" line="19" package="Default">
+      <extends/>
+      <name>DatabaseAdapter</name>
+      <full_name>\GW2CBackend\DatabaseAdapter</full_name>
+      <docblock line="12">
+        <description><![CDATA[Manages the database access.]]></description>
+        <long-description><![CDATA[<p>This class uses PDO to request the database.</p>]]></long-description>
+        <tag line="12" name="todo" description="This class needs a massive refactoring. Comments will come with the refactoring."/>
+      </docblock>
+      <property final="false" static="false" visibility="protected" line="24" namespace="GW2CBackend" package="Default">
+        <name>$pdo</name>
+        <default><![CDATA[]]></default>
+        <docblock line="21">
+          <description><![CDATA[]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="21" name="ignore" description=""/>
+        </docblock>
+      </property>
+      <property final="false" static="false" visibility="protected" line="29" namespace="GW2CBackend" package="Default">
+        <name>$database</name>
+        <default><![CDATA[]]></default>
+        <docblock line="26">
+          <description><![CDATA[]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="26" name="ignore" description=""/>
+        </docblock>
+      </property>
+      <property final="false" static="false" visibility="protected" line="34" namespace="GW2CBackend" package="Default">
+        <name>$data</name>
+        <default><![CDATA[array()]]></default>
+        <docblock line="31">
+          <description><![CDATA[]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="31" name="ignore" description=""/>
+        </docblock>
+      </property>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="GW2CBackend" line="39" package="Default">
+        <name>connect</name>
+        <full_name>connect</full_name>
+        <docblock line="36">
+          <description><![CDATA[]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="36" name="ignore" description=""/>
+        </docblock>
+        <argument line="39">
+          <name>$host</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+        <argument line="39">
+          <name>$port</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+        <argument line="39">
+          <name>$database</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+        <argument line="39">
+          <name>$user</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+        <argument line="39">
+          <name>$pword</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="GW2CBackend" line="55" package="Default">
+        <name>addModification</name>
+        <full_name>addModification</full_name>
+        <docblock line="52">
+          <description><![CDATA[]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="52" name="ignore" description=""/>
+        </docblock>
+        <argument line="55">
+          <name>$json</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="GW2CBackend" line="69" package="Default">
+        <name>saveNewRevisionAsReference</name>
+        <full_name>saveNewRevisionAsReference</full_name>
+        <docblock line="66">
+          <description><![CDATA[]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="66" name="ignore" description=""/>
+        </docblock>
+        <argument line="69">
+          <name>$newRevision</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+        <argument line="69">
+          <name>$modificationSourceID</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+        <argument line="69">
+          <name>$maxID</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="GW2CBackend" line="88" package="Default">
+        <name>markAsMerged</name>
+        <full_name>markAsMerged</full_name>
+        <docblock line="85">
+          <description><![CDATA[]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="85" name="ignore" description=""/>
+        </docblock>
+        <argument line="88">
+          <name>$revID</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="GW2CBackend" line="98" package="Default">
+        <name>retrieveAll</name>
+        <full_name>retrieveAll</full_name>
+        <docblock line="95">
+          <description><![CDATA[]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="95" name="ignore" description=""/>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="GW2CBackend" line="110" package="Default">
+        <name>retrieveModificationList</name>
+        <full_name>retrieveModificationList</full_name>
+        <docblock line="107">
+          <description><![CDATA[]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="107" name="ignore" description=""/>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="GW2CBackend" line="120" package="Default">
+        <name>retrieveMergedModificationList</name>
+        <full_name>retrieveMergedModificationList</full_name>
+        <docblock line="117">
+          <description><![CDATA[]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="117" name="ignore" description=""/>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="GW2CBackend" line="130" package="Default">
+        <name>retrieveReferenceAtSubmission</name>
+        <full_name>retrieveReferenceAtSubmission</full_name>
+        <docblock line="127">
+          <description><![CDATA[]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="127" name="ignore" description=""/>
+        </docblock>
+        <argument line="130">
+          <name>$referenceID</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="GW2CBackend" line="141" package="Default">
+        <name>retrieveCurrentReference</name>
+        <full_name>retrieveCurrentReference</full_name>
+        <docblock line="138">
+          <description><![CDATA[]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="138" name="ignore" description=""/>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="GW2CBackend" line="153" package="Default">
+        <name>retrieveOptions</name>
+        <full_name>retrieveOptions</full_name>
+        <docblock line="150">
+          <description><![CDATA[]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="150" name="ignore" description=""/>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="GW2CBackend" line="166" package="Default">
+        <name>getMarkerGroups</name>
+        <full_name>getMarkerGroups</full_name>
+        <docblock line="163">
+          <description><![CDATA[]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="163" name="ignore" description=""/>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="GW2CBackend" line="186" package="Default">
+        <name>getTranslatedData</name>
+        <full_name>getTranslatedData</full_name>
+        <docblock line="183">
+          <description><![CDATA[]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="183" name="ignore" description=""/>
+        </docblock>
+        <argument line="186">
+          <name>$id</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="GW2CBackend" line="210" package="Default">
+        <name>getMarkerTypes</name>
+        <full_name>getMarkerTypes</full_name>
+        <docblock line="207">
+          <description><![CDATA[]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="207" name="ignore" description=""/>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="GW2CBackend" line="229" package="Default">
+        <name>getMarkersStructure</name>
+        <full_name>getMarkersStructure</full_name>
+        <docblock line="226">
+          <description><![CDATA[]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="226" name="ignore" description=""/>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="GW2CBackend" line="243" package="Default">
+        <name>retrieveAreasList</name>
+        <full_name>retrieveAreasList</full_name>
+        <docblock line="240">
+          <description><![CDATA[]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="240" name="ignore" description=""/>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="GW2CBackend" line="257" package="Default">
+        <name>createArea</name>
+        <full_name>createArea</full_name>
+        <docblock line="254">
+          <description><![CDATA[]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="254" name="ignore" description=""/>
+        </docblock>
+        <argument line="257">
+          <name>$name</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+        <argument line="257">
+          <name>$rangeLvl</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+        <argument line="257">
+          <name>$swLat</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+        <argument line="257">
+          <name>$swLng</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+        <argument line="257">
+          <name>$neLat</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+        <argument line="257">
+          <name>$neLng</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="GW2CBackend" line="267" package="Default">
+        <name>editArea</name>
+        <full_name>editArea</full_name>
+        <docblock line="264">
+          <description><![CDATA[]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="264" name="ignore" description=""/>
+        </docblock>
+        <argument line="267">
+          <name>$areaID</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+        <argument line="267">
+          <name>$name</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+        <argument line="267">
+          <name>$rangeLvl</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+        <argument line="267">
+          <name>$swLat</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+        <argument line="267">
+          <name>$swLng</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+        <argument line="267">
+          <name>$neLat</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+        <argument line="267">
+          <name>$neLng</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="GW2CBackend" line="281" package="Default">
+        <name>removeArea</name>
+        <full_name>removeArea</full_name>
+        <docblock line="278">
+          <description><![CDATA[]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="278" name="ignore" description=""/>
+        </docblock>
+        <argument line="281">
+          <name>$areaID</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="GW2CBackend" line="289" package="Default">
+        <name>retrieveModification</name>
+        <full_name>retrieveModification</full_name>
+        <docblock line="286">
+          <description><![CDATA[]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="286" name="ignore" description=""/>
+        </docblock>
+        <argument line="289">
+          <name>$idModification</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="GW2CBackend" line="299" package="Default">
+        <name>retrieveFirstModification</name>
+        <full_name>retrieveFirstModification</full_name>
+        <docblock line="296">
+          <description><![CDATA[]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="296" name="ignore" description=""/>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="GW2CBackend" line="309" package="Default">
+        <name>getData</name>
+        <full_name>getData</full_name>
+        <docblock line="306">
+          <description><![CDATA[]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="306" name="ignore" description=""/>
+        </docblock>
+        <argument line="309">
+          <name>$index</name>
+          <default><![CDATA[null]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="GW2CBackend" line="322" package="Default">
+        <name>addFieldset</name>
+        <full_name>addFieldset</full_name>
+        <docblock line="319">
+          <description><![CDATA[]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="319" name="ignore" description=""/>
+        </docblock>
+        <argument line="322">
+          <name>$fieldsetName</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="GW2CBackend" line="331" package="Default">
+        <name>removeFieldset</name>
+        <full_name>removeFieldset</full_name>
+        <docblock line="328">
+          <description><![CDATA[]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="328" name="ignore" description=""/>
+        </docblock>
+        <argument line="331">
+          <name>$fieldsetID</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="GW2CBackend" line="345" package="Default">
+        <name>getAllFieldsets</name>
+        <full_name>getAllFieldsets</full_name>
+        <docblock line="342">
+          <description><![CDATA[]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="342" name="ignore" description=""/>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="GW2CBackend" line="366" package="Default">
+        <name>getFieldset</name>
+        <full_name>getFieldset</full_name>
+        <docblock line="363">
+          <description><![CDATA[]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="363" name="ignore" description=""/>
+        </docblock>
+        <argument line="366">
+          <name>$fieldsetID</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="GW2CBackend" line="387" package="Default">
+        <name>getTranslatableDataIDsByFieldset</name>
+        <full_name>getTranslatableDataIDsByFieldset</full_name>
+        <docblock line="384">
+          <description><![CDATA[]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="384" name="ignore" description=""/>
+        </docblock>
+        <argument line="387">
+          <name>$fieldsetID</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="GW2CBackend" line="405" package="Default">
+        <name>addField</name>
+        <full_name>addField</full_name>
+        <docblock line="402">
+          <description><![CDATA[]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="402" name="ignore" description=""/>
+        </docblock>
+        <argument line="405">
+          <name>$fieldsetID</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+        <argument line="405">
+          <name>$fieldName</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="GW2CBackend" line="432" package="Default">
+        <name>editField</name>
+        <full_name>editField</full_name>
+        <docblock line="429">
+          <description><![CDATA[]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="429" name="ignore" description=""/>
+        </docblock>
+        <argument line="432">
+          <name>$fieldID</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+        <argument line="432">
+          <name>$fieldName</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="GW2CBackend" line="460" package="Default">
+        <name>removeField</name>
+        <full_name>removeField</full_name>
+        <docblock line="457">
+          <description><![CDATA[]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="457" name="ignore" description=""/>
+        </docblock>
+        <argument line="460">
+          <name>$fieldID</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+        <argument line="460">
+          <name>$fieldName</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="GW2CBackend" line="492" package="Default">
+        <name>getMarkerGroupIDsIfNoTranslatedData</name>
+        <full_name>getMarkerGroupIDsIfNoTranslatedData</full_name>
+        <docblock line="489">
+          <description><![CDATA[]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="489" name="ignore" description=""/>
+        </docblock>
+        <argument line="492">
+          <name>$fieldsetID</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="GW2CBackend" line="504" package="Default">
+        <name>getMarkerGroupByFieldset</name>
+        <full_name>getMarkerGroupByFieldset</full_name>
+        <docblock line="501">
+          <description><![CDATA[]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="501" name="ignore" description=""/>
+        </docblock>
+        <argument line="504">
+          <name>$fieldsetID</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="GW2CBackend" line="515" package="Default">
+        <name>getMarkerTypeByFieldset</name>
+        <full_name>getMarkerTypeByFieldset</full_name>
+        <docblock line="512">
+          <description><![CDATA[]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="512" name="ignore" description=""/>
+        </docblock>
+        <argument line="515">
+          <name>$fieldsetID</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="GW2CBackend" line="526" package="Default">
+        <name>getMarkerTypeIDsIfNoTranslatedData</name>
+        <full_name>getMarkerTypeIDsIfNoTranslatedData</full_name>
+        <docblock line="523">
+          <description><![CDATA[]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="523" name="ignore" description=""/>
+        </docblock>
+        <argument line="526">
+          <name>$fieldsetID</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="GW2CBackend" line="538" package="Default">
+        <name>addMarkerGroup</name>
+        <full_name>addMarkerGroup</full_name>
+        <docblock line="535">
+          <description><![CDATA[]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="535" name="ignore" description=""/>
+        </docblock>
+        <argument line="538">
+          <name>$slug</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+        <argument line="538">
+          <name>$iconPrefix</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+        <argument line="538">
+          <name>$fieldsetID</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="GW2CBackend" line="564" package="Default">
+        <name>editMarkerGroup</name>
+        <full_name>editMarkerGroup</full_name>
+        <docblock line="561">
+          <description><![CDATA[]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="561" name="ignore" description=""/>
+        </docblock>
+        <argument line="564">
+          <name>$slugReference</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+        <argument line="564">
+          <name>$slug</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+        <argument line="564">
+          <name>$iconPrefix</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+        <argument line="564">
+          <name>$fieldsetID</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="GW2CBackend" line="615" package="Default">
+        <name>updateTranslatedDataFieldsRange</name>
+        <full_name>updateTranslatedDataFieldsRange</full_name>
+        <docblock line="612">
+          <description><![CDATA[]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="612" name="ignore" description=""/>
+        </docblock>
+        <argument line="615">
+          <name>$translatedDataID</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+        <argument line="615">
+          <name>$fieldsetID</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="GW2CBackend" line="662" package="Default">
+        <name>removeMarkerGroup</name>
+        <full_name>removeMarkerGroup</full_name>
+        <docblock line="659">
+          <description><![CDATA[]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="659" name="ignore" description=""/>
+        </docblock>
+        <argument line="662">
+          <name>$slug</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="GW2CBackend" line="682" package="Default">
+        <name>addMarkerType</name>
+        <full_name>addMarkerType</full_name>
+        <docblock line="679">
+          <description><![CDATA[]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="679" name="ignore" description=""/>
+        </docblock>
+        <argument line="682">
+          <name>$slug</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+        <argument line="682">
+          <name>$filename</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+        <argument line="682">
+          <name>$displayInAreaSum</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+        <argument line="682">
+          <name>$fieldsetID</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+        <argument line="682">
+          <name>$markerGroupID</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="GW2CBackend" line="709" package="Default">
+        <name>removeMarkerType</name>
+        <full_name>removeMarkerType</full_name>
+        <docblock line="706">
+          <description><![CDATA[]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="706" name="ignore" description=""/>
+        </docblock>
+        <argument line="709">
+          <name>$slug</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="GW2CBackend" line="727" package="Default">
+        <name>editMarkerType</name>
+        <full_name>editMarkerType</full_name>
+        <docblock line="724">
+          <description><![CDATA[]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="724" name="ignore" description=""/>
+        </docblock>
+        <argument line="727">
+          <name>$slugReference</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+        <argument line="727">
+          <name>$slug</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+        <argument line="727">
+          <name>$filename</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+        <argument line="727">
+          <name>$displayInAreaSum</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+        <argument line="727">
+          <name>$fieldsetID</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="GW2CBackend" line="775" package="Default">
+        <name>addTranslatedDataFieldsFromFieldset</name>
+        <full_name>addTranslatedDataFieldsFromFieldset</full_name>
+        <docblock line="772">
+          <description><![CDATA[]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="772" name="ignore" description=""/>
+        </docblock>
+        <argument line="775">
+          <name>$fieldsetID</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="GW2CBackend" line="798" package="Default">
+        <name>addTranslatedDataField</name>
+        <full_name>addTranslatedDataField</full_name>
+        <docblock line="795">
+          <description><![CDATA[]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="795" name="ignore" description=""/>
+        </docblock>
+        <argument line="798">
+          <name>$id</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+        <argument line="798">
+          <name>$lang</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+        <argument line="798">
+          <name>$key</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="GW2CBackend" line="808" package="Default">
+        <name>removeTranslatedDataField</name>
+        <full_name>removeTranslatedDataField</full_name>
+        <docblock line="805">
+          <description><![CDATA[]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="805" name="ignore" description=""/>
+        </docblock>
+        <argument line="808">
+          <name>$id</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+        <argument line="808">
+          <name>$key</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="GW2CBackend" line="817" package="Default">
+        <name>updateTranslatedDataField</name>
+        <full_name>updateTranslatedDataField</full_name>
+        <docblock line="814">
+          <description><![CDATA[]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="814" name="ignore" description=""/>
+        </docblock>
+        <argument line="817">
+          <name>$id</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+        <argument line="817">
+          <name>$lang</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+        <argument line="817">
+          <name>$key</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+        <argument line="817">
+          <name>$value</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="GW2CBackend" line="826" package="Default">
+        <name>getReference</name>
+        <full_name>getReference</full_name>
+        <docblock line="823">
+          <description><![CDATA[]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="823" name="ignore" description=""/>
+        </docblock>
+        <argument line="826">
+          <name>$referenceID</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="GW2CBackend" line="837" package="Default">
+        <name>removeModification</name>
+        <full_name>removeModification</full_name>
+        <docblock line="834">
+          <description><![CDATA[]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="834" name="ignore" description=""/>
+        </docblock>
+        <argument line="837">
+          <name>$idModification</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="GW2CBackend" line="844" package="Default">
+        <name>editTranslatedData</name>
+        <full_name>editTranslatedData</full_name>
+        <docblock line="841">
+          <description><![CDATA[]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="841" name="ignore" description=""/>
+        </docblock>
+        <argument line="844">
+          <name>$tDataID</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+        <argument line="844">
+          <name>$values</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+        <argument line="844">
+          <name>$fieldsetID</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="GW2CBackend" line="861" package="Default">
+        <name>getTranslatedDataNewID</name>
+        <full_name>getTranslatedDataNewID</full_name>
+        <docblock line="858">
+          <description><![CDATA[]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="858" name="ignore" description=""/>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="GW2CBackend" line="872" package="Default">
+        <name>getAllLanguages</name>
+        <full_name>getAllLanguages</full_name>
+        <docblock line="869">
+          <description><![CDATA[]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="869" name="ignore" description=""/>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="GW2CBackend" line="888" package="Default">
+        <name>getUserByUsername</name>
+        <full_name>getUserByUsername</full_name>
+        <docblock line="885">
+          <description><![CDATA[]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="885" name="ignore" description=""/>
+        </docblock>
+        <argument line="888">
+          <name>$username</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="GW2CBackend" line="901" package="Default">
+        <name>getAllUsers</name>
+        <full_name>getAllUsers</full_name>
+        <docblock line="898">
+          <description><![CDATA[]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="898" name="ignore" description=""/>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="GW2CBackend" line="912" package="Default">
+        <name>createUser</name>
+        <full_name>createUser</full_name>
+        <docblock line="909">
+          <description><![CDATA[]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="909" name="ignore" description=""/>
+        </docblock>
+        <argument line="912">
+          <name>$username</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+        <argument line="912">
+          <name>$password</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+        <argument line="912">
+          <name>$role</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+        <argument line="912">
+          <name>$service</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="GW2CBackend" line="929" package="Default">
+        <name>removeUser</name>
+        <full_name>removeUser</full_name>
+        <docblock line="926">
+          <description><![CDATA[]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="926" name="ignore" description=""/>
+        </docblock>
+        <argument line="929">
+          <name>$username</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="GW2CBackend" line="937" package="Default">
+        <name>editOptions</name>
+        <full_name>editOptions</full_name>
+        <docblock line="934">
+          <description><![CDATA[]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="934" name="ignore" description=""/>
+        </docblock>
+        <argument line="937">
+          <name>$options</name>
+          <default><![CDATA[]]></default>
+          <type>array</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="GW2CBackend" line="947" package="Default">
+        <name>dumpDatabase</name>
+        <full_name>dumpDatabase</full_name>
+        <docblock line="944">
+          <description><![CDATA[]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="944" name="ignore" description=""/>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="GW2CBackend" line="1007" package="Default">
+        <name>handleError</name>
+        <full_name>handleError</full_name>
+        <docblock line="1004">
+          <description><![CDATA[]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="1004" name="ignore" description=""/>
+        </docblock>
+        <argument line="1007">
+          <name>$e</name>
+          <default><![CDATA[]]></default>
+          <type>\Exception</type>
+        </argument>
+      </method>
+    </class>
+    <parse_markers>
+      <error line="0" code="50007">No page-level DocBlock was found in file DatabaseAdapter.php</error>
+    </parse_markers>
+  </file>
+  <file path="DatabaseServiceProvider.php" hash="7c1f74d94504afa5c0446ff7b478eaba" package="Default">
+    <namespace-alias name="Application">Silex\Application</namespace-alias>
+    <namespace-alias name="ServiceProviderInterface">Silex\ServiceProviderInterface</namespace-alias>
+    <class final="false" abstract="false" namespace="GW2CBackend" line="18" package="Default">
+      <extends/>
+      <implements>\Silex\ServiceProviderInterface</implements>
+      <name>DatabaseServiceProvider</name>
+      <full_name>\GW2CBackend\DatabaseServiceProvider</full_name>
+      <docblock line="13">
+        <description><![CDATA[Silex service provider for the GW2C-Backend database.]]></description>
+        <long-description><![CDATA[<p>Gives access to the silex application to the database service, an instance of \GW2CBackend\DatabaseAdapter.</p>]]></long-description>
+      </docblock>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="GW2CBackend" line="25" package="Default">
+        <name>register</name>
+        <full_name>register</full_name>
+        <docblock line="20">
+          <description><![CDATA[Registers the service into the Silex application.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="20" name="param" description="the Silex Application object." type="\Silex\Application" variable="$app">
+            <type by_reference="false">\Silex\Application</type>
+          </tag>
+        </docblock>
+        <argument line="25">
+          <name>$app</name>
+          <default><![CDATA[]]></default>
+          <type>\Silex\Application</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="GW2CBackend" line="37" package="Default">
+        <name>boot</name>
+        <full_name>boot</full_name>
+        <docblock line="30">
+          <description><![CDATA[Executed the first time the service is called.]]></description>
+          <long-description><![CDATA[<p>Opens the database connection.</p>]]></long-description>
+          <tag line="30" name="param" description="the Silex Application object." type="\Silex\Application" variable="$app">
+            <type by_reference="false">\Silex\Application</type>
+          </tag>
+        </docblock>
+        <argument line="37">
+          <name>$app</name>
+          <default><![CDATA[]]></default>
+          <type>\Silex\Application</type>
+        </argument>
+      </method>
+    </class>
+    <parse_markers>
+      <error line="0" code="50007">No page-level DocBlock was found in file DatabaseServiceProvider.php</error>
+    </parse_markers>
+  </file>
+  <file path="DiffProcessor.php" hash="d49b08915b3bf864715a7809f50ca861" package="Default">
+    <namespace-alias name="MapRevision">GW2CBackend\Marker\MapRevision</namespace-alias>
+    <namespace-alias name="Marker">GW2CBackend\Marker\Marker</namespace-alias>
+    <class final="false" abstract="false" namespace="GW2CBackend" line="16" package="Default">
+      <extends/>
+      <name>DiffProcessor</name>
+      <full_name>\GW2CBackend\DiffProcessor</full_name>
+      <docblock line="13">
+        <description><![CDATA[This class detects the differences between two version of the map.]]></description>
+        <long-description><![CDATA[]]></long-description>
+      </docblock>
+      <constant namespace="GW2CBackend" line="22" package="Default">
+        <name>STATUS_OK</name>
+        <full_name>STATUS_OK</full_name>
+        <value><![CDATA["status_ok"]]></value>
+        <docblock line="18">
+          <description><![CDATA[When an entry has no change.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="18" name="var" description="" type="string">
+            <type by_reference="false">string</type>
+          </tag>
+        </docblock>
+      </constant>
+      <constant namespace="GW2CBackend" line="28" package="Default">
+        <name>STATUS_ADDED</name>
+        <full_name>STATUS_ADDED</full_name>
+        <value><![CDATA["status_added"]]></value>
+        <docblock line="24">
+          <description><![CDATA[When an entry is a new one.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="24" name="var" description="" type="string">
+            <type by_reference="false">string</type>
+          </tag>
+        </docblock>
+      </constant>
+      <constant namespace="GW2CBackend" line="34" package="Default">
+        <name>STATUS_REMOVED</name>
+        <full_name>STATUS_REMOVED</full_name>
+        <value><![CDATA["status_removed"]]></value>
+        <docblock line="30">
+          <description><![CDATA[When an entry has been removed.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="30" name="var" description="" type="string">
+            <type by_reference="false">string</type>
+          </tag>
+        </docblock>
+      </constant>
+      <constant namespace="GW2CBackend" line="40" package="Default">
+        <name>STATUS_MODIFIED_ALL</name>
+        <full_name>STATUS_MODIFIED_ALL</full_name>
+        <value><![CDATA["status_modified_all"]]></value>
+        <docblock line="36">
+          <description><![CDATA[When an entry has its coordinates and its data modified.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="36" name="var" description="" type="string">
+            <type by_reference="false">string</type>
+          </tag>
+        </docblock>
+      </constant>
+      <constant namespace="GW2CBackend" line="46" package="Default">
+        <name>STATUS_MODIFIED_COORDINATES</name>
+        <full_name>STATUS_MODIFIED_COORDINATES</full_name>
+        <value><![CDATA["status_modified_coordinates"]]></value>
+        <docblock line="42">
+          <description><![CDATA[When an entry has its coordinates modified.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="42" name="var" description="" type="string">
+            <type by_reference="false">string</type>
+          </tag>
+        </docblock>
+      </constant>
+      <constant namespace="GW2CBackend" line="52" package="Default">
+        <name>STATUS_MODIFIED_DATA</name>
+        <full_name>STATUS_MODIFIED_DATA</full_name>
+        <value><![CDATA["status_modified_data"]]></value>
+        <docblock line="48">
+          <description><![CDATA[When an entry has its data modified.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="48" name="var" description="" type="string">
+            <type by_reference="false">string</type>
+          </tag>
+        </docblock>
+      </constant>
+      <constant namespace="GW2CBackend" line="58" package="Default">
+        <name>STATUS_POTENTIAL_DATA_LOSS</name>
+        <full_name>STATUS_POTENTIAL_DATA_LOSS</full_name>
+        <value><![CDATA["status_potential_data_loss"]]></value>
+        <docblock line="54">
+          <description><![CDATA[When an entry has potentially a data loss.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="54" name="var" description="" type="string">
+            <type by_reference="false">string</type>
+          </tag>
+        </docblock>
+      </constant>
+      <property final="false" static="false" visibility="protected" line="64" namespace="GW2CBackend" package="Default">
+        <name>$modification</name>
+        <default><![CDATA[]]></default>
+        <docblock line="60">
+          <description><![CDATA[The submitted modification.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="60" name="var" description="" type="\GW2CBackend\Marker\MapRevision">
+            <type by_reference="false">\GW2CBackend\Marker\MapRevision</type>
+          </tag>
+        </docblock>
+      </property>
+      <property final="false" static="false" visibility="protected" line="70" namespace="GW2CBackend" package="Default">
+        <name>$reference</name>
+        <default><![CDATA[]]></default>
+        <docblock line="66">
+          <description><![CDATA[The current reference.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="66" name="var" description="" type="\GW2CBackend\Marker\MapRevision">
+            <type by_reference="false">\GW2CBackend\Marker\MapRevision</type>
+          </tag>
+        </docblock>
+      </property>
+      <property final="false" static="false" visibility="protected" line="76" namespace="GW2CBackend" package="Default">
+        <name>$changes</name>
+        <default><![CDATA[]]></default>
+        <docblock line="72">
+          <description><![CDATA[The changes detected in the diff process.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="72" name="var" description="" type="array">
+            <type by_reference="false">array</type>
+          </tag>
+        </docblock>
+      </property>
+      <property final="false" static="false" visibility="protected" line="86" namespace="GW2CBackend" package="Default">
+        <name>$maxReferenceID</name>
+        <default><![CDATA[]]></default>
+        <docblock line="78">
+          <description><![CDATA[The maximum ID of the reference.]]></description>
+          <long-description><![CDATA[<p>This is used to know if the deleted marker has really been deleted or the deletion detection comes from the fact that
+the modification has been made from an older reference than the current one.</p>]]></long-description>
+          <tag line="78" name="var" description="" type="integer">
+            <type by_reference="false">integer</type>
+          </tag>
+        </docblock>
+      </property>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="GW2CBackend" line="95" package="Default">
+        <name>__construct</name>
+        <full_name>__construct</full_name>
+        <docblock line="88">
+          <description><![CDATA[Constructor.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="88" name="param" description="the modification" type="\GW2CBackend\Marker\MapRevision" variable="$modification">
+            <type by_reference="false">\GW2CBackend\Marker\MapRevision</type>
+          </tag>
+          <tag line="88" name="param" description="the current reference" type="\GW2CBackend\Marker\MapRevision" variable="$reference">
+            <type by_reference="false">\GW2CBackend\Marker\MapRevision</type>
+          </tag>
+          <tag line="88" name="param" description="the current reference's max ID" type="integer" variable="$maxReferenceID">
+            <type by_reference="false">integer</type>
+          </tag>
+        </docblock>
+        <argument line="95">
+          <name>$modification</name>
+          <default><![CDATA[]]></default>
+          <type>\GW2CBackend\Marker\MapRevision</type>
+        </argument>
+        <argument line="95">
+          <name>$reference</name>
+          <default><![CDATA[]]></default>
+          <type>\GW2CBackend\Marker\MapRevision</type>
+        </argument>
+        <argument line="95">
+          <name>$maxReferenceID</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="GW2CBackend" line="113" package="Default">
+        <name>process</name>
+        <full_name>process</full_name>
+        <docblock line="105">
+          <description><![CDATA[Process the DIFF between the modification and the reference config.]]></description>
+          <long-description><![CDATA[<p>This populates the $changes attribute with markers and information about the change.</p>]]></long-description>
+          <tag line="105" name="todo" description="adding more comments for the algorithm"/>
+          <tag line="105" name="return" description="$changes with all the changes from the diff" type="array">
+            <type by_reference="false">array</type>
+          </tag>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="protected" namespace="GW2CBackend" line="169" package="Default">
+        <name>lookForMarker</name>
+        <full_name>lookForMarker</full_name>
+        <docblock line="162">
+          <description><![CDATA[Looks for a marker in the reference and build the entry result.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="162" name="todo" description="adding comments, refactoring function name"/>
+          <tag line="162" name="param" description="the marker being searched" type="\GW2CBackend\Marker\Marker" variable="$marker">
+            <type by_reference="false">\GW2CBackend\Marker\Marker</type>
+          </tag>
+          <tag line="162" name="param" description="the markers from the reference" type="array" variable="$markersReference">
+            <type by_reference="false">array</type>
+          </tag>
+        </docblock>
+        <argument line="169">
+          <name>$marker</name>
+          <default><![CDATA[]]></default>
+          <type>\GW2CBackend\Marker\Marker</type>
+        </argument>
+        <argument line="169">
+          <name>$markersReference</name>
+          <default><![CDATA[]]></default>
+          <type>array</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="protected" namespace="GW2CBackend" line="233" package="Default">
+        <name>searchForMarker</name>
+        <full_name>searchForMarker</full_name>
+        <docblock line="223">
+          <description><![CDATA[Search for a marker in the modification JSON array.]]></description>
+          <long-description><![CDATA[<p>We delete the found item from the modification JSON array each time we find it. In the end, the remaining items are the added ones.</p>]]></long-description>
+          <tag line="223" name="todo" description="removing unused code"/>
+          <tag line="223" name="param" description="the marker from the reference" type="\GW2CBackend\$markerReference" variable="$markerReference">
+            <type by_reference="false">\GW2CBackend\$markerReference</type>
+          </tag>
+          <tag line="223" name="param" description="the marker type from the reference" type="\GW2CBackend\$markerTypeReference" variable="$markers">
+            <type by_reference="false">\GW2CBackend\$markerTypeReference</type>
+          </tag>
+          <tag line="223" name="return" description="array that represents the result with the status and eventually the marker or/and the marker from the reference" type="\GW2CBackend\an">
+            <type by_reference="false">\GW2CBackend\an</type>
+          </tag>
+        </docblock>
+        <argument line="233">
+          <name>$markerReference</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+        <argument line="233">
+          <name>$markers</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="true" visibility="public" namespace="GW2CBackend" line="308" package="Default">
+        <name>getMarkerByID</name>
+        <full_name>getMarkerByID</full_name>
+        <docblock line="301">
+          <description><![CDATA[Get a marker in a collection by marker's ID.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="301" name="param" description="a marker's ID." type="integer" variable="$id">
+            <type by_reference="false">integer</type>
+          </tag>
+          <tag line="301" name="param" description="a collection containing markers." type="array" variable="$collection">
+            <type by_reference="false">array</type>
+          </tag>
+          <tag line="301" name="return" description="the marker if found, null otherwise." type="\GW2CBackend\Marker\Marker|null">
+            <type by_reference="false">\GW2CBackend\Marker\Marker</type>
+            <type by_reference="false">null</type>
+          </tag>
+        </docblock>
+        <argument line="308">
+          <name>$id</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+        <argument line="308">
+          <name>$collection</name>
+          <default><![CDATA[]]></default>
+          <type>array</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="true" visibility="protected" namespace="GW2CBackend" line="326" package="Default">
+        <name>isPotentialDataLoss</name>
+        <full_name>isPotentialDataLoss</full_name>
+        <docblock line="319">
+          <description><![CDATA[Detects if a marker presents a potential data loss in comparison with the reference.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="319" name="param" description="" type="\GW2CBackend\Marker\Marker" variable="$reference">
+            <type by_reference="false">\GW2CBackend\Marker\Marker</type>
+          </tag>
+          <tag line="319" name="param" description="" type="\GW2CBackend\Marker\Marker" variable="$changedMarker">
+            <type by_reference="false">\GW2CBackend\Marker\Marker</type>
+          </tag>
+          <tag line="319" name="return" description="" type="boolean">
+            <type by_reference="false">boolean</type>
+          </tag>
+        </docblock>
+        <argument line="326">
+          <name>$reference</name>
+          <default><![CDATA[]]></default>
+          <type>\GW2CBackend\Marker\Marker</type>
+        </argument>
+        <argument line="326">
+          <name>$changedMarker</name>
+          <default><![CDATA[]]></default>
+          <type>\GW2CBackend\Marker\Marker</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="GW2CBackend" line="349" package="Default">
+        <name>hasChanges</name>
+        <full_name>hasChanges</full_name>
+        <docblock line="344">
+          <description><![CDATA[Indicates if the DiffProcessor detected changes or not.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="344" name="return" description="" type="boolean">
+            <type by_reference="false">boolean</type>
+          </tag>
+        </docblock>
+      </method>
+    </class>
+    <parse_markers>
+      <error line="0" code="50007">No page-level DocBlock was found in file DiffProcessor.php</error>
+    </parse_markers>
+  </file>
+  <file path="FormatJSON.php" hash="30194ed9b9961edc4cc8eff26153084a" package="Default">
+    <class final="false" abstract="false" namespace="GW2CBackend" line="14" package="Default">
+      <extends/>
+      <name>FormatJSON</name>
+      <full_name>\GW2CBackend\FormatJSON</full_name>
+      <docblock line="10">
+        <description><![CDATA[This class was used to transform json into a new format]]></description>
+        <long-description><![CDATA[]]></long-description>
+        <tag line="10" name="deprecated" description=""/>
+      </docblock>
+      <property final="false" static="false" visibility="protected" line="19" namespace="GW2CBackend" package="Default">
+        <name>$json</name>
+        <default><![CDATA[]]></default>
+        <docblock line="16">
+          <description><![CDATA[]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="16" name="ignore" description=""/>
+        </docblock>
+      </property>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="GW2CBackend" line="24" package="Default">
+        <name>__construct</name>
+        <full_name>__construct</full_name>
+        <docblock line="21">
+          <description><![CDATA[]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="21" name="ignore" description=""/>
+        </docblock>
+        <argument line="24">
+          <name>$json</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="GW2CBackend" line="31" package="Default">
+        <name>format</name>
+        <full_name>format</full_name>
+        <docblock line="28">
+          <description><![CDATA[]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="28" name="ignore" description=""/>
+        </docblock>
+      </method>
+    </class>
+    <parse_markers>
+      <error line="0" code="50007">No page-level DocBlock was found in file FormatJSON.php</error>
+    </parse_markers>
+  </file>
+  <file path="InputValidator.php" hash="c8100f572ea0ff911936a0bb513d789e" package="Default">
+    <class final="false" abstract="false" namespace="GW2CBackend" line="13" package="Default">
+      <extends/>
+      <name>InputValidator</name>
+      <full_name>\GW2CBackend\InputValidator</full_name>
+      <docblock line="10">
+        <description><![CDATA[Validates the JSON sent from GW2: Cartographers.]]></description>
+        <long-description><![CDATA[]]></long-description>
+      </docblock>
+      <property final="false" static="false" visibility="protected" line="19" namespace="GW2CBackend" package="Default">
+        <name>$input</name>
+        <default><![CDATA[]]></default>
+        <docblock line="15">
+          <description><![CDATA[The decoded json input]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="15" name="var" description="" type="array">
+            <type by_reference="false">array</type>
+          </tag>
+        </docblock>
+      </property>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="GW2CBackend" line="25" package="Default">
+        <name>__construct</name>
+        <full_name>__construct</full_name>
+        <docblock line="21">
+          <description><![CDATA[Constructor.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="21" name="param" description="the decoded json" type="array|null" variable="$input">
+            <type by_reference="false">array</type>
+            <type by_reference="false">null</type>
+          </tag>
+        </docblock>
+        <argument line="25">
+          <name>$input</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="GW2CBackend" line="35" package="Default">
+        <name>validate</name>
+        <full_name>validate</full_name>
+        <docblock line="30">
+          <description><![CDATA[Processes the validation.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="30" name="return" description="true if the json is valid, the error message otherwise." type="string|true">
+            <type by_reference="false">string</type>
+            <type by_reference="false">true</type>
+          </tag>
+        </docblock>
+      </method>
+    </class>
+    <parse_markers>
+      <error line="0" code="50007">No page-level DocBlock was found in file InputValidator.php</error>
+    </parse_markers>
+  </file>
+  <file path="Marker/MapRevision.php" hash="5bb7762116671df83751b6aae5b10ea9" package="Default">
+    <class final="false" abstract="false" namespace="GW2CBackend\Marker" line="13" package="Default">
+      <extends/>
+      <name>MapRevision</name>
+      <full_name>\GW2CBackend\Marker\MapRevision</full_name>
+      <docblock line="10">
+        <description><![CDATA[Represents a map revision.]]></description>
+        <long-description><![CDATA[]]></long-description>
+      </docblock>
+      <property final="false" static="false" visibility="protected" line="19" namespace="GW2CBackend\Marker" package="Default">
+        <name>$id</name>
+        <default><![CDATA[]]></default>
+        <docblock line="15">
+          <description><![CDATA[The map's ID.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="15" name="var" description="" type="integer">
+            <type by_reference="false">integer</type>
+          </tag>
+        </docblock>
+      </property>
+      <property final="false" static="false" visibility="protected" line="25" namespace="GW2CBackend\Marker" package="Default">
+        <name>$markerGroups</name>
+        <default><![CDATA[]]></default>
+        <docblock line="21">
+          <description><![CDATA[The marker groups collection.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="21" name="var" description="" type="array">
+            <type by_reference="false">array</type>
+          </tag>
+        </docblock>
+      </property>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="GW2CBackend\Marker" line="32" package="Default">
+        <name>__construct</name>
+        <full_name>__construct</full_name>
+        <docblock line="27">
+          <description><![CDATA[Constructor.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="27" name="param" description="" type="integer" variable="$id">
+            <type by_reference="false">integer</type>
+          </tag>
+        </docblock>
+        <argument line="32">
+          <name>$id</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="GW2CBackend\Marker" line="43" package="Default">
+        <name>getID</name>
+        <full_name>getID</full_name>
+        <docblock line="38">
+          <description><![CDATA[Gets the ID.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="38" name="return" description="the map's ID" type="integer">
+            <type by_reference="false">integer</type>
+          </tag>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="GW2CBackend\Marker" line="50" package="Default">
+        <name>setID</name>
+        <full_name>setID</full_name>
+        <docblock line="45">
+          <description><![CDATA[Sets the map's ID.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="45" name="param" description="" type="integer" variable="$id">
+            <type by_reference="false">integer</type>
+          </tag>
+        </docblock>
+        <argument line="50">
+          <name>$id</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="GW2CBackend\Marker" line="57" package="Default">
+        <name>addMarkerGroup</name>
+        <full_name>addMarkerGroup</full_name>
+        <docblock line="52">
+          <description><![CDATA[Adds a marker group.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="52" name="param" description="the marker group object." type="\GW2CBackend\Marker\MarkerGroup" variable="$markerGroup">
+            <type by_reference="false">\GW2CBackend\Marker\MarkerGroup</type>
+          </tag>
+        </docblock>
+        <argument line="57">
+          <name>$markerGroup</name>
+          <default><![CDATA[]]></default>
+          <type>\GW2CBackend\Marker\MarkerGroup</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="GW2CBackend\Marker" line="67" package="Default">
+        <name>getAllMarkerGroups</name>
+        <full_name>getAllMarkerGroups</full_name>
+        <docblock line="62">
+          <description><![CDATA[Gets the marker groups array.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="62" name="return" description="" type="array">
+            <type by_reference="false">array</type>
+          </tag>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="GW2CBackend\Marker" line="75" package="Default">
+        <name>getMarkerGroup</name>
+        <full_name>getMarkerGroup</full_name>
+        <docblock line="69">
+          <description><![CDATA[Gets a marker group.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="69" name="param" description="the group identifier." type="string" variable="$groupSlug">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="69" name="return" description="the marker group object if it exists, null otherwise" type="\GW2CBackend\Marker\MarkerGroup|null">
+            <type by_reference="false">\GW2CBackend\Marker\MarkerGroup</type>
+            <type by_reference="false">null</type>
+          </tag>
+        </docblock>
+        <argument line="75">
+          <name>$groupSlug</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="GW2CBackend\Marker" line="89" package="Default">
+        <name>toJSON</name>
+        <full_name>toJSON</full_name>
+        <docblock line="84">
+          <description><![CDATA[Converts the objet to its representation in JSON.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="84" name="return" description="a decoded json array." type="array">
+            <type by_reference="false">array</type>
+          </tag>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="GW2CBackend\Marker" line="124" package="Default">
+        <name>d</name>
+        <full_name>d</full_name>
+        <docblock line="121">
+          <description><![CDATA[Dumps the objet.]]></description>
+          <long-description><![CDATA[<p>Debug purpose only.</p>]]></long-description>
+        </docblock>
+      </method>
+    </class>
+    <parse_markers>
+      <error line="0" code="50007">No page-level DocBlock was found in file Marker/MapRevision.php</error>
+    </parse_markers>
+  </file>
+  <file path="Marker/Marker.php" hash="f1cc7a6c0d4d7e602f0f4d07225ec83c" package="Default">
+    <namespace-alias name="TranslatedData">GW2CBackend\TranslatedData</namespace-alias>
+    <class final="false" abstract="false" namespace="GW2CBackend\Marker" line="15" package="Default">
+      <extends/>
+      <name>Marker</name>
+      <full_name>\GW2CBackend\Marker\Marker</full_name>
+      <docblock line="12">
+        <description><![CDATA[Represents a marker.]]></description>
+        <long-description><![CDATA[]]></long-description>
+      </docblock>
+      <property final="false" static="false" visibility="protected" line="21" namespace="GW2CBackend\Marker" package="Default">
+        <name>$id</name>
+        <default><![CDATA[]]></default>
+        <docblock line="17">
+          <description><![CDATA[The marker's ID.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="17" name="var" description="" type="integer">
+            <type by_reference="false">integer</type>
+          </tag>
+        </docblock>
+      </property>
+      <property final="false" static="false" visibility="protected" line="27" namespace="GW2CBackend\Marker" package="Default">
+        <name>$lat</name>
+        <default><![CDATA[]]></default>
+        <docblock line="23">
+          <description><![CDATA[The marker's latitude.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="23" name="var" description="" type="float">
+            <type by_reference="false">float</type>
+          </tag>
+        </docblock>
+      </property>
+      <property final="false" static="false" visibility="protected" line="33" namespace="GW2CBackend\Marker" package="Default">
+        <name>$lng</name>
+        <default><![CDATA[]]></default>
+        <docblock line="29">
+          <description><![CDATA[The marker's longitude.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="29" name="var" description="" type="float">
+            <type by_reference="false">float</type>
+          </tag>
+        </docblock>
+      </property>
+      <property final="false" static="false" visibility="protected" line="39" namespace="GW2CBackend\Marker" package="Default">
+        <name>$area</name>
+        <default><![CDATA[]]></default>
+        <docblock line="35">
+          <description><![CDATA[The marker's area ID.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="35" name="var" description="" type="integer">
+            <type by_reference="false">integer</type>
+          </tag>
+        </docblock>
+      </property>
+      <property final="false" static="false" visibility="protected" line="45" namespace="GW2CBackend\Marker" package="Default">
+        <name>$translatedData</name>
+        <default><![CDATA[]]></default>
+        <docblock line="41">
+          <description><![CDATA[The marker's translated data.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="41" name="var" description="" type="\GW2CBackend\TranslatedData">
+            <type by_reference="false">\GW2CBackend\TranslatedData</type>
+          </tag>
+        </docblock>
+      </property>
+      <property final="false" static="false" visibility="protected" line="51" namespace="GW2CBackend\Marker" package="Default">
+        <name>$status</name>
+        <default><![CDATA[]]></default>
+        <docblock line="47">
+          <description><![CDATA[The marker's status.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="47" name="var" description="" type="integer">
+            <type by_reference="false">integer</type>
+          </tag>
+        </docblock>
+      </property>
+      <property final="false" static="false" visibility="protected" line="57" namespace="GW2CBackend\Marker" package="Default">
+        <name>$reference</name>
+        <default><![CDATA[]]></default>
+        <docblock line="53">
+          <description><![CDATA[The reference marker.]]></description>
+          <long-description><![CDATA[<p>When a marker is changed, we keep the old marker as the "reference".</p>]]></long-description>
+          <tag line="53" name="var" description="" type="\GW2Backend\Marker\Marker">
+            <type by_reference="false">\GW2Backend\Marker\Marker</type>
+          </tag>
+        </docblock>
+      </property>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="GW2CBackend\Marker" line="68" package="Default">
+        <name>__construct</name>
+        <full_name>__construct</full_name>
+        <docblock line="59">
+          <description><![CDATA[Constructor.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="59" name="param" description="" type="integer" variable="$id">
+            <type by_reference="false">integer</type>
+          </tag>
+          <tag line="59" name="param" description="" type="float" variable="$lat">
+            <type by_reference="false">float</type>
+          </tag>
+          <tag line="59" name="param" description="" type="float" variable="$lng">
+            <type by_reference="false">float</type>
+          </tag>
+          <tag line="59" name="param" description="" type="integer" variable="$area">
+            <type by_reference="false">integer</type>
+          </tag>
+          <tag line="59" name="param" description="" type="\GW2CBackend\TranslatedData" variable="$translatedData">
+            <type by_reference="false">\GW2CBackend\TranslatedData</type>
+          </tag>
+        </docblock>
+        <argument line="68">
+          <name>$id</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+        <argument line="68">
+          <name>$lat</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+        <argument line="68">
+          <name>$lng</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+        <argument line="68">
+          <name>$area</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+        <argument line="68">
+          <name>$translatedData</name>
+          <default><![CDATA[]]></default>
+          <type>\GW2CBackend\TranslatedData</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="GW2CBackend\Marker" line="83" package="Default">
+        <name>compare</name>
+        <full_name>compare</full_name>
+        <docblock line="77">
+          <description><![CDATA[Compares two marker's data.]]></description>
+          <long-description><![CDATA[<p>Coordinates are not taken into account !</p>]]></long-description>
+          <tag line="77" name="param" description="" type="\GW2CBackend\Marker\Marker" variable="$marker">
+            <type by_reference="false">\GW2CBackend\Marker\Marker</type>
+          </tag>
+          <tag line="77" name="return" description="true if the translated data and the area are the same." type="boolean">
+            <type by_reference="false">boolean</type>
+          </tag>
+        </docblock>
+        <argument line="83">
+          <name>$marker</name>
+          <default><![CDATA[]]></default>
+          <type>\GW2CBackend\Marker\Marker</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="GW2CBackend\Marker" line="93" package="Default">
+        <name>setAsReference</name>
+        <full_name>setAsReference</full_name>
+        <docblock line="88">
+          <description><![CDATA[Sets the marker as its reference.]]></description>
+          <long-description><![CDATA[<p>This is used when the marker as changed to set the current marker as the reference to be able to keep track of the changes.</p>]]></long-description>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="GW2CBackend\Marker" line="105" package="Default">
+        <name>getID</name>
+        <full_name>getID</full_name>
+        <docblock line="100">
+          <description><![CDATA[Gets the marker's ID.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="100" name="return" description="" type="integer">
+            <type by_reference="false">integer</type>
+          </tag>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="GW2CBackend\Marker" line="112" package="Default">
+        <name>setID</name>
+        <full_name>setID</full_name>
+        <docblock line="107">
+          <description><![CDATA[Sets the marker's ID.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="107" name="param" description="" type="integer" variable="$value">
+            <type by_reference="false">integer</type>
+          </tag>
+        </docblock>
+        <argument line="112">
+          <name>$value</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="GW2CBackend\Marker" line="119" package="Default">
+        <name>getStatus</name>
+        <full_name>getStatus</full_name>
+        <docblock line="114">
+          <description><![CDATA[Gets the marker's status.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="114" name="return" description="" type="string">
+            <type by_reference="false">string</type>
+          </tag>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="GW2CBackend\Marker" line="126" package="Default">
+        <name>setStatus</name>
+        <full_name>setStatus</full_name>
+        <docblock line="121">
+          <description><![CDATA[Sets the marker's status.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="121" name="param" description="" type="string" variable="$status">
+            <type by_reference="false">string</type>
+          </tag>
+        </docblock>
+        <argument line="126">
+          <name>$status</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="GW2CBackend\Marker" line="133" package="Default">
+        <name>getReference</name>
+        <full_name>getReference</full_name>
+        <docblock line="128">
+          <description><![CDATA[Gets the marker's reference.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="128" name="return" description="" type="\GW2CBackend\Marker\Marker">
+            <type by_reference="false">\GW2CBackend\Marker\Marker</type>
+          </tag>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="GW2CBackend\Marker" line="140" package="Default">
+        <name>setReference</name>
+        <full_name>setReference</full_name>
+        <docblock line="135">
+          <description><![CDATA[Sets the marker's reference.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="135" name="param" description="" type="\GW2CBackend\Marker\Marker" variable="$reference">
+            <type by_reference="false">\GW2CBackend\Marker\Marker</type>
+          </tag>
+        </docblock>
+        <argument line="140">
+          <name>$reference</name>
+          <default><![CDATA[]]></default>
+          <type>\GW2CBackend\Marker\Marker</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="GW2CBackend\Marker" line="147" package="Default">
+        <name>getLat</name>
+        <full_name>getLat</full_name>
+        <docblock line="142">
+          <description><![CDATA[Gets the marker's latitude.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="142" name="return" description="" type="float">
+            <type by_reference="false">float</type>
+          </tag>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="GW2CBackend\Marker" line="154" package="Default">
+        <name>setLat</name>
+        <full_name>setLat</full_name>
+        <docblock line="149">
+          <description><![CDATA[Sets the marker's latitude.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="149" name="param" description="" type="float" variable="$lat">
+            <type by_reference="false">float</type>
+          </tag>
+        </docblock>
+        <argument line="154">
+          <name>$lat</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="GW2CBackend\Marker" line="161" package="Default">
+        <name>getLng</name>
+        <full_name>getLng</full_name>
+        <docblock line="156">
+          <description><![CDATA[Gets the marker's longitude.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="156" name="return" description="" type="float">
+            <type by_reference="false">float</type>
+          </tag>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="GW2CBackend\Marker" line="168" package="Default">
+        <name>setLng</name>
+        <full_name>setLng</full_name>
+        <docblock line="163">
+          <description><![CDATA[Sets the marker's longitude.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="163" name="param" description="" type="float" variable="$lng">
+            <type by_reference="false">float</type>
+          </tag>
+        </docblock>
+        <argument line="168">
+          <name>$lng</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="GW2CBackend\Marker" line="175" package="Default">
+        <name>getArea</name>
+        <full_name>getArea</full_name>
+        <docblock line="170">
+          <description><![CDATA[Gets the marker's area ID.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="170" name="return" description="" type="integer">
+            <type by_reference="false">integer</type>
+          </tag>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="GW2CBackend\Marker" line="182" package="Default">
+        <name>getData</name>
+        <full_name>getData</full_name>
+        <docblock line="177">
+          <description><![CDATA[Gets the marker's translated data.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="177" name="return" description="" type="\GW2CBackend\TranslatedData">
+            <type by_reference="false">\GW2CBackend\TranslatedData</type>
+          </tag>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="GW2CBackend\Marker" line="189" package="Default">
+        <name>setData</name>
+        <full_name>setData</full_name>
+        <docblock line="184">
+          <description><![CDATA[Sets the marker's translated data.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="184" name="param" description="" type="\GW2CBackend\TranslatedData" variable="$tData">
+            <type by_reference="false">\GW2CBackend\TranslatedData</type>
+          </tag>
+        </docblock>
+        <argument line="189">
+          <name>$tData</name>
+          <default><![CDATA[]]></default>
+          <type>\GW2CBackend\TranslatedData</type>
+        </argument>
+      </method>
+    </class>
+    <parse_markers>
+      <error line="0" code="50007">No page-level DocBlock was found in file Marker/Marker.php</error>
+    </parse_markers>
+  </file>
+  <file path="Marker/MarkerGroup.php" hash="49b69dee3f535b60a6eea8cfb237fcf2" package="Default">
+    <namespace-alias name="TranslatedData">GW2CBackend\TranslatedData</namespace-alias>
+    <class final="false" abstract="false" namespace="GW2CBackend\Marker" line="15" package="Default">
+      <extends/>
+      <name>MarkerGroup</name>
+      <full_name>\GW2CBackend\Marker\MarkerGroup</full_name>
+      <docblock line="12">
+        <description><![CDATA[Represents a marker group.]]></description>
+        <long-description><![CDATA[]]></long-description>
+      </docblock>
+      <property final="false" static="false" visibility="protected" line="21" namespace="GW2CBackend\Marker" package="Default">
+        <name>$slug</name>
+        <default><![CDATA[]]></default>
+        <docblock line="17">
+          <description><![CDATA[The marker group's slug.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="17" name="var" description="" type="string">
+            <type by_reference="false">string</type>
+          </tag>
+        </docblock>
+      </property>
+      <property final="false" static="false" visibility="protected" line="29" namespace="GW2CBackend\Marker" package="Default">
+        <name>$iconPrefix</name>
+        <default><![CDATA[]]></default>
+        <docblock line="23">
+          <description><![CDATA[The marker group's prefix for icons.]]></description>
+          <long-description><![CDATA[<p>This is the folder path to the marker type's icon filename.</p>]]></long-description>
+          <tag line="23" name="var" description="" type="string">
+            <type by_reference="false">string</type>
+          </tag>
+        </docblock>
+      </property>
+      <property final="false" static="false" visibility="protected" line="35" namespace="GW2CBackend\Marker" package="Default">
+        <name>$translatedData</name>
+        <default><![CDATA[]]></default>
+        <docblock line="31">
+          <description><![CDATA[The marker group's translated data.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="31" name="var" description="" type="\GW2CBackend\TranslatedData">
+            <type by_reference="false">\GW2CBackend\TranslatedData</type>
+          </tag>
+        </docblock>
+      </property>
+      <property final="false" static="false" visibility="protected" line="41" namespace="GW2CBackend\Marker" package="Default">
+        <name>$markerTypes</name>
+        <default><![CDATA[]]></default>
+        <docblock line="37">
+          <description><![CDATA[The marker types collection.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="37" name="var" description="" type="array">
+            <type by_reference="false">array</type>
+          </tag>
+        </docblock>
+      </property>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="GW2CBackend\Marker" line="50" package="Default">
+        <name>__construct</name>
+        <full_name>__construct</full_name>
+        <docblock line="43">
+          <description><![CDATA[Constructor.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="43" name="param" description="" type="string" variable="$slug">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="43" name="param" description="" type="string" variable="$iconPrefix">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="43" name="param" description="" type="\GW2CBackend\TranslatedData" variable="$translatedData">
+            <type by_reference="false">\GW2CBackend\TranslatedData</type>
+          </tag>
+        </docblock>
+        <argument line="50">
+          <name>$slug</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+        <argument line="50">
+          <name>$iconPrefix</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+        <argument line="50">
+          <name>$translatedData</name>
+          <default><![CDATA[]]></default>
+          <type>\GW2CBackend\TranslatedData</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="GW2CBackend\Marker" line="63" package="Default">
+        <name>getSlug</name>
+        <full_name>getSlug</full_name>
+        <docblock line="58">
+          <description><![CDATA[Gets the marker group's slug.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="58" name="return" description="" type="string">
+            <type by_reference="false">string</type>
+          </tag>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="GW2CBackend\Marker" line="70" package="Default">
+        <name>getIconPrefix</name>
+        <full_name>getIconPrefix</full_name>
+        <docblock line="65">
+          <description><![CDATA[Gets the marker group's prefix icon.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="65" name="return" description="" type="string">
+            <type by_reference="false">string</type>
+          </tag>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="GW2CBackend\Marker" line="77" package="Default">
+        <name>getData</name>
+        <full_name>getData</full_name>
+        <docblock line="72">
+          <description><![CDATA[Gets the marker group's translated data.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="72" name="return" description="" type="\GW2CBackend\TranslatedData">
+            <type by_reference="false">\GW2CBackend\TranslatedData</type>
+          </tag>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="GW2CBackend\Marker" line="84" package="Default">
+        <name>addMarkerType</name>
+        <full_name>addMarkerType</full_name>
+        <docblock line="79">
+          <description><![CDATA[Adds a marker type to the marker type's collection.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="79" name="param" description="" type="\GW2CBackend\Marker\MarkerType" variable="$markerType">
+            <type by_reference="false">\GW2CBackend\Marker\MarkerType</type>
+          </tag>
+        </docblock>
+        <argument line="84">
+          <name>$markerType</name>
+          <default><![CDATA[]]></default>
+          <type>\GW2CBackend\Marker\MarkerType</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="GW2CBackend\Marker" line="95" package="Default">
+        <name>getMarkerType</name>
+        <full_name>getMarkerType</full_name>
+        <docblock line="89">
+          <description><![CDATA[Gets a marker type.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="89" name="param" description="" type="string" variable="$markerTypeSlug">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="89" name="return" description="the marker type object, null if it doesn't exist." type="\GW2CBackend\Marker\MarkerType|null">
+            <type by_reference="false">\GW2CBackend\Marker\MarkerType</type>
+            <type by_reference="false">null</type>
+          </tag>
+        </docblock>
+        <argument line="95">
+          <name>$markerTypeSlug</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="GW2CBackend\Marker" line="109" package="Default">
+        <name>getAllMarkerTypes</name>
+        <full_name>getAllMarkerTypes</full_name>
+        <docblock line="104">
+          <description><![CDATA[Gets all the marker types.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="104" name="return" description="" type="array">
+            <type by_reference="false">array</type>
+          </tag>
+        </docblock>
+      </method>
+    </class>
+    <parse_markers>
+      <error line="0" code="50007">No page-level DocBlock was found in file Marker/MarkerGroup.php</error>
+    </parse_markers>
+  </file>
+  <file path="Marker/MarkerType.php" hash="e5a7280e5739b7c80f20fb882d90ba24" package="Default">
+    <namespace-alias name="TranslatedData">GW2CBackend\TranslatedData</namespace-alias>
+    <class final="false" abstract="false" namespace="GW2CBackend\Marker" line="15" package="Default">
+      <extends/>
+      <name>MarkerType</name>
+      <full_name>\GW2CBackend\Marker\MarkerType</full_name>
+      <docblock line="12">
+        <description><![CDATA[Represents a marker type.]]></description>
+        <long-description><![CDATA[]]></long-description>
+      </docblock>
+      <property final="false" static="false" visibility="protected" line="21" namespace="GW2CBackend\Marker" package="Default">
+        <name>$slug</name>
+        <default><![CDATA[]]></default>
+        <docblock line="17">
+          <description><![CDATA[The marker type's slug.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="17" name="var" description="" type="string">
+            <type by_reference="false">string</type>
+          </tag>
+        </docblock>
+      </property>
+      <property final="false" static="false" visibility="protected" line="27" namespace="GW2CBackend\Marker" package="Default">
+        <name>$icon</name>
+        <default><![CDATA[]]></default>
+        <docblock line="23">
+          <description><![CDATA[The marker type's icon filename.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="23" name="var" description="" type="string">
+            <type by_reference="false">string</type>
+          </tag>
+        </docblock>
+      </property>
+      <property final="false" static="false" visibility="protected" line="33" namespace="GW2CBackend\Marker" package="Default">
+        <name>$displayInAreaSummary</name>
+        <default><![CDATA[]]></default>
+        <docblock line="29">
+          <description><![CDATA[An indicator that tell the system if the marker type must be displayed in the area summary or not.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="29" name="var" description="" type="boolean">
+            <type by_reference="false">boolean</type>
+          </tag>
+        </docblock>
+      </property>
+      <property final="false" static="false" visibility="protected" line="39" namespace="GW2CBackend\Marker" package="Default">
+        <name>$translatedData</name>
+        <default><![CDATA[]]></default>
+        <docblock line="35">
+          <description><![CDATA[The marker type's data]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="35" name="var" description="" type="\GW2CBackend\TranslatedData">
+            <type by_reference="false">\GW2CBackend\TranslatedData</type>
+          </tag>
+        </docblock>
+      </property>
+      <property final="false" static="false" visibility="protected" line="45" namespace="GW2CBackend\Marker" package="Default">
+        <name>$markers</name>
+        <default><![CDATA[]]></default>
+        <docblock line="41">
+          <description><![CDATA[The markers collection]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="41" name="var" description="" type="array">
+            <type by_reference="false">array</type>
+          </tag>
+        </docblock>
+      </property>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="GW2CBackend\Marker" line="55" package="Default">
+        <name>__construct</name>
+        <full_name>__construct</full_name>
+        <docblock line="47">
+          <description><![CDATA[Constructor.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="47" name="param" description="" type="string" variable="$slug">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="47" name="param" description="" type="string" variable="$icon">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="47" name="param" description="" type="boolean" variable="$displayInAreaSummary">
+            <type by_reference="false">boolean</type>
+          </tag>
+          <tag line="47" name="param" description="" type="\GW2CBackend\TranslatedData" variable="$translatedData">
+            <type by_reference="false">\GW2CBackend\TranslatedData</type>
+          </tag>
+        </docblock>
+        <argument line="55">
+          <name>$slug</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+        <argument line="55">
+          <name>$icon</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+        <argument line="55">
+          <name>$displayInAreaSummary</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+        <argument line="55">
+          <name>$translatedData</name>
+          <default><![CDATA[]]></default>
+          <type>\GW2CBackend\TranslatedData</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="GW2CBackend\Marker" line="69" package="Default">
+        <name>getSlug</name>
+        <full_name>getSlug</full_name>
+        <docblock line="64">
+          <description><![CDATA[Gets the marker's slug.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="64" name="return" description="" type="string">
+            <type by_reference="false">string</type>
+          </tag>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="GW2CBackend\Marker" line="76" package="Default">
+        <name>getIcon</name>
+        <full_name>getIcon</full_name>
+        <docblock line="71">
+          <description><![CDATA[Gets the marker's icon.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="71" name="return" description="" type="string">
+            <type by_reference="false">string</type>
+          </tag>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="GW2CBackend\Marker" line="83" package="Default">
+        <name>isDisplayInAreaSummary</name>
+        <full_name>isDisplayInAreaSummary</full_name>
+        <docblock line="78">
+          <description><![CDATA[Gets the isDisplayInAreaSummary value]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="78" name="return" description="" type="boolean">
+            <type by_reference="false">boolean</type>
+          </tag>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="GW2CBackend\Marker" line="90" package="Default">
+        <name>getData</name>
+        <full_name>getData</full_name>
+        <docblock line="85">
+          <description><![CDATA[Gets the marker's data]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="85" name="return" description="" type="\GW2CBackend\TranslatedData">
+            <type by_reference="false">\GW2CBackend\TranslatedData</type>
+          </tag>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="GW2CBackend\Marker" line="97" package="Default">
+        <name>addMarker</name>
+        <full_name>addMarker</full_name>
+        <docblock line="92">
+          <description><![CDATA[Adds a marker into the collection.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="92" name="param" description="" type="\GW2CBackend\Marker\Marker" variable="$marker">
+            <type by_reference="false">\GW2CBackend\Marker\Marker</type>
+          </tag>
+        </docblock>
+        <argument line="97">
+          <name>$marker</name>
+          <default><![CDATA[]]></default>
+          <type>\GW2CBackend\Marker\Marker</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="GW2CBackend\Marker" line="107" package="Default">
+        <name>getAllMarkers</name>
+        <full_name>getAllMarkers</full_name>
+        <docblock line="102">
+          <description><![CDATA[Gets all the markers collection]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="102" name="return" description="the collection of markers" type="array">
+            <type by_reference="false">array</type>
+          </tag>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="GW2CBackend\Marker" line="117" package="Default">
+        <name>getMarker</name>
+        <full_name>getMarker</full_name>
+        <docblock line="111">
+          <description><![CDATA[Gets a marker in the collection]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="111" name="param" description="" type="string" variable="$markerID">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="111" name="return" description="a marker object if found, null otherwise" type="\GW2CBackend\Marker\Marker|null">
+            <type by_reference="false">\GW2CBackend\Marker\Marker</type>
+            <type by_reference="false">null</type>
+          </tag>
+        </docblock>
+        <argument line="117">
+          <name>$markerID</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="GW2CBackend\Marker" line="134" package="Default">
+        <name>removeMarker</name>
+        <full_name>removeMarker</full_name>
+        <docblock line="129">
+          <description><![CDATA[Removes a marker from the markers collection]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="129" name="param" description="" type="string" variable="$markerID">
+            <type by_reference="false">string</type>
+          </tag>
+        </docblock>
+        <argument line="134">
+          <name>$markerID</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+    </class>
+    <parse_markers>
+      <error line="0" code="50007">No page-level DocBlock was found in file Marker/MarkerType.php</error>
+    </parse_markers>
+  </file>
+  <file path="MarkerBuilder.php" hash="f975063719fd31040100f230735ecb9c" package="Default">
+    <namespace-alias name="MarkerGroup">GW2CBackend\Marker\MarkerGroup</namespace-alias>
+    <namespace-alias name="MarkerType">GW2CBackend\Marker\MarkerType</namespace-alias>
+    <namespace-alias name="Marker">GW2CBackend\Marker\Marker</namespace-alias>
+    <namespace-alias name="MapRevision">GW2CBackend\Marker\MapRevision</namespace-alias>
+    <class final="false" abstract="false" namespace="GW2CBackend" line="18" package="Default">
+      <extends/>
+      <name>MarkerBuilder</name>
+      <full_name>\GW2CBackend\MarkerBuilder</full_name>
+      <docblock line="15">
+        <description><![CDATA[Builds a MapRevision instance.]]></description>
+        <long-description><![CDATA[]]></long-description>
+      </docblock>
+      <property final="false" static="false" visibility="protected" line="24" namespace="GW2CBackend" package="Default">
+        <name>$db</name>
+        <default><![CDATA[]]></default>
+        <docblock line="20">
+          <description><![CDATA[Contains the database service.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="20" name="var" description="" type="\GW2CBackend\DatabaseAdapter">
+            <type by_reference="false">\GW2CBackend\DatabaseAdapter</type>
+          </tag>
+        </docblock>
+      </property>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="GW2CBackend" line="31" package="Default">
+        <name>__construct</name>
+        <full_name>__construct</full_name>
+        <docblock line="26">
+          <description><![CDATA[Constructor.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="26" name="param" description="the database service" type="\GW2CBackend\DatabaseAdapter" variable="$db">
+            <type by_reference="false">\GW2CBackend\DatabaseAdapter</type>
+          </tag>
+        </docblock>
+        <argument line="31">
+          <name>$db</name>
+          <default><![CDATA[]]></default>
+          <type>\GW2CBackend\DatabaseAdapter</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="GW2CBackend" line="42" package="Default">
+        <name>build</name>
+        <full_name>build</full_name>
+        <docblock line="35">
+          <description><![CDATA[Builds a map object.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="35" name="param" description="the revision's ID." type="integer" variable="$revisionID">
+            <type by_reference="false">integer</type>
+          </tag>
+          <tag line="35" name="param" description="the json string that represents the map." type="string" variable="$json">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="35" name="return" description="a new map revision object." type="\GW2CBackend\Marker\MapRevision">
+            <type by_reference="false">\GW2CBackend\Marker\MapRevision</type>
+          </tag>
+        </docblock>
+        <argument line="42">
+          <name>$revisionID</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+        <argument line="42">
+          <name>$json</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="protected" namespace="GW2CBackend" line="96" package="Default">
+        <name>getMarkerArea</name>
+        <full_name>getMarkerArea</full_name>
+        <docblock line="87">
+          <description><![CDATA[Gets the marker's area by coordinates.]]></description>
+          <long-description><![CDATA[<p>The areas information are retrieved from the database.</p>]]></long-description>
+          <tag line="87" name="param" description="the marker's latitude." type="float" variable="$lat">
+            <type by_reference="false">float</type>
+          </tag>
+          <tag line="87" name="param" description="the marker's longitude." type="float" variable="$lng">
+            <type by_reference="false">float</type>
+          </tag>
+          <tag line="87" name="return" description="the area's ID if found, 0 otherwise." type="integer">
+            <type by_reference="false">integer</type>
+          </tag>
+        </docblock>
+        <argument line="96">
+          <name>$lat</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+        <argument line="96">
+          <name>$lng</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="protected" namespace="GW2CBackend" line="116" package="Default">
+        <name>getMarkersStructure</name>
+        <full_name>getMarkersStructure</full_name>
+        <docblock line="111">
+          <description><![CDATA[Retrieves the marker groups and the marker types from the database.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="111" name="return" description="" type="array">
+            <type by_reference="false">array</type>
+          </tag>
+        </docblock>
+      </method>
+    </class>
+    <parse_markers>
+      <error line="0" code="50007">No page-level DocBlock was found in file MarkerBuilder.php</error>
+    </parse_markers>
+  </file>
+  <file path="TranslatedData.php" hash="d50f834aba1df740cb8d78fd48243b6a" package="Default">
+    <class final="false" abstract="false" namespace="GW2CBackend" line="13" package="Default">
+      <extends/>
+      <name>TranslatedData</name>
+      <full_name>\GW2CBackend\TranslatedData</full_name>
+      <docblock line="10">
+        <description><![CDATA[Represents the marker information with the translation.]]></description>
+        <long-description><![CDATA[]]></long-description>
+      </docblock>
+      <property final="false" static="false" visibility="protected" line="19" namespace="GW2CBackend" package="Default">
+        <name>$langs</name>
+        <default><![CDATA[]]></default>
+        <docblock line="15">
+          <description><![CDATA[The data collection.]]></description>
+          <long-description><![CDATA[<p>Index is the lang's slug and value an array of key => value</p>]]></long-description>
+          <tag line="15" name="var" description="" type="array">
+            <type by_reference="false">array</type>
+          </tag>
+        </docblock>
+      </property>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="GW2CBackend" line="26" package="Default">
+        <name>__construct</name>
+        <full_name>__construct</full_name>
+        <docblock line="21">
+          <description><![CDATA[Constructor.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="21" name="param" description="" type="array" variable="$langs">
+            <type by_reference="false">array</type>
+          </tag>
+        </docblock>
+        <argument line="26">
+          <name>$langs</name>
+          <default><![CDATA[array()]]></default>
+          <type>array</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="GW2CBackend" line="36" package="Default">
+        <name>compare</name>
+        <full_name>compare</full_name>
+        <docblock line="30">
+          <description><![CDATA[Compares two TranslatedData objects.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="30" name="param" description="" type="\GW2CBackend\TranslatedData" variable="$tData">
+            <type by_reference="false">\GW2CBackend\TranslatedData</type>
+          </tag>
+          <tag line="30" name="return" description="" type="boolean">
+            <type by_reference="false">boolean</type>
+          </tag>
+        </docblock>
+        <argument line="36">
+          <name>$tData</name>
+          <default><![CDATA[]]></default>
+          <type>\GW2CBackend\TranslatedData</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="GW2CBackend" line="56" package="Default">
+        <name>getAllData</name>
+        <full_name>getAllData</full_name>
+        <docblock line="49">
+          <description><![CDATA[Gets all the data or all the data of a determined language.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="49" name="param" description="the lang's slug or false." type="string|false" variable="$lang">
+            <type by_reference="false">string</type>
+            <type by_reference="false">false</type>
+          </tag>
+          <tag line="49" name="return" description="null if the lang's slug does not exist, array of all langs if $lang is false, array of data if $lang has been specified." type="array|null">
+            <type by_reference="false">array</type>
+            <type by_reference="false">null</type>
+          </tag>
+        </docblock>
+        <argument line="56">
+          <name>$lang</name>
+          <default><![CDATA[false]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="GW2CBackend" line="76" package="Default">
+        <name>getData</name>
+        <full_name>getData</full_name>
+        <docblock line="69">
+          <description><![CDATA[Gets a data of a determined language]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="69" name="param" description="the lang's slug." type="string" variable="$lang">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="69" name="param" description="the data's key." type="string" variable="$key">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="69" name="return" description="null if the key does not exist, the value otherwise." type="string|null">
+            <type by_reference="false">string</type>
+            <type by_reference="false">null</type>
+          </tag>
+        </docblock>
+        <argument line="76">
+          <name>$lang</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+        <argument line="76">
+          <name>$key</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+    </class>
+    <parse_markers>
+      <error line="0" code="50007">No page-level DocBlock was found in file TranslatedData.php</error>
+    </parse_markers>
+  </file>
+  <file path="UserProvider.php" hash="e3898c481bf81e9d373ffb8851091fd6" package="Default">
+    <namespace-alias name="UserProviderInterface">Symfony\Component\Security\Core\User\UserProviderInterface</namespace-alias>
+    <namespace-alias name="UserInterface">Symfony\Component\Security\Core\User\UserInterface</namespace-alias>
+    <namespace-alias name="User">Symfony\Component\Security\Core\User\User</namespace-alias>
+    <namespace-alias name="UsernameNotFoundException">Symfony\Component\Security\Core\Exception\UsernameNotFoundException</namespace-alias>
+    <class final="false" abstract="false" namespace="GW2CBackend" line="20" package="Default">
+      <extends/>
+      <implements>\Symfony\Component\Security\Core\User\UserProviderInterface</implements>
+      <name>UserProvider</name>
+      <full_name>\GW2CBackend\UserProvider</full_name>
+      <docblock line="15">
+        <description><![CDATA[Silex User Provider for the GW2C-Backend authentification]]></description>
+        <long-description><![CDATA[<p>Allows the Silex firewall to know how to load users</p>]]></long-description>
+      </docblock>
+      <property final="false" static="false" visibility="private" line="26" namespace="GW2CBackend" package="Default">
+        <name>$conn</name>
+        <default><![CDATA[]]></default>
+        <docblock line="22">
+          <description><![CDATA[Contains the database Silex service]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="22" name="var" description="" type="\GW2CBackend\DatabaseAdapter">
+            <type by_reference="false">\GW2CBackend\DatabaseAdapter</type>
+          </tag>
+        </docblock>
+      </property>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="GW2CBackend" line="33" package="Default">
+        <name>__construct</name>
+        <full_name>__construct</full_name>
+        <docblock line="28">
+          <description><![CDATA[Constructor]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="28" name="param" description="the database Silex service objet" type="\GW2CBackend\DatabaseAdapter" variable="$conn">
+            <type by_reference="false">\GW2CBackend\DatabaseAdapter</type>
+          </tag>
+        </docblock>
+        <argument line="33">
+          <name>$conn</name>
+          <default><![CDATA[]]></default>
+          <type>\GW2CBackend\DatabaseAdapter</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="GW2CBackend" line="43" package="Default">
+        <name>loadUserByUsername</name>
+        <full_name>loadUserByUsername</full_name>
+        <docblock line="37">
+          <description><![CDATA[Loads a user thanks to a username]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="37" name="param" description="the username" type="string" variable="$username">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="37" name="return" description="a user object" type="\Symfony\Component\Security\Core\User\User">
+            <type by_reference="false">\Symfony\Component\Security\Core\User\User</type>
+          </tag>
+        </docblock>
+        <argument line="43">
+          <name>$username</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="GW2CBackend" line="59" package="Default">
+        <name>refreshUser</name>
+        <full_name>refreshUser</full_name>
+        <docblock line="53">
+          <description><![CDATA[Refreshes a user]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="53" name="param" description="the user object to refresh" type="\Symfony\Component\Security\Core\User\UserInterface" variable="$user">
+            <type by_reference="false">\Symfony\Component\Security\Core\User\UserInterface</type>
+          </tag>
+          <tag line="53" name="return" description="the refreshed user object" type="\Symfony\Component\Security\Core\User\User">
+            <type by_reference="false">\Symfony\Component\Security\Core\User\User</type>
+          </tag>
+        </docblock>
+        <argument line="59">
+          <name>$user</name>
+          <default><![CDATA[]]></default>
+          <type>\Symfony\Component\Security\Core\User\UserInterface</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="GW2CBackend" line="73" package="Default">
+        <name>supportsClass</name>
+        <full_name>supportsClass</full_name>
+        <docblock line="67">
+          <description><![CDATA[Tells if the class that describes a user is supported or not]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="67" name="param" description="the full-qualified class name" type="string" variable="$class">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="67" name="return" description="true if the class is supported, false otherwise" type="boolean">
+            <type by_reference="false">boolean</type>
+          </tag>
+        </docblock>
+        <argument line="73">
+          <name>$class</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+    </class>
+    <parse_markers>
+      <error line="0" code="50007">No page-level DocBlock was found in file UserProvider.php</error>
+    </parse_markers>
+  </file>
+  <package name="Default" full_name="Default"/>
+  <namespace name="GW2CBackend" full_name="GW2CBackend">
+    <namespace name="Controller" full_name="GW2CBackend\Controller"/>
+    <namespace name="Marker" full_name="GW2CBackend\Marker"/>
+  </namespace>
+  <marker count="4">todo</marker>
+  <marker count="0">fixme</marker>
+  <deprecated count="1"/>
+</project>

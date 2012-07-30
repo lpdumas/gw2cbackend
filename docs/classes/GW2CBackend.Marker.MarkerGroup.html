@@ -1,0 +1,219 @@
+<!DOCTYPE html><html xmlns:date="http://exslt.org/dates-and-times" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+<meta charset="utf-8">
+<title>Guild Wars 2 Cartographers: Crowdsourcing tools » \GW2CBackend\Marker\MarkerGroup</title>
+<meta name="author" content="Mike van Riel">
+<meta name="description" content="">
+<link href="../css/template.css" rel="stylesheet" media="all">
+<script src="../js/jquery-1.7.1.min.js" type="text/javascript"></script><script src="../js/jquery-ui-1.8.2.custom.min.js" type="text/javascript"></script><script src="../js/jquery.mousewheel.min.js" type="text/javascript"></script><script src="../js/bootstrap.js" type="text/javascript"></script><script src="../js/template.js" type="text/javascript"></script><script src="../js/prettify/prettify.min.js" type="text/javascript"></script><link rel="shortcut icon" href="../img/favicon.ico">
+<link rel="apple-touch-icon" href="../img/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="72x72" href="../img/apple-touch-icon-72x72.png">
+<link rel="apple-touch-icon" sizes="114x114" href="../img/apple-touch-icon-114x114.png">
+</head>
+<body>
+<div class="navbar navbar-fixed-top">
+<div class="navbar-inner"><div class="container">
+<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></a><a class="brand" href="../index.html">Guild Wars 2 Cartographers: Crowdsourcing tools</a><div class="nav-collapse"><ul class="nav">
+<li class="dropdown">
+<a href="#api" class="dropdown-toggle" data-toggle="dropdown">
+                                    API Documentation <b class="caret"></b></a><ul class="dropdown-menu">
+<li><a>Namespaces</a></li>
+<li><a href="../namespaces/GW2CBackend.html"><i class="icon-th"></i> GW2CBackend</a></li>
+</ul>
+</li>
+<li class="dropdown" id="charts-menu">
+<a href="#charts" class="dropdown-toggle" data-toggle="dropdown">
+                                    Charts <b class="caret"></b></a><ul class="dropdown-menu"><li><a href="../graph_class.html"><i class="icon-list-alt"></i> Class hierarchy diagram</a></li></ul>
+</li>
+<li class="dropdown" id="reports-menu">
+<a href="#reports" class="dropdown-toggle" data-toggle="dropdown">
+                                    Reports <b class="caret"></b></a><ul class="dropdown-menu">
+<li><a href="../errors.html"><i class="icon-remove-sign"></i> Errors 
+                <span class="label label-info">19</span></a></li>
+<li><a href="../markers.html"><i class="icon-map-marker"></i> Markers 
+                <ul><li>todo 
+                <span class="label label-info">4</span>
+</li></ul></a></li>
+<li><a href="../deprecated.html"><i class="icon-stop"></i> Deprecated elements 
+                <span class="label label-info">1</span></a></li>
+</ul>
+</li>
+</ul></div>
+</div></div>
+<div class="go_to_top"><a href="#___" style="color: inherit">Back to top  <i class="icon-upload icon-white"></i></a></div>
+</div>
+<div id="___" class="container">
+<noscript><div class="alert alert-warning">
+                            Javascript is disabled; several features are only available
+                            if Javascript is enabled.
+                        </div></noscript>
+<div class="row">
+<div class="span4">
+<span class="btn-group visibility" data-toggle="buttons-checkbox"><button class="btn public active" title="Show public elements">Public</button><button class="btn protected" title="Show protected elements">Protected</button><button class="btn private" title="Show private elements">Private</button><button class="btn inherited active" title="Show inherited elements">Inherited</button></span><div class="btn-group view pull-right" data-toggle="buttons-radio">
+<button class="btn details" title="Show descriptions and method names"><i class="icon-list"></i></button><button class="btn simple" title="Show only method names"><i class="icon-align-justify"></i></button>
+</div>
+<ul class="side-nav nav nav-list">
+<li class="nav-header">
+<i class="icon-custom icon-method"></i> Methods</li>
+<li class="method public "><a href="#__construct" title="__construct :: Constructor."><span class="description">Constructor.</span><pre>__construct()</pre></a></li>
+<li class="method public "><a href="#addMarkerType" title="addMarkerType :: Adds a marker type to the marker type's collection."><span class="description">Adds a marker type to the marker type's collection.</span><pre>addMarkerType()</pre></a></li>
+<li class="method public "><a href="#getAllMarkerTypes" title="getAllMarkerTypes :: Gets all the marker types."><span class="description">Gets all the marker types.</span><pre>getAllMarkerTypes()</pre></a></li>
+<li class="method public "><a href="#getData" title="getData :: Gets the marker group's translated data."><span class="description">Gets the marker group's translated data.</span><pre>getData()</pre></a></li>
+<li class="method public "><a href="#getIconPrefix" title="getIconPrefix :: Gets the marker group's prefix icon."><span class="description">Gets the marker group's prefix icon.</span><pre>getIconPrefix()</pre></a></li>
+<li class="method public "><a href="#getMarkerType" title="getMarkerType :: Gets a marker type."><span class="description">Gets a marker type.</span><pre>getMarkerType()</pre></a></li>
+<li class="method public "><a href="#getSlug" title="getSlug :: Gets the marker group's slug."><span class="description">Gets the marker group's slug.</span><pre>getSlug()</pre></a></li>
+<li class="nav-header">
+<i class="icon-custom icon-property"></i> Properties</li>
+<li class="nav-header protected">» Protected</li>
+<li class="property protected "><a href="#%24iconPrefix" title="$iconPrefix :: The marker group's prefix for icons."><span class="description">The marker group's prefix for icons.</span><pre>$iconPrefix</pre></a></li>
+<li class="property protected "><a href="#%24markerTypes" title="$markerTypes :: The marker types collection."><span class="description">The marker types collection.</span><pre>$markerTypes</pre></a></li>
+<li class="property protected "><a href="#%24slug" title="$slug :: The marker group's slug."><span class="description">The marker group's slug.</span><pre>$slug</pre></a></li>
+<li class="property protected "><a href="#%24translatedData" title="$translatedData :: The marker group's translated data."><span class="description">The marker group's translated data.</span><pre>$translatedData</pre></a></li>
+</ul>
+</div>
+<div class="span8">
+<a name="%5CGW2CBackend%5CMarker%5CMarkerGroup" id="\GW2CBackend\Marker\MarkerGroup"></a><ul class="breadcrumb">
+<li>
+<a href="../index.html"><i class="icon-custom icon-class"></i></a><span class="divider">\</span>
+</li>
+<li><a href="../namespaces/GW2CBackend.html">GW2CBackend</a></li>
+<span class="divider">\</span><li><a href="../namespaces/GW2CBackend.Marker.html">Marker</a></li>
+<li class="active">
+<span class="divider">\</span><a href="../classes/GW2CBackend.Marker.MarkerGroup.html">MarkerGroup</a>
+</li>
+</ul>
+<div href="../classes/GW2CBackend.Marker.MarkerGroup.html" class="element class">
+<p class="short_description">Represents a marker group.</p>
+<div class="details">
+<p class="long_description"></p>
+<h3>
+<i class="icon-custom icon-method"></i> Methods</h3>
+<a name="__construct" id="__construct"></a><div class="element clickable method public __construct" data-toggle="collapse" data-target=".__construct .collapse">
+<h2>Constructor.</h2>
+<pre>__construct(string $slug, string $iconPrefix, \GW2CBackend\TranslatedData $translatedData) </pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$slug</h4>
+<code>string</code>
+</div>
+<div class="subelement argument">
+<h4>$iconPrefix</h4>
+<code>string</code>
+</div>
+<div class="subelement argument">
+<h4>$translatedData</h4>
+<code><a href="../classes/GW2CBackend.TranslatedData.html">\GW2CBackend\TranslatedData</a></code>
+</div>
+</div></div>
+</div>
+<a name="addMarkerType" id="addMarkerType"></a><div class="element clickable method public addMarkerType" data-toggle="collapse" data-target=".addMarkerType .collapse">
+<h2>Adds a marker type to the marker type's collection.</h2>
+<pre>addMarkerType(\GW2CBackend\Marker\MarkerType $markerType) </pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$markerType</h4>
+<code><a href="../classes/GW2CBackend.Marker.MarkerType.html">\GW2CBackend\Marker\MarkerType</a></code>
+</div>
+</div></div>
+</div>
+<a name="getAllMarkerTypes" id="getAllMarkerTypes"></a><div class="element clickable method public getAllMarkerTypes" data-toggle="collapse" data-target=".getAllMarkerTypes .collapse">
+<h2>Gets all the marker types.</h2>
+<pre>getAllMarkerTypes() : array</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Returns</h3>
+<div class="subelement response"><code>array</code></div>
+</div></div>
+</div>
+<a name="getData" id="getData"></a><div class="element clickable method public getData" data-toggle="collapse" data-target=".getData .collapse">
+<h2>Gets the marker group's translated data.</h2>
+<pre>getData() : <a href="../classes/GW2CBackend.TranslatedData.html">\GW2CBackend\TranslatedData</a></pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Returns</h3>
+<div class="subelement response"><code><a href="../classes/GW2CBackend.TranslatedData.html">\GW2CBackend\TranslatedData</a></code></div>
+</div></div>
+</div>
+<a name="getIconPrefix" id="getIconPrefix"></a><div class="element clickable method public getIconPrefix" data-toggle="collapse" data-target=".getIconPrefix .collapse">
+<h2>Gets the marker group's prefix icon.</h2>
+<pre>getIconPrefix() : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Returns</h3>
+<div class="subelement response"><code>string</code></div>
+</div></div>
+</div>
+<a name="getMarkerType" id="getMarkerType"></a><div class="element clickable method public getMarkerType" data-toggle="collapse" data-target=".getMarkerType .collapse">
+<h2>Gets a marker type.</h2>
+<pre>getMarkerType(string $markerTypeSlug) : <a href="../classes/GW2CBackend.Marker.MarkerType.html">\GW2CBackend\Marker\MarkerType</a> | null</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Parameters</h3>
+<div class="subelement argument">
+<h4>$markerTypeSlug</h4>
+<code>string</code>
+</div>
+<h3>Returns</h3>
+<div class="subelement response">
+<code><a href="../classes/GW2CBackend.Marker.MarkerType.html">\GW2CBackend\Marker\MarkerType</a></code><code>null</code>the marker type object, null if it doesn't exist.</div>
+</div></div>
+</div>
+<a name="getSlug" id="getSlug"></a><div class="element clickable method public getSlug" data-toggle="collapse" data-target=".getSlug .collapse">
+<h2>Gets the marker group's slug.</h2>
+<pre>getSlug() : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description">
+<p class="long_description"></p>
+<h3>Returns</h3>
+<div class="subelement response"><code>string</code></div>
+</div></div>
+</div>
+<h3>
+<i class="icon-custom icon-property"></i> Properties</h3>
+<a name="%24iconPrefix" id="$iconPrefix"> </a><div class="element clickable property protected $iconPrefix" data-toggle="collapse" data-target=".$iconPrefix .collapse">
+<h2>The marker group's prefix for icons.</h2>
+<pre>$iconPrefix : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><p class="long_description"><p>This is the folder path to the marker type's icon filename.</p></p></div></div>
+</div>
+<a name="%24markerTypes" id="$markerTypes"> </a><div class="element clickable property protected $markerTypes" data-toggle="collapse" data-target=".$markerTypes .collapse">
+<h2>The marker types collection.</h2>
+<pre>$markerTypes : array</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
+</div>
+<a name="%24slug" id="$slug"> </a><div class="element clickable property protected $slug" data-toggle="collapse" data-target=".$slug .collapse">
+<h2>The marker group's slug.</h2>
+<pre>$slug : string</pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
+</div>
+<a name="%24translatedData" id="$translatedData"> </a><div class="element clickable property protected $translatedData" data-toggle="collapse" data-target=".$translatedData .collapse">
+<h2>The marker group's translated data.</h2>
+<pre>$translatedData : <a href="../classes/GW2CBackend.TranslatedData.html">\GW2CBackend\TranslatedData</a></pre>
+<div class="labels"></div>
+<div class="row collapse"><div class="detail-description"><p class="long_description"></p></div></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="row"><footer class="span12">
+            Template is built using <a href="http://twitter.github.com/bootstrap/">Twitter Bootstrap 2</a> and icons provided by <a href="http://glyphicons.com/">Glyphicons</a>.<br>
+            Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor 2.0.0a8</a> and<br>
+            generated on 2012-07-30T17:09:27+02:00.<br></footer></div>
+</div>
+</body>
+</html>
