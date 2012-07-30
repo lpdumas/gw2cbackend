@@ -1,15 +1,33 @@
 <?php
+/**
+ * This file is part of Guild Wars 2 : Cartographers - Crowdsourcing Tool
+ *
+ * @link https://github.com/lpdumas/gw2cbackend
+ */
 
 namespace GW2CBackend;
 
+/**
+ * This class was used to transform json into a new format
+ * @deprecated
+ */
 class FormatJSON {
-    
+
+    /**
+     * @ignore
+     */
     protected $json;
-    
+
+    /**
+     * @ignore
+     */
     public function __construct($json) {
         $this->json = json_decode($json, true);    
     }
-    
+
+    /**
+     * @ignore
+     */
     public function format() {
                 
         $id = 1;

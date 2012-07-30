@@ -1,15 +1,41 @@
 <?php
-
+/**
+ * This file is part of Guild Wars 2 : Cartographers - Crowdsourcing Tool.
+ *
+ * @link https://github.com/lpdumas/gw2cbackend
+ */
+ 
 namespace GW2CBackend;
 
 use Symfony\Component\Security\Core\User\User;
 
+/**
+ * Manages the database access.
+ *
+ * This class uses PDO to request the database.
+ *
+ * @todo This class needs a massive refactoring. Comments will come with the refactoring.
+ */
 class DatabaseAdapter {
 
+    /**
+     * @ignore
+     */
     protected $pdo;
+    
+    /**
+     * @ignore
+     */
     protected $database;
+
+    /**
+     * @ignore
+     */
     protected $data = array();
 
+    /**
+     * @ignore
+     */
     public function connect($host, $port, $database, $user, $pword) {
         
         if($this->pdo instanceof \PDO) return;
@@ -23,6 +49,9 @@ class DatabaseAdapter {
         }
     }
     
+    /**
+     * @ignore
+     */
     public function addModification($json) {
         
         $date = date('Y-m-d H:i:s');
@@ -33,7 +62,10 @@ class DatabaseAdapter {
 
         $r = $this->pdo->exec($q);
     }
-    
+
+    /**
+     * @ignore
+     */
     public function saveNewRevisionAsReference($newRevision, $modificationSourceID, $maxID) {
         $date = date('Y-m-d H:i:s');
         
@@ -49,7 +81,10 @@ class DatabaseAdapter {
         
         return $this->pdo->lastInsertId();
     }
-    
+
+    /**
+     * @ignore
+     */
     public function markAsMerged($revID) {
         
         $date = date('Y-m-d H:i:s');
@@ -57,6 +92,9 @@ class DatabaseAdapter {
         $this->pdo->exec("UPDATE modification_list SET `is_merged` = 1, `date_merge` = '".$date."' WHERE id = ".$revID);
     }
 
+    /**
+     * @ignore
+     */
     public function retrieveAll() {
         $this->retrieveOptions();
         //$this->retrieveResources();
@@ -65,21 +103,30 @@ class DatabaseAdapter {
         $this->retrieveFirstModification();
         //$this->retrieveReferenceAtSubmission($this->data['first-modification']['reference-at-submission']);
     }
-    
+
+    /**
+     * @ignore
+     */
     public function retrieveModificationList() {
         $result = $this->pdo->query("SELECT * FROM modification_list WHERE is_merged = 0");
         $result->setFetchMode(\PDO::FETCH_ASSOC);
         
         return $result->fetchAll();
     }
-    
+
+    /**
+     * @ignore
+     */
     public function retrieveMergedModificationList() {
         $result = $this->pdo->query("SELECT * FROM modification_list WHERE is_merged = 1 ORDER BY date_merge DESC");
         $result->setFetchMode(\PDO::FETCH_ASSOC);
         
         return $result->fetchAll();
     }
-    
+
+    /**
+     * @ignore
+     */
     public function retrieveReferenceAtSubmission($referenceID) {
         $result = $this->pdo->query("SELECT * FROM reference_list WHERE id = ".$referenceID."");
         
@@ -87,7 +134,10 @@ class DatabaseAdapter {
         
         $this->data["reference-at-submission"] = $result->fetch();
     }
-    
+
+    /**
+     * @ignore
+     */
     public function retrieveCurrentReference() {
         
         $result = $this->pdo->query("SELECT * FROM reference_list ORDER BY date_added DESC LIMIT 0,1");
@@ -97,6 +147,9 @@ class DatabaseAdapter {
         $this->data["current-reference"] = $result->fetch();
     }
 
+    /**
+     * @ignore
+     */
     public function retrieveOptions() {
         $result = $this->pdo->query("SELECT * FROM options");
         $result->setFetchMode(\PDO::FETCH_ASSOC);
@@ -106,7 +159,10 @@ class DatabaseAdapter {
             $this->data["options"][$row["id"]] = array('value' => $row["value"], 'desc' => $row['desc']);
         }
     }
-    
+
+    /**
+     * @ignore
+     */
     public function getMarkerGroups() {
         $result = $this->pdo->query("SELECT * FROM marker_group");
         $result->setFetchMode(\PDO::FETCH_ASSOC);
@@ -123,7 +179,10 @@ class DatabaseAdapter {
         
         return $r;
     }
-    
+
+    /**
+     * @ignore
+     */
     public function getTranslatedData($id) {
         
         if($id == null) {
@@ -145,6 +204,9 @@ class DatabaseAdapter {
         return $tData;
     }
 
+    /**
+     * @ignore
+     */
     public function getMarkerTypes() {
         $result = $this->pdo->query("SELECT * FROM marker_type");
         $result->setFetchMode(\PDO::FETCH_ASSOC);
@@ -160,7 +222,10 @@ class DatabaseAdapter {
         
         return $r;
     }
-    
+
+    /**
+     * @ignore
+     */
     public function getMarkersStructure() {
         $markerGroups = $this->getMarkerGroups();
         $markerTypes = $this->getMarkerTypes();
@@ -172,6 +237,9 @@ class DatabaseAdapter {
         return $markerGroups;
     }
 
+    /**
+     * @ignore
+     */
     public function retrieveAreasList() {
         $result = $this->pdo->query("SELECT * FROM areas_list");
         $result->setFetchMode(\PDO::FETCH_ASSOC);
@@ -182,14 +250,20 @@ class DatabaseAdapter {
         
         return $this->data["areas-list"];
     }
-    
+
+    /**
+     * @ignore
+     */
     public function createArea($name, $rangeLvl, $swLat, $swLng, $neLat, $neLng) {
         
         $q = "INSERT INTO areas_list (`name`, `rangeLvl`, `swLat`, `swLng`, `neLat`, `neLng`)
                 VALUES ('".$name."', '".$rangeLvl."', '".$swLat."', '".$swLng."','".$neLat."', '".$neLng."')";
         $this->pdo->exec($q);
     }
-    
+
+    /**
+     * @ignore
+     */
     public function editArea($areaID, $name, $rangeLvl, $swLat, $swLng, $neLat, $neLng) {
         
         $name = $this->pdo->quote($name);
@@ -200,26 +274,38 @@ class DatabaseAdapter {
                 WHERE id = ".$areaID;
         $this->pdo->exec($q);
     }
-    
+
+    /**
+     * @ignore
+     */
     public function removeArea($areaID) {
         
         $this->pdo->exec("DELETE FROM areas_list WHERE id = ".$areaID);
     }
-    
+
+    /**
+     * @ignore
+     */
     public function retrieveModification($idModification) {
         $result = $this->pdo->query("SELECT * FROM modification_list WHERE id = ".$idModification);
         $result->setFetchMode(\PDO::FETCH_ASSOC);
 
         return $result->fetch();
     }
-    
+
+    /**
+     * @ignore
+     */
     public function retrieveFirstModification() {
         $result = $this->pdo->query("SELECT * FROM modification_list WHERE is_merged = 0 ORDER BY date_added LIMIT 0,1");
         $result->setFetchMode(\PDO::FETCH_ASSOC);
         
         $this->data["first-modification"] = $result->fetch();
     }
-    
+
+    /**
+     * @ignore
+     */
     public function getData($index = null) {
         
         if($index == null) {
@@ -229,13 +315,19 @@ class DatabaseAdapter {
             return $this->data[$index];
         }
     }
-    
+
+    /**
+     * @ignore
+     */
     public function addFieldset($fieldsetName) {
         
         $q = "INSERT INTO fieldset (name) VALUES ('".$fieldsetName."')";
         $r = $this->pdo->exec($q);
     }
-    
+
+    /**
+     * @ignore
+     */
     public function removeFieldset($fieldsetID) {
         
         $query = $this->pdo->query("SELECT name FROM fieldset WHERE id =".$fieldsetID);
@@ -246,7 +338,10 @@ class DatabaseAdapter {
         $result = $query->fetch();
         return $result['name'];
     }
-    
+
+    /**
+     * @ignore
+     */
     public function getAllFieldsets() {
         $result = $this->pdo->query("SELECT * FROM fieldset ORDER BY id");
         $result->setFetchMode(\PDO::FETCH_ASSOC);
@@ -265,6 +360,9 @@ class DatabaseAdapter {
         return $r;
     }
 
+    /**
+     * @ignore
+     */
     public function getFieldset($fieldsetID) {
         $query = $this->pdo->query("SELECT name FROM fieldset WHERE id =".$fieldsetID);
         
@@ -282,7 +380,10 @@ class DatabaseAdapter {
 
         return $fieldset;
     }
-    
+
+    /**
+     * @ignore
+     */ 
     public function getTranslatableDataIDsByFieldset($fieldsetID) {
         
         $qg = "SELECT id_translated_data FROM marker_group WHERE id_translated_data IS NOT NULL AND id_fieldset = ".$fieldsetID;
@@ -297,7 +398,10 @@ class DatabaseAdapter {
         
         return $tDataIDs;
     }
-    
+
+    /**
+     * @ignore
+     */
     public function addField($fieldsetID, $fieldName) {
 
         $q = "INSERT INTO fieldset_content (key_value, id_fieldset) VALUES ('".$fieldName."', '".$fieldsetID."')";
@@ -322,6 +426,9 @@ class DatabaseAdapter {
         return $result['name'];
     }
 
+    /**
+     * @ignore
+     */
     public function editField($fieldID, $fieldName) {
         
         $query = $this->pdo->query("SELECT * FROM fieldset_content WHERE id =".$fieldID);
@@ -346,7 +453,10 @@ class DatabaseAdapter {
         $result = $this->getFieldset($fieldsetID);
         return $result['name'];
     }
-    
+
+    /**
+     * @ignore
+     */
     public function removeField($fieldID, $fieldName) {
         
         $query = $this->pdo->query("SELECT id_fieldset FROM fieldset_content WHERE id =".$fieldID);
@@ -375,7 +485,10 @@ class DatabaseAdapter {
         $result = $this->getFieldset($fieldsetID);
         return $result['name'];
     }
-    
+
+    /**
+     * @ignore
+     */
     public function getMarkerGroupIDsIfNoTranslatedData($fieldsetID) {
         
         $q = "SELECT * FROM marker_group WHERE id_translated_data is NULL AND id_fieldset = ".$fieldsetID;
@@ -384,7 +497,10 @@ class DatabaseAdapter {
         
         return $r->fetchAll();
     }
-    
+
+    /**
+     * @ignore
+     */
     public function getMarkerGroupByFieldset($fieldsetID) {
         $q = "SELECT * FROM marker_group WHERE id_fieldset = ".$fieldsetID;
         $r = $this->pdo->query($q);
@@ -393,6 +509,9 @@ class DatabaseAdapter {
         return $r->fetchAll();
     }
 
+    /**
+     * @ignore
+     */
     public function getMarkerTypeByFieldset($fieldsetID) {
         $q = "SELECT * FROM marker_type WHERE id_fieldset = ".$fieldsetID;
         $r = $this->pdo->query($q);
@@ -401,6 +520,9 @@ class DatabaseAdapter {
         return $r->fetchAll();
     }
 
+    /**
+     * @ignore
+     */
     public function getMarkerTypeIDsIfNoTranslatedData($fieldsetID) {
         
         $q = "SELECT * FROM marker_type WHERE id_translated_data is NULL AND id_fieldset = ".$fieldsetID;
@@ -409,7 +531,10 @@ class DatabaseAdapter {
         
         return $r->fetchAll();
     }    
-    
+
+    /**
+     * @ignore
+     */
     public function addMarkerGroup($slug, $iconPrefix, $fieldsetID) {
 
         $tDataID = "NULL";
@@ -432,7 +557,10 @@ class DatabaseAdapter {
                 VALUES ('".$slug."', '".$iconPrefix."', ".$tDataID.", ".$fieldsetID.")";
         $r = $this->pdo->exec($q);
     }
-    
+
+    /**
+     * @ignore
+     */
     public function editMarkerGroup($slugReference, $slug, $iconPrefix, $fieldsetID) {
         
         $mgQ = "SELECT id_translated_data, id_fieldset FROM marker_group WHERE slug = '".$slugReference."'";
@@ -480,7 +608,10 @@ class DatabaseAdapter {
         $this->pdo->exec($qMT);        
         $this->pdo->exec($q);
     }
-    
+
+    /**
+     * @ignore
+     */
     public function updateTranslatedDataFieldsRange($translatedDataID, $fieldsetID) {
 
         $fieldset = $this->getFieldset($fieldsetID);
@@ -524,7 +655,10 @@ class DatabaseAdapter {
         
         return count($fieldset['fields']);
     }
-    
+
+    /**
+     * @ignore
+     */
     public function removeMarkerGroup($slug) {
         
         $mgQ = "SELECT id_translated_data FROM marker_group WHERE slug = '".$slug."'";
@@ -542,6 +676,9 @@ class DatabaseAdapter {
         $this->pdo->exec($rmg);
     }
 
+    /**
+     * @ignore
+     */
     public function addMarkerType($slug, $filename, $displayInAreaSum, $fieldsetID, $markerGroupID) {
 
         $tDataID = "NULL";
@@ -565,7 +702,10 @@ class DatabaseAdapter {
                 VALUES ('".$slug."', '".$filename."', '".$displayInAreaSum."', '".$markerGroupID."', ".$tDataID.", ".$fieldsetID.")";
         $r = $this->pdo->exec($q);
     }
-    
+
+    /**
+     * @ignore
+     */
     public function removeMarkerType($slug) {
         
         $mtQ = "SELECT id_translated_data FROM marker_type WHERE id = '".$slug."'";
@@ -580,7 +720,10 @@ class DatabaseAdapter {
         $this->pdo->exec($rtd);
         $this->pdo->exec($rmt);
     }
-    
+
+    /**
+     * @ignore
+     */
     public function editMarkerType($slugReference, $slug, $filename, $displayInAreaSum, $fieldsetID) {
         
         $mtQ = "SELECT id_translated_data, id_fieldset FROM marker_type WHERE id = '".$slugReference."'";
@@ -625,7 +768,10 @@ class DatabaseAdapter {
                 `filename` = '".$filename."', `display_in_area_summary` = '".$displayInAreaSum."' WHERE id = '".$slugReference."'";
         $this->pdo->exec($q);
     }
-    
+
+    /**
+     * @ignore
+     */
     public function addTranslatedDataFieldsFromFieldset($fieldsetID) {
         $langs = $this->getAllLanguages();
         $fieldset = $this->getFieldset($fieldsetID);
@@ -645,7 +791,10 @@ class DatabaseAdapter {
 
         return $id;
     }
-    
+
+    /**
+     * @ignore
+     */
     public function addTranslatedDataField($id, $lang, $key) {
         
         $q = "INSERT INTO translated_data (id, lang, keyv) 
@@ -653,18 +802,27 @@ class DatabaseAdapter {
         $r = $this->pdo->exec($q);
     }
 
+    /**
+     * @ignore
+     */
     public function removeTranslatedDataField($id, $key) {
         
         $q = "DELETE FROM translated_data WHERE id = ".$id." AND keyv = '".$key."'";
         $r = $this->pdo->exec($q);
     }
-    
+
+    /**
+     * @ignore
+     */
     public function updateTranslatedDataField($id, $lang, $key, $value) {
         
         $q = "UPDATE translated_data SET `value` = '".$value."' WHERE id = '".$id."' AND lang = '".$lang."' AND keyv = '".$key."'";
         $r = $this->pdo->exec($q);
     }
-    
+
+    /**
+     * @ignore
+     */
     public function getReference($referenceID) {
         $q = $this->pdo->query("SELECT * FROM reference_list WHERE id = ".$referenceID);
         if(!$q) return null;
@@ -672,12 +830,17 @@ class DatabaseAdapter {
         $q->setFetchMode(\PDO::FETCH_ASSOC);
         return $q->fetch();
     }
-    
+
+    /**
+     * @ignore
+     */
     public function removeModification($idModification) {
         $this->pdo->exec("DELETE FROM modification_list WHERE id = ".$idModification);
     }
-    
-    
+
+    /**
+     * @ignore
+     */
     public function editTranslatedData($tDataID, $values, $fieldsetID) {
         
         $fieldset = $this->getFieldset($fieldsetID);
@@ -691,7 +854,10 @@ class DatabaseAdapter {
             }
         }
     }
-    
+
+    /**
+     * @ignore
+     */
     public function getTranslatedDataNewID() {
         $l = $this->pdo->query("SELECT MAX(id) as max_id FROM translated_data");
         $l->setFetchMode(\PDO::FETCH_ASSOC);
@@ -700,6 +866,9 @@ class DatabaseAdapter {
         return $l['max_id'] + 1;
     }
 
+    /**
+     * @ignore
+     */
     public function getAllLanguages() {
         
         $l = $this->pdo->query("SELECT * FROM supported_language");
@@ -712,7 +881,10 @@ class DatabaseAdapter {
         
         return $langs;
     }
-    
+
+    /**
+     * @ignore
+     */
     public function getUserByUsername($username) {
         
         $q = $this->pdo->query("SELECT * FROM user WHERE username = '".$username."'");
@@ -722,7 +894,10 @@ class DatabaseAdapter {
         return $q->fetch();
         
     }
-    
+
+    /**
+     * @ignore
+     */
     public function getAllUsers() {
         $q = $this->pdo->query("SELECT * FROM user");
         if(!$q) return null;
@@ -731,6 +906,9 @@ class DatabaseAdapter {
         return $q->fetchAll();
     }
 
+    /**
+     * @ignore
+     */
     public function createUser($username, $password, $role, $service) {
         
         $username = strtolower($username);
@@ -744,19 +922,28 @@ class DatabaseAdapter {
 
         $r = $this->pdo->exec($q);
     }
-    
+
+    /**
+     * @ignore
+     */
     public function removeUser($username) {
         
         $this->pdo->exec("DELETE FROM user WHERE username = '".$username."'");
     }
-    
+
+    /**
+     * @ignore
+     */
     public function editOptions(array $options) {
         
         foreach($options as $key => $value) {
             $this->pdo->exec("UPDATE options SET `value` = '".$value."' WHERE id = '".$key."'");
         }
     }
-    
+
+    /**
+     * @ignore
+     */
     public function dumpDatabase() {
 
         $sQuery = "SHOW tables FROM " . $this->database;
@@ -814,6 +1001,9 @@ class DatabaseAdapter {
         return $sData;
     }
 
+    /**
+     * @ignore
+     */
     public function handleError(\Exception $e) {
         var_dump($e);
     }

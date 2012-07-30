@@ -1,4 +1,9 @@
 <?php
+/**
+ * This file is part of Guild Wars 2 : Cartographers - Crowdsourcing Tool.
+ *
+ * @link https://github.com/lpdumas/gw2cbackend
+ */
 
 namespace GW2CBackend\Controller;
 
@@ -9,8 +14,16 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
+/**
+ * Controllers for areas management.
+ */
 class AreaControllerProvider extends ControllerProvider implements ControllerProviderInterface {
 
+    /**
+     * Connects the controllers to the Silex application.
+     *
+     * @param \Silex\Application $app the Silex application objet.
+     */
     public function connect(Application $app) {
         // creates a new controller based on the default route
         $controllers = $app['controllers_factory'];

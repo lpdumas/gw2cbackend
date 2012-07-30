@@ -1,20 +1,41 @@
 <?php
+/**
+ * This file is part of Guild Wars 2 : Cartographers - Crowdsourcing Tool.
+ *
+ * @link https://github.com/lpdumas/gw2cbackend
+ */
 
 namespace GW2CBackend;
 
+/**
+ * Validates the JSON sent from GW2: Cartographers.
+ */
 class InputValidator {
 
+    /**
+     * The decoded json input
+     * @var array
+     */
     protected $input;
 
+    /**
+     * Constructor.
+     * @param array|null $input the decoded json
+     */
     public function __construct($input) {
 
         $this->input = $input;
     }
 
+    /**
+     * Processes the validation.
+     *
+     * @return string|true true if the json is valid, the error message otherwise.
+     */
     public function validate() {
         
         if(!is_array($this->input)) {
-            return false;
+            return 'the json string is invalid';
         }
 
         if(!array_key_exists('version', $this->input) || !is_int($this->input['version'])) {
@@ -45,8 +66,7 @@ class InputValidator {
                 foreach($markerType['markers'] as $key => $marker) {
 
                     if(!is_int($key)) {
-                        //echo "key is not a digit";
-                        return false;
+                        return 'the key is not a digit';
                     }
                     elseif (
                            !array_key_exists("id", $marker) || 

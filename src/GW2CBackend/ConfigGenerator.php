@@ -1,4 +1,9 @@
 <?php
+/**
+ * This file is part of Guild Wars 2 : Cartographers - Crowdsourcing Tool.
+ *
+ * @link https://github.com/lpdumas/gw2cbackend
+ */
 
 namespace GW2CBackend;
 
@@ -6,45 +11,46 @@ use GW2CBackend\Marker\MapRevision;
 use GW2CBackend\Marker\Marker;
 
 /**
- * Generator of the configuration file
+ * Generator of the configuration file.
  */
 class ConfigGenerator {
     
     /**
-     * Contains the generator's output
+     * Contains the generator's output.
      * @var string
      */
     protected $output;
     
     /**
-     * Contains the source of the generation
+     * Contains the source of the generation.
      * @var \GW2CBackend\Marker\MapRevision
      */
     protected $revision;
     
     /**
-     * Contains all the area information
+     * Contains all the area information.
      * @var array
      */
     protected $areas;
     
     /**
-     * The path of the marker types's sicons
+     * The path of the marker types' icons.
      * @var string
      */
     protected $resourcesPath;
     
     /**
-     * Indicates if the generation is for gw2c or gw2c-backend's merging envrionment
+     * Indicates if the generation is for gw2c or gw2c-backend's merging envrionment.
      * @var boolean
      */
     protected $forAdmin;
     
     /**
-     * Constructor
-     * @param \GW2CBackend\Marker\MapRevision $revision the source of the generation
-     * @param string $resourcesPath the path to the marker's icons
-     * @param array $areas contains arrays that describe areas
+     * Constructor.
+     *
+     * @param \GW2CBackend\Marker\MapRevision $revision the source of the generation.
+     * @param string $resourcesPath the path to the marker's icons.
+     * @param array $areas contains arrays that describe areas.
      */
     public function __construct(MapRevision $revision, $resourcesPath, array $areas) {
         
@@ -56,13 +62,14 @@ class ConfigGenerator {
     }
     
     /**
-     * Trigger the generation process
-     * @return string the generated output
+     * Trigger the generation process.
+     *
+     * @return string the generated output.
      */
     public function generate() {
-        
+
         $outputString = "";
-        
+
         $outputString.= $this->generateMetadataOutput();
         $outputString.= $this->generateMarkersOutput();
         $outputString.= $this->generateAreasOutput();
@@ -73,8 +80,9 @@ class ConfigGenerator {
     }
 
     /**
-     * Generator Subprocess. Generates the output of the markers
-     * @return string the generated output
+     * Generator Subprocess. Generates the output of the markers.
+     *
+     * @return string the generated output.
      */
     protected function generateMarkersOutput() {
         
@@ -128,10 +136,11 @@ class ConfigGenerator {
     }
     
     /**
-     * Generator subprocess. Generates the output of ONE marker
-     * @param \GW2CBackend\Marker\Marker $marker the marker source of the generation
-     * @param integer $numTabs the number of tabs to put in front of the output
-     * @return string the generated output
+     * Generator subprocess. Generates the output of ONE marker.
+     *
+     * @param \GW2CBackend\Marker\Marker $marker the marker source of the generation.
+     * @param integer $numTabs the number of tabs to put in front of the output.
+     * @return string the generated output.
      */
     protected function generateMarkerOutput(Marker $marker, $numTabs) {
         $outputString = self::tabs($numTabs).'{'.PHP_EOL;
@@ -161,10 +170,11 @@ class ConfigGenerator {
     }
     
     /**
-     * Generator subprocess. Generates the output of ONE translated data field
-     * @param \GW2CBackend\TranslatedData $tData the data source of the generation
-     * @param integer $numTabs the number of tabs to put in front of the output
-     * @return string the generated output
+     * Generator subprocess. Generates the output of ONE translated data field.
+     *
+     * @param \GW2CBackend\TranslatedData $tData the data source of the generation.
+     * @param integer $numTabs the number of tabs to put in front of the output.
+     * @return string the generated output.
      */
     protected function generateTranslatedDataOutput(TranslatedData $tData, $numTabs) {
 
@@ -197,8 +207,9 @@ class ConfigGenerator {
     }
     
     /**
-     * Generator subprocess. Generates the output of file's metadata
-     * @return string the generated output
+     * Generator subprocess. Generates the output of file's metadata.
+     *
+     * @return string the generated output.
      */
     protected function generateMetadataOutput() {
         
@@ -216,8 +227,9 @@ class ConfigGenerator {
     
     
     /**
-     * Generator subprocess. Generates the output of all areas
-     * @return string the generated output
+     * Generator subprocess. Generates the output of all areas.
+     *
+     * @return string the generated output.
      */
     protected function generateAreasOutput() {
         
@@ -234,8 +246,9 @@ class ConfigGenerator {
     }
     
     /**
-     * Calculates the area summary (number of markers) for each relevant MarkerType
-     * @param integer $areaID the area's ID
+     * Calculates the area summary (number of markers) for each relevant MarkerType.
+     *
+     * @param integer $areaID the area's ID.
      * @return array of values where the key is the marker type's slug and the value the number of associated markers.
      */
     protected function getAreaSummary($areaID) {
@@ -266,10 +279,11 @@ class ConfigGenerator {
     }
     
     /**
-     * Generator subprocess. Generates the output of ONE area
-     * @param array $area describes an area
-     * @param array $summary where the key is marker type's slug and the value the number of associated markers
-     * @return string the generated output
+     * Generator subprocess. Generates the output of ONE area.
+     *
+     * @param array $area describes an area.
+     * @param array $summary where the key is marker type's slug and the value the number of associated markers.
+     * @return string the generated output.
      */
     protected function generateOneAreaOutput($area, $summary) {
         
@@ -294,8 +308,9 @@ class ConfigGenerator {
     }
     
     /**
-     * Minimizes the output
-     * @return string the minimized output
+     * Minimizes the output.
+     *
+     * @return string the minimized output.
      */
     public function minimize() {
         $this->output = preg_replace('#[\t\n ]*(=|:|,|;|{|}|\[|\]|")[\t\n ]*#', '$1', $this->output);
@@ -304,8 +319,9 @@ class ConfigGenerator {
     }
 
     /**
-     * Saves the output to a file
-     * @param string $path the path where the file will be saved
+     * Saves the output to a file.
+     *
+     * @param string $path the path where the file will be saved.
      */
     public function save($path) {
 
@@ -315,15 +331,17 @@ class ConfigGenerator {
     }
     
     /**
-     * Returns the output
-     * @return string the output
+     * Returns the output.
+     *
+     * @return string the output.
      */
     public function getOutput() { return $this->output; }
     
     /**
-     * Creates a string of tabs
+     * Creates a string of tabs.
+     *
      * @param integer $numTabs the number of tabs. Default is 1.
-     * @return string with $numTabs tabs
+     * @return string with $numTabs tabs.
      */
     protected static function tabs($numTabs = 1) {
         
@@ -334,7 +352,8 @@ class ConfigGenerator {
     }
     
     /**
-     * Set the indicator that will determine if the output will be used by gw2c-backend's merging environment
+     * Set the indicator that will determine if the output will be used by gw2c-backend's merging environment.
+     *
      * @param boolean $forAdmin
      */
     public function setForAdmin($forAdmin) { $this->forAdmin = $forAdmin; }

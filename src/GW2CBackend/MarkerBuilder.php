@@ -1,4 +1,9 @@
 <?php
+/**
+ * This file is part of Guild Wars 2 : Cartographers - Crowdsourcing Tool.
+ *
+ * @link https://github.com/lpdumas/gw2cbackend
+ */
 
 namespace GW2CBackend;
 
@@ -7,14 +12,33 @@ use GW2CBackend\Marker\MarkerType;
 use GW2CBackend\Marker\Marker;
 use GW2CBackend\Marker\MapRevision;
 
+/**
+ * Builds a MapRevision instance.
+ */
 class MarkerBuilder {
-    
+
+    /**
+     * Contains the database service.
+     * @var \GW2CBackend\DatabaseAdapter 
+     */
     protected $db;
-    
+
+    /**
+     * Constructor.
+     *
+     * @param \GW2CBackend\DatabaseAdapter $db the database service
+     */
     public function __construct(DatabaseAdapter $db) {
         $this->db = $db;
     }
 
+    /**
+     * Builds a map object.
+     *
+     * @param integer $revisionID the revision's ID.
+     * @param string $json the json string that represents the map.
+     * @return \GW2CBackend\Marker\MapRevision a new map revision object.
+     */
     public function build($revisionID, $json) {
         
         $mGroup = null;
@@ -59,7 +83,16 @@ class MarkerBuilder {
 
         return $mapRevision;
     }
-    
+
+    /**
+     * Gets the marker's area by coordinates.
+     *
+     * The areas information are retrieved from the database.
+     *
+     * @param float $lat the marker's latitude.
+     * @param float $lng the marker's longitude.
+     * @return integer the area's ID if found, 0 otherwise.
+     */
     protected function getMarkerArea($lat, $lng) {
         
         $areas = $this->db->retrieveAreasList();
@@ -74,7 +107,12 @@ class MarkerBuilder {
         
         return 0;
     }
-    
+
+    /**
+     * Retrieves the marker groups and the marker types from the database.
+     *
+     * @return array 
+     */
     protected function getMarkersStructure() {
 
         return $this->db->getMarkersStructure();
