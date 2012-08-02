@@ -369,13 +369,13 @@ $app->post('/admin/merge-changes', function(Request $request) use($app) {
     if($options['output-minimization']['value']) {
         $generator->minimize();
     }
-    
-    $app['database']->markAsMerged($revID);
-    
+
+    $app['database']->markAsMerged($revID, $changesToMerge, $newID);
+
     $generator->save(__DIR__.'/../'.$options['output-filepath']['value']);
-    
+
     return $app->redirect('/admin/');
-    
+
 })->bind('admin_merge_changes');
 
 $app->get('/format', function() use($app) {

@@ -85,11 +85,16 @@ class DatabaseAdapter {
     /**
      * @ignore
      */
-    public function markAsMerged($revID) {
-        
+    public function markAsMerged($revID, $mergedChanges, $refID) {
+
         $date = date('Y-m-d H:i:s');
-        
-        $this->pdo->exec("UPDATE modification_list SET `is_merged` = 1, `date_merge` = '".$date."' WHERE id = ".$revID);
+
+        foreach($mergedChanges as $change) {
+            
+            $q = "INSERT INTO merged_changes (id_change, id_modification, id_reference)
+                    VALUES ('".$change."', '".$revID."', '".$refID."')";
+            $this->pdo->exec($q);
+        }
     }
 
     /**
