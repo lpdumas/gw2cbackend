@@ -9,8 +9,6 @@ use GW2CBackend\UserProvider;
 
 $app = new Silex\Application();
 
-$app['debug'] = true;
-
 // we register the services
 $app->register(new GW2CBackend\DatabaseServiceProvider(), array(
     'database.host'     => $host,

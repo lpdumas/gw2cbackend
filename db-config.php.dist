@@ -5,3 +5,5 @@ $port = "3306";
 $database = "";
 $user = "";
 $pword = "";
+
+$app['debug'] = false;
