@@ -209,8 +209,8 @@ $app->get('/admin/revision/{revID}', function($revID) use($app) {
     $currentReference = $app['database']->getData('current-reference');
     
     $lastRev = $app['database']->retrieveModification($revID);
-    $modification = json_decode($lastRev['value'], true); 
-    $reference = json_decode($currentReference['value'], true);
+    $modification = json_decode(utf8_encode($lastRev['value']), true);
+    $reference = json_decode(utf8_encode($currentReference['value']), true);
 
     $builder = new GW2CBackend\MarkerBuilder($app['database']);
     $mapModif = $builder->build(-1, $modification);
