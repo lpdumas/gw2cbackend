@@ -32,6 +32,11 @@ $app->register(new Silex\Provider\MonologServiceProvider(), array(
     'monolog.logfile' => __DIR__.'/../logs/development.log',
 ));
 
+if($app['debug'] === true) {
+    $app['monolog']->pushHandler(new \Monolog\Handler\ChromePHPHandler());
+    $app['monolog']->pushHandler(new \Monolog\Handler\FirePHPHandler());
+}
+
 // firewall for admin area
 $app['security.firewalls'] = array(
     'admin' => array(
