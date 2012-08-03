@@ -28,6 +28,10 @@ $app->register(new Silex\Provider\TwigServiceProvider(), array(
     'twig.path' => __DIR__.'/../src/views',
 ));
 
+$app->register(new Silex\Provider\MonologServiceProvider(), array(
+    'monolog.logfile' => __DIR__.'/../logs/development.log',
+));
+
 // firewall for admin area
 $app['security.firewalls'] = array(
     'admin' => array(
@@ -65,7 +69,7 @@ $generateConfigFile = function() use($app) {
     $areasList = $app['database']->getData("areas-list");
     $currentReference = $app['database']->getData('current-reference');
 
-    $reference = json_decode($currentReference['value'], true);
+    $reference = GW2CBackend\Util::decodeJSON($currentReference['value']);
 
     $builder = new GW2CBackend\MarkerBuilder($app['database']);
     $mapRef = $builder->build($currentReference['id'], $reference);
@@ -88,6 +92,9 @@ $closuresForControllers = array(
                             'generate_config' => $generateConfigFile,
                             'route_for_debug' => $routeForDebugOnly,
                           );
+
+// The Utility class needs the $app to use monolog
+GW2CBackend\Util::$app = $app;
 
 $app->mount('/admin/organize', new GW2CBackend\Controller\OrganizeControllerProvider($closuresForControllers));
 $app->mount('/admin/user', new GW2CBackend\Controller\UserControllerProvider($closuresForControllers));
@@ -114,7 +121,7 @@ $app->post('/submit-modification', function(Request $request) use($app) {
 
     // we mock the submission
     $jsonString = stripslashes($request->request->get('json'));
-    $json = json_decode($jsonString, true);
+    $json = GW2CBackend\Util::decodeJSON($jsonString);
 
     $app['database']->retrieveAreasList();
     $validator = new GW2CBackend\InputValidator($json, $app['database']->getData("areas-list"));
@@ -125,7 +132,7 @@ $app->post('/submit-modification', function(Request $request) use($app) {
         $app['database']->retrieveCurrentReference();
         $currentReference = $app['database']->getData('current-reference');
  
-        $reference = json_decode($currentReference['value'], true);
+        $reference = GW2CBackend\Util::decodeJSON($currentReference['value']);
 
         $builder = new GW2CBackend\MarkerBuilder($app['database']);
         $mapModif = $builder->build(-1, $json);
@@ -173,13 +180,13 @@ $app->get('/admin/', function() use($app) {
     
     $list = $app['database']->retrieveModificationList();
     foreach($list as $k => $item) {
-        $json = json_decode($item['value'], true);
+        $json = GW2CBackend\Util::decodeJSON($item['value'];
         $list[$k]['reference_id'] = $json['version'];
     }
     
     $mergedList = $app['database']->retrieveMergedModificationList();
     foreach($mergedList as $k => $item) {
-        $json = json_decode($item['value'], true);
+        $json = GW2CBackend\Util::decodeJSON($item['value']);
         $mergedList[$k]['reference_id'] = $json['version'];
     }
     
@@ -190,8 +197,7 @@ $app->get('/admin/', function() use($app) {
 })->bind('admin');
 
 $app->get('/admin/revision/delete/{revID}', function($revID) use($app) {
-   
-   
+
    $app['database']->removeModification($revID);
     
    return $app->redirect('/admin/');
@@ -209,8 +215,9 @@ $app->get('/admin/revision/{revID}', function($revID) use($app) {
     $currentReference = $app['database']->getData('current-reference');
     
     $lastRev = $app['database']->retrieveModification($revID);
-    $modification = json_decode(utf8_encode($lastRev['value']), true);
-    $reference = json_decode(utf8_encode($currentReference['value']), true);
+
+    $modification = GW2CBackend\Util::decodeJSON($lastRev['value']);
+    $reference = GW2CBackend\Util::decodeJSON($currentReference['value']);
 
     $builder = new GW2CBackend\MarkerBuilder($app['database']);
     $mapModif = $builder->build(-1, $modification);
@@ -269,10 +276,10 @@ $app->get('/admin/revision/{revID}/compare/{referenceID}', function($revID, $ref
     $areasList = $app['database']->getData("areas-list");
     
     $lastRev = $app['database']->retrieveModification($revID);
-    $modification = json_decode($lastRev['value'], true);
+    $modification = GW2CBackend\Util::decodeJSON($lastRev['value']);
 
     $currentReference = $app['database']->getReference($referenceID);
-    $reference = json_decode($currentReference['value'], true);
+    $reference = GW2CBackend\Util::decodeJSON($currentReference['value']);
 
     $builder = new GW2CBackend\MarkerBuilder($app['database']);
     $mapModif = $builder->build($revID, $modification);
@@ -342,8 +349,8 @@ $app->post('/admin/merge-changes', function(Request $request) use($app) {
     
     if($lastRev['is_merged']) return $app->redirect('/admin/');
     
-    $modification = json_decode($lastRev['value'], true); 
-    $reference = json_decode($currentReference['value'], true);
+    $modification = GW2CBackend\Util::decodeJSON($lastRev['value']); 
+    $reference = GW2CBackend\Util::decodeJSON($currentReference['value']);
 
     $builder = new GW2CBackend\MarkerBuilder($app['database']);
     $mapModif = $builder->build(-1, $modification);
@@ -385,7 +392,7 @@ $app->get('/format', function() use($app) {
     $formatter = new GW2CBackend\FormatJSON($json);
     $json = $formatter->format();
     $je = json_encode($json['json']);
-    $de = json_decode($je, true);
+    $de = GW2CBackend\Util::decodeJSON($je);
 
     $builder = new GW2CBackend\MarkerBuilder($app['database']);
     $map = $builder->build(1, $de);

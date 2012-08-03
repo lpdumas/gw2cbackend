@@ -4,3 +4,4 @@ vendor/
 composer.phar
 web/config.js
 tests/output/
+logs/
