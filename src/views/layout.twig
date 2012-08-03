@@ -3,7 +3,7 @@
 <head>
     <title>{% block title %}{% endblock %}</title>
     <meta charset="UTF-8" />
-    
+    <link rel="stylesheet" href="/assets/stylesheets/bootstrap.css"> 
     {% block assets %}
     {% endblock %}
 </head>
@@ -11,8 +11,9 @@
     
     {% block menu %}
     {% endblock %}
-    
-    {% block content %}
-    {% endblock %}
+    <div class="container">
+        {% block content %}
+        {% endblock %}
+    </div>
 </body>
 </html>
