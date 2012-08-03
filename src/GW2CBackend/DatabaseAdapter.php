@@ -976,12 +976,12 @@ class DatabaseAdapter {
           $aTableInfo = $sResult2->fetch(\PDO::FETCH_ASSOC);
 
           $sData .= "\n\n--
-        -- Tabel structuur voor tabel `$sTable`
+        -- Table structure for table `$sTable`
         --\n\n";
           $sData .= $aTableInfo['Create Table'] . ";\n";
 
           $sData .= "\n\n--
-        -- Gegevens worden uitgevoerd voor tabel `$sTable`
+        -- Entries for table `$sTable`
         --\n\n";
 
 
@@ -995,7 +995,7 @@ class DatabaseAdapter {
             $sData .= "INSERT INTO $sTable VALUES (";
             $sRecord = "";
             foreach( $aRecord as $sField => $sValue ) {
-              $sRecord .= "'".addslashes($sValue)."',";
+              $sRecord .= "'".utf8_encode(addslashes($sValue))."',";
             }
             $sData .= substr( $sRecord, 0, -1 );
             $sData .= ");\n";
