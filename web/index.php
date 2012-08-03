@@ -1,13 +1,15 @@
 <?php
 
 require_once __DIR__.'/../vendor/autoload.php';
-require_once __DIR__.'/../db-config.php';
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use GW2CBackend\UserProvider;
 
 $app = new Silex\Application();
+
+// must be done after $app has been initialized
+require_once __DIR__.'/../db-config.php';
 
 // we register the services
 $app->register(new GW2CBackend\DatabaseServiceProvider(), array(
