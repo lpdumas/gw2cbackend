@@ -180,7 +180,7 @@ $app->get('/admin/', function() use($app) {
     
     $list = $app['database']->retrieveModificationList();
     foreach($list as $k => $item) {
-        $json = GW2CBackend\Util::decodeJSON($item['value'];
+        $json = GW2CBackend\Util::decodeJSON($item['value']);
         $list[$k]['reference_id'] = $json['version'];
     }
     
