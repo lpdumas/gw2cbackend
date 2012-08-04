@@ -8,7 +8,7 @@ class Util {
 
     static public function decodeJSON($jsonString) {
 
-        $json = json_decode(utf8_encode($jsonString), true);
+        $json = json_decode($jsonString, true);
 
         if(is_null($json)) {
 
