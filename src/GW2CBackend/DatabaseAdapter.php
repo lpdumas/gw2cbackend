@@ -95,6 +95,8 @@ class DatabaseAdapter {
                     VALUES ('".$change."', '".$revID."', '".$refID."')";
             $this->pdo->exec($q);
         }
+
+        $this->pdo->exec("UPDATE modification_list SET `is_merged` = 1, `date_merge` = '".$date."' WHERE id = ".$revID);
     }
 
     /**
