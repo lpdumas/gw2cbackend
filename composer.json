@@ -1,4 +1,7 @@
 {
+    "name": "gw2c/gw2cbackend",
+    "description": "Backend for gw2c",
+    "minimum-stability": "dev",
     "require": {
         "silex/silex": "1.0.*",
         "twig/twig": ">=1.8,<2.0-dev",
