@@ -125,8 +125,26 @@ class DatabaseAdapter {
     public function retrieveModificationList() {
         $result = $this->pdo->query("SELECT * FROM modification_list WHERE is_merged = 0");
         $result->setFetchMode(\PDO::FETCH_ASSOC);
-        
-        return $result->fetchAll();
+
+        $modifList = $result->fetchAll();
+        foreach($modifList as $k => $modif) {
+            $modifList[$k]['tags'] = $this->getTagsByModification($modif['id']);
+        }
+
+        return $modifList;
+    }
+
+    public function getTagsByModification($modifID) {
+
+        $tags = $this->pdo->query("SELECT tag_value FROM modification_tag WHERE id_modification = ".$modifID);
+
+        $tags = $tags->fetchAll();
+        $tagger = new TagProcessor();
+        foreach($tags as $k => $tag) {
+            $tags[$k]['tag_slug'] = $tagger->getTagSlug($tag['tag_value']);
+        }
+
+        return $tags;
     }
 
     /**

@@ -51,7 +51,7 @@ class TagProcessor {
     
     protected $tagsDisplayName;
 
-    public function __construct(array $changes) {
+    public function __construct(array $changes = array()) {
 
         $this->changes = $changes;
         $this->tags = array();
@@ -117,11 +117,18 @@ class TagProcessor {
             }
         }
 
-        if(empty($tmpTags)) {
-            var_dump($change);
-        }
-
         return $tmpTags;
+    }
+
+    public function getTagSlug($tag) {
+
+        if(array_key_exists($tag, $this->tagsDisplayName)) {
+            return $this->tagsDisplayName[$tag];
+        }
+        else {
+            $slug = explode('_', $tag);
+            return $slug[count($slug) - 1];
+        }
     }
 
     /**
