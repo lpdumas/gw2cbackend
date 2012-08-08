@@ -25,7 +25,10 @@
     {% for item in mergedModifList %}
         <li>
             <a href="{{ path('admin_revision_compare', { 'revID' : item.id, 'referenceID' : item.reference_id }) }}">Preview ID#{{ item.id }}</a> - 
-            <a href="{{ path('admin_revision', { 'revID' : item.id }) }}">Compare to current state</a>
+            <a href="{{ path('admin_revision', { 'revID' : item.id }) }}">Compare to current state</a> -
+            {% for tag in item.tags %}
+                #{{ tag.tag_slug }}
+            {% endfor %}
         </li>
     {% endfor %}
     </ul>

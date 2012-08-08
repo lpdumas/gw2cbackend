@@ -134,6 +134,24 @@ class DatabaseAdapter {
         return $modifList;
     }
 
+    /**
+     * @ignore
+     */
+    public function retrieveMergedModificationList() {
+        $result = $this->pdo->query("SELECT * FROM modification_list WHERE is_merged = 1 ORDER BY date_merge DESC");
+        $result->setFetchMode(\PDO::FETCH_ASSOC);
+        
+        $modifList = $result->fetchAll();
+        foreach($modifList as $k => $modif) {
+            $modifList[$k]['tags'] = $this->getTagsByModification($modif['id']);
+        }
+
+        return $modifList;
+    }
+
+    /**
+     * @ignore
+     */
     public function getTagsByModification($modifID) {
 
         $tags = $this->pdo->query("SELECT tag_value FROM modification_tag WHERE id_modification = ".$modifID);
@@ -145,16 +163,6 @@ class DatabaseAdapter {
         }
 
         return $tags;
-    }
-
-    /**
-     * @ignore
-     */
-    public function retrieveMergedModificationList() {
-        $result = $this->pdo->query("SELECT * FROM modification_list WHERE is_merged = 1 ORDER BY date_merge DESC");
-        $result->setFetchMode(\PDO::FETCH_ASSOC);
-        
-        return $result->fetchAll();
     }
 
     /**
