@@ -104,7 +104,8 @@ class DatabaseAdapter {
             $this->pdo->exec($q);
         }
 
-        $this->pdo->exec("UPDATE modification_list SET `is_merged` = 1, `date_merge` = '".$date."' WHERE id = ".$revID);
+        $this->pdo->exec("UPDATE modification_list SET `is_merged` = 1, `is_archived` = 1, `date_merge` = '".$date."' 
+                            WHERE id = ".$revID);
     }
 
     /**
@@ -123,7 +124,7 @@ class DatabaseAdapter {
      * @ignore
      */
     public function retrieveModificationList() {
-        $result = $this->pdo->query("SELECT * FROM modification_list WHERE is_merged = 0");
+        $result = $this->pdo->query("SELECT * FROM modification_list WHERE is_archived = 0");
         $result->setFetchMode(\PDO::FETCH_ASSOC);
 
         $modifList = $result->fetchAll();
@@ -138,7 +139,7 @@ class DatabaseAdapter {
      * @ignore
      */
     public function retrieveMergedModificationList() {
-        $result = $this->pdo->query("SELECT * FROM modification_list WHERE is_merged = 1 ORDER BY date_merge DESC");
+        $result = $this->pdo->query("SELECT * FROM modification_list WHERE is_archived = 1 ORDER BY date_merge DESC");
         $result->setFetchMode(\PDO::FETCH_ASSOC);
         
         $modifList = $result->fetchAll();
@@ -875,8 +876,9 @@ class DatabaseAdapter {
     /**
      * @ignore
      */
-    public function removeModification($idModification) {
-        $this->pdo->exec("DELETE FROM modification_list WHERE id = ".$idModification);
+    public function archiveModification($idModification) {
+        $date = date('Y-m-d H:i:s');
+        $this->pdo->exec("UPDATE modification_list SET `is_archived` = 1, `date_merge` = '".$date."' WHERE id = ".$idModification);
     }
 
     /**

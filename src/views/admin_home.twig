@@ -11,7 +11,7 @@
             {% for tag in item.tags %}
                 #{{ tag.tag_slug }}
             {% endfor %}
-            (<a href="{{ path('admin_revision_delete', { 'revID' : item.id }) }}">delete</a>)
+            (<a href="{{ path('admin_revision_archive', { 'revID' : item.id }) }}">archive</a>)
         </li>
     {% endfor %}
     </ul>
