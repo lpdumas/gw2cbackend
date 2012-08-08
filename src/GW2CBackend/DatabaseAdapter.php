@@ -52,7 +52,7 @@ class DatabaseAdapter {
     /**
      * @ignore
      */
-    public function addModification($json) {
+    public function addModification($json, $tags) {
         
         $date = date('Y-m-d H:i:s');
         $json = addslashes($json);
@@ -61,6 +61,14 @@ class DatabaseAdapter {
                          VALUES ('".$date."', '".$json."')";
 
         $r = $this->pdo->exec($q);
+
+        $modifID = $this->pdo->lastInsertId();
+        foreach($tags as $tag) {
+
+            $q = "INSERT INTO modification_tag (id_modification, tag_value)
+                    VALUES ('".$modifID."', '".$tag."')";
+            $this->pdo->exec($q);
+        }
     }
 
     /**

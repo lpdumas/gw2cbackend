@@ -151,10 +151,14 @@ $app->post('/submit-modification', function(Request $request) use($app) {
             $message = array('success' => false, 'message' => '<h1>Ooops...</h1><p>It seems that you haven\'t made any change !</p>');
         }
         else {
+
             $app['database']->retrieveOptions();
             $options = $app['database']->getData("options");
             if(!$options['maintenance-mode']['value']) {
-                $app['database']->addModification($jsonString);
+
+                $tagger = new \GW2CBackend\TagProcessor($changes);
+                $tags = $tagger->process();
+                $app['database']->addModification($jsonString, $tags);
                 $message = array('success' => true, 'message' => '<h1>Thank you !</h1><p>A team of dedicated grawls will sort that out.</p>');
             }
             else {
@@ -231,7 +235,7 @@ $app->get('/admin/revision/{revID}', function($revID) use($app) {
     $baseReference = $app['database']->getReference($modification['version']);
     $diff = new GW2CBackend\DiffProcessor($mapModif, $mapRef, $baseReference['max_marker_id']);
     $changes = $diff->process();
-    
+
     $forAdmin = true;
     $merger = new GW2CBackend\ChangeMerger($mapRef, $changes);
     $merger->setForAdmin($forAdmin);
