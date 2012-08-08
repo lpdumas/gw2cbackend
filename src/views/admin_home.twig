@@ -9,7 +9,7 @@
             <a href="{{ path('admin_revision_compare', { 'revID' : item.id, 'referenceID' : item.reference_id }) }}">Preview ID#{{ item.id }}</a> - 
             <a href="{{ path('admin_revision', { 'revID' : item.id }) }}">Compare to current state</a> - 
             {% for tag in item.tags %}
-                #{{ tag.tag_slug }}
+                [{{ tag.tag_slug }}]
             {% endfor %}
             (<a href="{{ path('admin_revision_archive', { 'revID' : item.id }) }}">archive</a>)
         </li>
@@ -27,7 +27,7 @@
             <a href="{{ path('admin_revision_compare', { 'revID' : item.id, 'referenceID' : item.reference_id }) }}">Preview ID#{{ item.id }}</a> - 
             <a href="{{ path('admin_revision', { 'revID' : item.id }) }}">Compare to current state</a> -
             {% for tag in item.tags %}
-                #{{ tag.tag_slug }}
+                [{{ tag.tag_slug }}]
             {% endfor %}
         </li>
     {% endfor %}
