@@ -1,9 +1,11 @@
 {
-    "hash": "a05f9ae5f68db0f9472729d77a43a16d",
+    "hash": "d50126fa8485d344fb7accff2084f272",
     "packages": [
         {
             "package": "monolog/monolog",
-            "version": "1.1.0"
+            "version": "dev-master",
+            "source-reference": "59fb9f41be22b246f5e5d3bd8a012ed77f44a7d0",
+            "commit-date": "1342167011"
         },
         {
             "package": "pimple/pimple",
@@ -62,8 +64,8 @@
         {
             "package": "symfony/http-kernel",
             "version": "dev-master",
-            "source-reference": "v2.1.0-RC1",
-            "commit-date": "1344072741"
+            "source-reference": "0d0ee371ab0425f3399dba9e25d7ad98ca5c0d62",
+            "commit-date": "1344074675"
         },
         {
             "package": "symfony/routing",
@@ -110,15 +112,15 @@
         {
             "package": "twig/twig",
             "version": "dev-master",
-            "source-reference": "51c866f415bbee670cd9ba13591307bce8dabdca",
-            "commit-date": "1343464333"
+            "source-reference": "f2f698c820d4396f519ef4175ad6fe79fcfb9ecf",
+            "commit-date": "1344328685"
         }
     ],
     "packages-dev": null,
     "aliases": [
 
     ],
-    "minimum-stability": "stable",
+    "minimum-stability": "dev",
     "stability-flags": [
 
     ]
