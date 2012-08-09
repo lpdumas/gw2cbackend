@@ -10,6 +10,10 @@
             <a href="{{ path('admin_revision', { 'revID' : item.id }) }}">Compare to current state</a> - 
             {% for tag in item.tags %}
                 [{{ tag.tag_slug }}]
+            {% endfor %} -
+
+            {% for key, stat in item.stats %}
+                {{ key }}={{ stat }};
             {% endfor %}
             (<a href="{{ path('admin_revision_archive', { 'revID' : item.id }) }}">archive</a>)
         </li>
@@ -28,6 +32,10 @@
             <a href="{{ path('admin_revision', { 'revID' : item.id }) }}">Compare to current state</a> -
             {% for tag in item.tags %}
                 [{{ tag.tag_slug }}]
+            {% endfor %} -
+
+            {% for key, stat in item.stats %}
+                {{ key }}={{ stat }};
             {% endfor %}
         </li>
     {% endfor %}

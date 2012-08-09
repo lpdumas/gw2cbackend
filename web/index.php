@@ -156,9 +156,12 @@ $app->post('/submit-modification', function(Request $request) use($app) {
             $options = $app['database']->getData("options");
             if(!$options['maintenance-mode']['value']) {
 
+                $stater = new GW2CBackend\StatsProcessor($changes);
+                $stats = $stater->process();
+
                 $tagger = new \GW2CBackend\TagProcessor($changes);
                 $tags = $tagger->process();
-                $app['database']->addModification($jsonString, $tags);
+                $app['database']->addModification($jsonString, $stats, $tags);
                 $message = array('success' => true, 'message' => '<h1>Thank you !</h1><p>A team of dedicated grawls will sort that out.</p>');
             }
             else {
@@ -191,14 +194,16 @@ $app->get('/admin/', function() use($app) {
     foreach($list as $k => $item) {
         $json = GW2CBackend\Util::decodeJSON($item['value']);
         $list[$k]['reference_id'] = $json['version'];
+        $list[$k]['stats'] = unserialize($item['stats']);
     }
-    
+
     $mergedList = $app['database']->retrieveMergedModificationList();
     foreach($mergedList as $k => $item) {
         $json = GW2CBackend\Util::decodeJSON($item['value']);
         $mergedList[$k]['reference_id'] = $json['version'];
+        $mergedList[$k]['stats'] = unserialize($item['stats']);
     }
-    
+
     return $app['twig']->render('admin_home.twig', array(
             'modifList' => $list,
             'mergedModifList' => $mergedList,
@@ -240,12 +245,12 @@ $app->get('/admin/revision/{revID}', function($revID) use($app) {
     $merger = new GW2CBackend\ChangeMerger($mapRef, $changes);
     $merger->setForAdmin($forAdmin);
     $mergedRevision = $merger->merge();
-    
+
     $generator = new GW2CBackend\ConfigGenerator($mergedRevision, $options["resources-path"]['value'], $areasList);
     $generator->setForAdmin($forAdmin);
-    
+
     $output = $generator->generate();
-    
+
     /*
         We make an array twig-friendly to easily display the changes in a list
     */

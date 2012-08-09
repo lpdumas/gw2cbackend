@@ -52,13 +52,14 @@ class DatabaseAdapter {
     /**
      * @ignore
      */
-    public function addModification($json, $tags) {
+    public function addModification($json, $stats, $tags) {
         
         $date = date('Y-m-d H:i:s');
         $json = addslashes($json);
+        $erializedStats = serialize($stats);
 
-        $q = "INSERT INTO modification_list (date_added, value) 
-                         VALUES ('".$date."', '".$json."')";
+        $q = "INSERT INTO modification_list (date_added, value, stats) 
+                         VALUES ('".$date."', '".$json."', '".$erializedStats."')";
 
         $r = $this->pdo->exec($q);
 
