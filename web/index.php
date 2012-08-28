@@ -194,7 +194,7 @@ $app->get('/admin/', function() use($app) {
     foreach($list as $k => $item) {
         $json = GW2CBackend\Util::decodeJSON($item['value']);
         $list[$k]['reference_id'] = $json['version'];
-        $list[$k]['stats'] = unserialize($item['stats']);
+        $list[$k]['stats'] = isset($item['stats']) ? unserialize($item['stats']) : "";
     }
 
     $mergedList = $app['database']->retrieveMergedModificationList();
