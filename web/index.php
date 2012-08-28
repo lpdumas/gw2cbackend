@@ -197,12 +197,13 @@ $app->get('/admin/', function() use($app) {
         $list[$k]['stats'] = isset($item['stats']) ? unserialize($item['stats']) : "";
     }
 
-    $mergedList = $app['database']->retrieveMergedModificationList();
+    /*$mergedList = $app['database']->retrieveMergedModificationList();
     foreach($mergedList as $k => $item) {
         $json = GW2CBackend\Util::decodeJSON($item['value']);
         $mergedList[$k]['reference_id'] = $json['version'];
         $mergedList[$k]['stats'] = isset($item['stats']) ? unserialize($item['stats']) : "";
-    }
+    }*/
+    $mergedList = array();
 
     return $app['twig']->render('admin_home.twig', array(
             'modifList' => $list,
