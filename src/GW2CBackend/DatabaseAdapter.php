@@ -124,8 +124,8 @@ class DatabaseAdapter {
     /**
      * @ignore
      */
-    public function retrieveModificationList() {
-        $result = $this->pdo->query("SELECT * FROM modification_list WHERE is_archived = 0");
+    public function retrieveModificationList($limit) {
+        $result = $this->pdo->query("SELECT * FROM modification_list WHERE is_archived = 0 LIMIT 0, ".$limit);
         $result->setFetchMode(\PDO::FETCH_ASSOC);
 
         $modifList = $result->fetchAll();
