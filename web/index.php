@@ -201,7 +201,7 @@ $app->get('/admin/', function() use($app) {
     foreach($mergedList as $k => $item) {
         $json = GW2CBackend\Util::decodeJSON($item['value']);
         $mergedList[$k]['reference_id'] = $json['version'];
-        $mergedList[$k]['stats'] = unserialize($item['stats']);
+        $mergedList[$k]['stats'] = isset($item['stats']) ? unserialize($item['stats']) : "";
     }
 
     return $app['twig']->render('admin_home.twig', array(
