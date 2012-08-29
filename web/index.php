@@ -190,7 +190,7 @@ $app->get('/login', function(Request $request) use ($app) {
 
 $app->get('/admin/', function() use($app) {
     
-    $list = $app['database']->retrieveModificationList(5);
+    $list = $app['database']->retrieveModificationList(30);
     foreach($list as $k => $item) {
         $json = GW2CBackend\Util::decodeJSON($item['value']);
         $list[$k]['reference_id'] = $json['version'];

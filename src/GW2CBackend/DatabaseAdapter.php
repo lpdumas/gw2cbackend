@@ -56,10 +56,10 @@ class DatabaseAdapter {
         
         $date = date('Y-m-d H:i:s');
         $json = addslashes($json);
-        $erializedStats = serialize($stats);
+        // $erializedStats = serialize($stats);
 
-        $q = "INSERT INTO modification_list (date_added, value, stats) 
-                         VALUES ('".$date."', '".$json."', '".$erializedStats."')";
+        // $q = "INSERT INTO modification_list (date_added, value, stats) VALUES ('".$date."', '".$json."', '".$erializedStats."')";
+        $q = "INSERT INTO modification_list (date_added, value) VALUES ('".$date."', '".$json."')";
 
         $r = $this->pdo->exec($q);
 
