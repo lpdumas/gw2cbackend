@@ -16,13 +16,21 @@
 
 {% block menu %}
 <div id="menu">
-    <a href="{{ path('admin') }}">Home</a> # 
-    <a href="{{ path('admin_organize') }}">Organize config.js</a> # 
-    <a href="{{ path('admin_areas') }}">Manage Areas</a> # 
-    <a href="{{ path('admin_options') }}">Options</a> # 
-    {% if is_granted('ROLE_SUPER_ADMIN') %}
-    <a href="{{ path('admin_users') }}">Users management</a> # 
-    {% endif %}
-    <a href="{{ path('admin_logout') }}">Logout</a>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="navbar-inner">
+            <div class="container">
+                <ul class="nav">
+                    <li><a href="{{ path('admin') }}">Home</a></li>
+                    <li><a href="{{ path('admin_organize') }}">Organize</a></li>
+                    <li{% if (section is defined ) and (section == "areas")%} class="disabled" {% endif %}><a href="{{ path('admin_areas') }}">Manage Areas</a></li>
+                    <li><a href="{{ path('admin_options') }}">Options</a></li>
+                    <li>{% if is_granted('ROLE_SUPER_ADMIN') %}</li>
+                    <li><a href="{{ path('admin_users') }}">Users management</a></li>
+                    <li>{% endif %}</li>
+                    <li class="pull-right"><a href="{{ path('admin_logout') }}">Logout</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
 </ul>
 {% endblock %}

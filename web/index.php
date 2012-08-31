@@ -5,6 +5,8 @@ require_once __DIR__.'/../vendor/autoload.php';
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use GW2CBackend\UserProvider;
+use Silex\Provider\FormServiceProvider;
+
 
 $app = new Silex\Application();
 
@@ -23,6 +25,7 @@ $app->register(new GW2CBackend\DatabaseServiceProvider(), array(
 $app->register(new Silex\Provider\SessionServiceProvider());
 $app->register(new Silex\Provider\SecurityServiceProvider());
 $app->register(new Silex\Provider\UrlGeneratorServiceProvider());
+$app->register(new FormServiceProvider());
 
 $app->register(new Silex\Provider\TwigServiceProvider(), array(
     'twig.path' => __DIR__.'/../src/views',

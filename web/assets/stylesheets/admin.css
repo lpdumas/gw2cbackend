@@ -1,0 +1,23 @@
+/* Common
+*********************{{{*/
+.nav li.disabled a {
+  color: #fff;
+}
+.alert {
+  text-align: center;
+}
+/*}}}*/
+
+/* Areas
+*********************{{{*/
+  #areas-listing a.btn + .btn{
+    margin-left: 8px;
+  }
+  
+  #add-areas {
+    margin-bottom: 0.7em;
+  }
+  
+
+  
+/*}}}*/

@@ -1,0 +1,35 @@
+{% extends "admin_layout.twig" %}
+{% block title %}Areas{% endblock %}
+
+{% block assets %}
+    {{ parent() }}
+    
+    <style>
+        .area { margin: 25px 0; }
+    </style>
+{% endblock %}
+
+{% block content %}
+
+{% if feedback is defined %}
+<p>{{ feedback }}</p>
+{% endif %}
+
+{# form_row(form.name) #}
+
+<a href="{{ path('admin_areas') }}">back to areas listing</a>
+<h1>Add Area</h1>
+<form method="post" action="{{ path('admin_areas_add') }}">
+    <label>Name</label> <input type="text" name="name" />
+    <label>Range lvl</label> <input type="text" name="rangeLvl" />
+    <label>SW LAT</label> <input type="text" name="swLat" />
+    <label>SW LNG</label> <input type="text" name="swLng" />
+    <label>NE LAT</label> <input type="text" name="neLat" />
+    <label>NE LNG</label> <input type="text" name="neLng" />
+    <p><button class="btn btn-success" type="submit">Add</button></p>
+</form>
+
+
+
+
+{% endblock %}

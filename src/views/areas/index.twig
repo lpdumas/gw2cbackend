@@ -1,0 +1,68 @@
+{% extends "admin_layout.twig" %}
+{% block title %}Areas{% endblock %}
+
+{% block assets %}
+    {{ parent() }}
+    
+    <style>
+        .area { margin: 25px 0; }
+    </style>
+{% endblock %}
+
+{% block content %}
+
+{# if feedback is defined and  feedback != "" %}
+<div class="alert {% if feedback.type == "good" %}alert-success{% else %}alert-error{% endif %}">
+    {{ feedback.message }}
+</div>
+{% endif #}
+
+<h1>Manage Areas</h1>
+<a id="add-areas" class="btn btn-success pull-right" href="{{ path('admin_areas_add_form')}}">Add</a>
+<table id="areas-listing" class="table table-striped">
+    <tr>
+        <th>Name</th>
+        <th>Level range</th>
+        <th width="20%">Options</th>
+    </tr>
+    {% for area in areas %}
+    <tr>
+        <td><span>{{ area.name }}</span></td>
+        <td><span>{% if area.rangeLvl %}{{ area.rangeLvl }}{% else %} NA {% endif %}</span></td>
+        <td><a class="btn btn-warning" href="{{ path('admin_areas_update', {'idArea': area.id}) }}">Update</a><a class="btn btn-danger" href="#{{ area.id }}">Delete</a></td>
+    </tr>
+    {% endfor %}
+</table>
+
+
+
+<form method="post" action="{{ path('admin_areas_add') }}">
+<label>Name</label> <input type="text" name="name" />
+<label>Range lvl</label> <input type="text" name="rangeLvl" />
+<label>SW LAT</label> <input type="text" name="swLat" />
+<label>SW LNG</label> <input type="text" name="swLng" />
+<label>NE LAT</label> <input type="text" name="neLat" />
+<label>NE LNG</label> <input type="text" name="neLng" />
+<input type="submit" value="Add" />
+</form>
+
+<h2>Manage existing areas</h2>
+{% for area in areas %}
+<div class="area">
+    <form method="post" action="{{ path('admin_areas_edit') }}">
+    <label>Name</label> <input type="text" name="name" value="{{ area.name }}" />
+    <label>Range lvl</label> <input type="text" name="rangeLvl" value="{{ area.rangeLvl }}" /><br />
+    <label>SW LAT</label> <input type="text" name="swLat" value="{{ area.swLat }}" />
+    <label>SW LNG</label> <input type="text" name="swLng" value="{{ area.swLng }}" /><br />
+    <label>NE LAT</label> <input type="text" name="neLat" value="{{ area.neLat }}" />
+    <label>NE LNG</label> <input type="text" name="neLng" value="{{ area.neLng }}" />
+    <input type="hidden" name="areaID" value="{{ area.id }}" />
+    <input type="submit" name="edit" value="Update" />
+    <input type="submit" name="remove" value="Remove" />
+    </form>
+</div>
+{% endfor %}
+
+
+
+{% endblock %}

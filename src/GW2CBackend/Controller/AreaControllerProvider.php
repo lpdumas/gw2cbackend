@@ -43,9 +43,10 @@ class AreaControllerProvider extends ControllerProvider implements ControllerPro
             $params = array(
                 "feedback" => $feedback,
                 "areas" => $areasList,
+                "section" => 'areas',
             );
 
-            return $app['twig']->render('areas.twig', $params);
+            return $app['twig']->render('areas/index.twig', $params);
 
         })->bind('admin_areas');
 
@@ -73,6 +74,34 @@ class AreaControllerProvider extends ControllerProvider implements ControllerPro
 
         })->after($this->getClosure('generate_config'))->bind('admin_areas_add');
 
+        $controllers->get('/update/{idArea}', function(Request $request, $idArea) use($app) {
+            $areasList = $app['database']->retrieveAreasListFromId($idArea);
+            $params = array(
+                "areas" => $areasList,
+                "section" => "areas"
+            );
+            return $app['twig']->render('areas/update.twig', $params);
+        })->bind('admin_areas_update');
+
+        
+        $controllers->get('/add/', function(Request $request) use($app) {
+            $form = $app['form.factory']->createBuilder('form')
+                ->add('name')
+                ->add('email')
+                ->getForm();
+                
+            $params = array(
+                "section" => "areas",
+                "form" => $form->createView()
+            );
+            
+            
+            return $app['twig']->render('areas/add.twig', $params);
+        })->bind('admin_areas_add_form');
+
+
+
+        
         $controllers->post('/edit', function(Request $request) use($app) {
             $name = $request->request->get('name');
             $rangeLvl = $request->request->get('rangeLvl');
@@ -87,21 +116,21 @@ class AreaControllerProvider extends ControllerProvider implements ControllerPro
                 $message = "All the fields must be filled.";
             }
             else {
-
-                if($request->request->has('remove')) {
-                    $app['database']->removeArea($id);
-                    $message = "The area has been successfully removed.";
+                $action = $app['database']->editArea($id, $name, $rangeLvl, $swLat, $swLng, $neLat, $neLng);
+                if($action) {
+                    $feedback = array(
+                        "type" => "good",
+                        "message" => "The area has been successfully updated."
+                    );
+                } else {                    
+                    $feedback = array(
+                        "type" => "good",
+                        "message" => "Ooops .. something went wrong."
+                    );
                 }
-                else if($request->request->has('edit')) {
-                    $app['database']->editArea($id, $name, $rangeLvl, $swLat, $swLng, $neLat, $neLng);
-                    $message = "The area has been successfully updated.";
-                }
-                else {
-                    $message = "Action not found.";
-                }
+                
             }
-
-            $app['session']->set('feedback', $message);
+            $app['session']->set('feedback', $feedback);
 
             return $app->redirect($app['url_generator']->generate('admin_areas'));
 

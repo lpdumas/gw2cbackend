@@ -284,11 +284,25 @@ class DatabaseAdapter {
      * @ignore
      */
     public function retrieveAreasList() {
-        $result = $this->pdo->query("SELECT * FROM areas_list");
+        $result = $this->pdo->query("SELECT * FROM areas_list ORDER BY rangeLvl, name");
         $result->setFetchMode(\PDO::FETCH_ASSOC);
         
         foreach($result->fetchAll() as $row) {
             $this->data["areas-list"][$row["id"]] = $row;
+        }
+        
+        return $this->data["areas-list"];
+    }
+    
+    /**
+     * @ignore
+    */
+    public function retrieveAreasListFromId($idAreas) {
+        $result = $this->pdo->query("SELECT * FROM areas_list WHERE id = ".$idAreas . " LIMIT 1");
+        $result->setFetchMode(\PDO::FETCH_ASSOC);
+        
+        foreach($result->fetchAll() as $row) {
+            $this->data["areas-list"] = $row;
         }
         
         return $this->data["areas-list"];
@@ -299,9 +313,16 @@ class DatabaseAdapter {
      */
     public function createArea($name, $rangeLvl, $swLat, $swLng, $neLat, $neLng) {
         
+        $name = $this->pdo->quote($name);
+        $rangeLvl = $this->pdo->quote($rangeLvl);
+        $swLat = $this->pdo->quote($swLat);
+        $swLng = $this->pdo->quote($swLng);
+        $neLat = $this->pdo->quote($neLat);
+        $neLng = $this->pdo->quote($neLng);
+        
         $q = "INSERT INTO areas_list (`name`, `rangeLvl`, `swLat`, `swLng`, `neLat`, `neLng`)
                 VALUES ('".$name."', '".$rangeLvl."', '".$swLat."', '".$swLng."','".$neLat."', '".$neLng."')";
-        $this->pdo->exec($q);
+        return $this->pdo->exec($q);
     }
 
     /**
@@ -315,7 +336,8 @@ class DatabaseAdapter {
                                     `swLat` = '".$swLat."', `swLng` = '".$swLng."',
                                     `neLat` = '".$neLat."', `neLng` = '".$neLng."'
                 WHERE id = ".$areaID;
-        $this->pdo->exec($q);
+                
+        return $this->pdo->exec($q);
     }
 
     /**

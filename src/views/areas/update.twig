@@ -1,0 +1,34 @@
+{% extends "admin_layout.twig" %}
+{% block title %}Areas{% endblock %}
+
+{% block assets %}
+    {{ parent() }}
+    
+    <style>
+        .area { margin: 25px 0; }
+    </style>
+{% endblock %}
+
+{% block content %}
+
+{% if feedback is defined %}
+<p>{{ feedback }}</p>
+{% endif %}
+
+<a href="{{ path('admin_areas') }}">back to areas listing</a>
+<h1>Update Area: {{ areas.name }}</h1>
+<form method="post" action="{{ path('admin_areas_edit') }}">
+    <label>Name</label> <input type="text" name="name" value="{{ areas.name }}" />
+    <label>Range lvl</label> <input type="text" name="rangeLvl" value="{{ areas.rangeLvl }}"/>
+    <label>SW LAT</label> <input type="text" name="swLat" value="{{ areas.swLat }}"/>
+    <label>SW LNG</label> <input type="text" name="swLng" value="{{ areas.swLng }}"/>
+    <label>NE LAT</label> <input type="text" name="neLat" value="{{ areas.neLat }}"/>
+    <label>NE LNG</label> <input type="text" name="neLng" value="{{ areas.neLng }}"/>
+    <input type="hidden" name="areaID" value="{{ areas.id }}" />
+    <p><button class="btn btn-warning" type="submit">Update</button></p>
+</form>
+
+
+
+
+{% endblock %}
