@@ -126,14 +126,21 @@ class DatabaseAdapter {
      */
     public function retrieveModificationList($limit) {
         $result = $this->pdo->query("SELECT * FROM modification_list WHERE is_archived = 0 LIMIT 0, ".$limit);
+        $countQuery = $this->pdo->query("SELECT COUNT(*) as 'num' FROM modification_list WHERE is_archived = 0");
+        
         $result->setFetchMode(\PDO::FETCH_ASSOC);
+        $countQuery->setFetchMode(\PDO::FETCH_ASSOC);
 
         $modifList = $result->fetchAll();
+        $count = $countQuery->fetchAll();
         foreach($modifList as $k => $modif) {
             $modifList[$k]['tags'] = $this->getTagsByModification($modif['id']);
         }
-
-        return $modifList;
+        return array(
+            "modifications" => $modifList,
+            "total" => $count[0]['num'],
+            "count" => count($modifList)
+        );
     }
 
     /**

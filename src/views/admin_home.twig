@@ -2,31 +2,52 @@
 
 {% block content %}
 
-    <h1>Pending modifications</h1>
-    <ul>
-    {% for item in modifList %}
-        <li>
-            <a href="{{ path('admin_revision_compare', { 'revID' : item.id, 'referenceID' : item.reference_id }) }}">Preview ID#{{ item.id }}</a> - 
-            <a href="{{ path('admin_revision', { 'revID' : item.id }) }}">Compare to current state</a> - 
-            {% for tag in item.tags %}
-                [{{ tag.tag_slug }}]
-            {% endfor %} -
-
-            {% for key, stat in item.stats %}
-                {{ key }}={{ stat }};
+    <h1>Pending modifications <small>{{modifList.count}} / {{modifList.total}}</small></h1>
+    <table id="areas-listing" class="table table-striped">
+        <th>Modification ID</th>
+        <th>tags</th>
+        <th width="10%">Options</th>
+    {% for item in modifList.modifications %}
+        <tr>
+            <td><a href="{{ path('admin_revision', { 'revID' : item.id }) }}">{{ item.id }}</a></td>
+            <td>{% for tag in item.tags %}
+                <span class="label">{{ tag.tag_slug }}</span>
             {% endfor %}
-            (<a href="{{ path('admin_revision_archive', { 'revID' : item.id }) }}">archive</a>)
-        </li>
+            </td>
+            
+            {#
+            <td>
+                {% for key, stat in item.stats %}
+                    {{ key }}={{ stat }};
+                {% endfor %}
+            </td>
+            #}
+            <td>
+                <div class="btn-group">
+                  <a class="btn btn-primary dropdown-toggle" data-toggle="dropdown" href="#">
+                    Action
+                    <span class="caret"></span>
+                  </a>
+                  <ul class="dropdown-menu">
+                      <li><a title="Compare to current state" href="{{ path('admin_revision_compare', { 'revID' : item.id, 'referenceID' : item.reference_id }) }}">Preview form user version</a></li>
+                      <li><a class="btn-warning" href="{{ path('admin_revision_archive', { 'revID' : item.id }) }}">Archive</a></li>
+                      <li><a class="btn-danger" href="#">Delete</a></li>
+                  </ul>
+                </div>
+                
+            </td>
+        </tr>
     {% endfor %}
-    </ul>
+    </table>
 
     {% if modifList is empty %}
     <p>No modification in the pending queue.</p>
     {% endif %}
     
+    {#
     <h1>Merged modifications</h1>
     <ul>
-    {% for item in mergedModifList %}
+     for item in mergedModifList %}
         <li>
             <a href="{{ path('admin_revision_compare', { 'revID' : item.id, 'referenceID' : item.reference_id }) }}">Preview ID#{{ item.id }}</a> - 
             <a href="{{ path('admin_revision', { 'revID' : item.id }) }}">Compare to current state</a> -
@@ -38,7 +59,7 @@
                 {{ key }}={{ stat }};
             {% endfor %}
         </li>
-    {% endfor %}
+    {% endfor 
     </ul>
-    
+    #}
 {% endblock %}

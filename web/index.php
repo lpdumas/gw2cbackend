@@ -31,6 +31,10 @@ $app->register(new Silex\Provider\TwigServiceProvider(), array(
     'twig.path' => __DIR__.'/../src/views',
 ));
 
+$app->register(new Silex\Provider\TranslationServiceProvider(), array(
+    'locale_fallback' => 'en',
+));
+
 $app->register(new Silex\Provider\MonologServiceProvider(), array(
     'monolog.logfile' => __DIR__.'/../logs/development.log',
 ));
@@ -194,10 +198,12 @@ $app->get('/login', function(Request $request) use ($app) {
 $app->get('/admin/', function() use($app) {
     
     $list = $app['database']->retrieveModificationList(30);
-    foreach($list as $k => $item) {
+    // print_r($list);
+    // die;
+    foreach($list['modifications'] as $k => $item) {
         $json = GW2CBackend\Util::decodeJSON($item['value']);
-        $list[$k]['reference_id'] = $json['version'];
-        $list[$k]['stats'] = isset($item['stats']) ? unserialize($item['stats']) : "";
+        $list['modifications'][$k]['reference_id'] = $json['version'];
+        $list['modifications'][$k]['stats'] = isset($item['stats']) ? unserialize($item['stats']) : "";
     }
 
     /*$mergedList = $app['database']->retrieveMergedModificationList();
