@@ -910,6 +910,11 @@ class DatabaseAdapter {
         $date = date('Y-m-d H:i:s');
         $this->pdo->exec("UPDATE modification_list SET `is_archived` = 1, `date_merge` = '".$date."' WHERE id = ".$idModification);
     }
+    
+    public function deleteModification($idModification) {
+        $this->pdo->exec("DELETE FROM modification_list WHERE id = ".$idModification);
+        $this->pdo->exec("DELETE FROM modification_tag WHERE id_modification = ".$idModification);
+    }
 
     /**
      * @ignore

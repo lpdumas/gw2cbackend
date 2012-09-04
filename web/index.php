@@ -227,6 +227,13 @@ $app->get('/admin/revision/archive/{revID}', function($revID) use($app) {
    return $app->redirect('/admin/');
 })->bind('admin_revision_archive');
 
+$app->get('/admin/revision/delete/{revID}', function($revID) use($app) {
+
+   $app['database']->deleteModification($revID);
+    
+   return $app->redirect('/admin/');
+})->bind('admin_revision_delete');
+
 $app->get('/admin/revision/{revID}', function($revID) use($app) {
 
     $app['twig.path'] = __DIR__.'/../gw2cread/';

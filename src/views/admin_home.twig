@@ -31,7 +31,7 @@
                   <ul class="dropdown-menu">
                       <li><a title="Compare to current state" href="{{ path('admin_revision_compare', { 'revID' : item.id, 'referenceID' : item.reference_id }) }}">Preview form user version</a></li>
                       <li><a class="btn-warning" href="{{ path('admin_revision_archive', { 'revID' : item.id }) }}">Archive</a></li>
-                      <li><a class="btn-danger" href="#">Delete</a></li>
+                      <li><a class="btn-danger" href="{{ path('admin_revision_delete', { 'revID' : item.id } )}}">Delete</a></li>
                   </ul>
                 </div>
                 
