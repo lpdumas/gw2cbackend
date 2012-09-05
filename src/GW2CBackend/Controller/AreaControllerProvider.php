@@ -50,7 +50,7 @@ class AreaControllerProvider extends ControllerProvider implements ControllerPro
 
         })->bind('admin_areas');
 
-        $controllers->post('/add', function(Request $request) use($app) {
+        $controllers->post('/new', function(Request $request) use($app) {
 
             $name = $request->request->get('name');
             $rangeLvl = $request->request->get('rangeLvl');
@@ -63,8 +63,13 @@ class AreaControllerProvider extends ControllerProvider implements ControllerPro
                 $message = "All the fields must be filled.";
             }
             else {
-
-                $app['database']->createArea($name, $rangeLvl, $swLat, $swLng, $neLat, $neLng);
+                $addStatus = $app['database']->createArea($name, $rangeLvl, $swLat, $swLng, $neLat, $neLng);
+                if ($addStatus) {
+                    $message = "O";
+                } else {
+                    $message = "Area '".$name."' has been created.";
+                }
+                
                 $message = "Area '".$name."' has been created.";
             }
 
@@ -72,7 +77,7 @@ class AreaControllerProvider extends ControllerProvider implements ControllerPro
 
             return $app->redirect($app['url_generator']->generate('admin_areas'));
 
-        })->after($this->getClosure('generate_config'))->bind('admin_areas_add');
+        })->after($this->getClosure('generate_config'))->bind('admin_areas_add_new');
 
         $controllers->get('/update/{idArea}', function(Request $request, $idArea) use($app) {
             $areasList = $app['database']->retrieveAreasListFromId($idArea);
@@ -85,14 +90,14 @@ class AreaControllerProvider extends ControllerProvider implements ControllerPro
 
         
         $controllers->get('/add/', function(Request $request) use($app) {
-            $form = $app['form.factory']->createBuilder('form')
-                ->add('name')
-                ->add('email')
-                ->getForm();
+            // $form = $app['form.factory']->createBuilder('form')
+                // ->add('name')
+                // ->add('email')
+                // ->getForm();
                 
             $params = array(
-                "section" => "areas",
-                "form" => $form->createView()
+                "section" => "areas"
+                // "form" => $form->createView()
             );
             
             

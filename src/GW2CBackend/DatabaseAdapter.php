@@ -328,7 +328,7 @@ class DatabaseAdapter {
         $neLng = $this->pdo->quote($neLng);
         
         $q = "INSERT INTO areas_list (`name`, `rangeLvl`, `swLat`, `swLng`, `neLat`, `neLng`)
-                VALUES ('".$name."', '".$rangeLvl."', '".$swLat."', '".$swLng."','".$neLat."', '".$neLng."')";
+                VALUES (".$name.", ".$rangeLvl.", ".$swLat.", ".$swLng.",".$neLat.", ".$neLng.")";
         return $this->pdo->exec($q);
     }
 
