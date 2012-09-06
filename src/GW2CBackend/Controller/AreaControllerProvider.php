@@ -30,18 +30,11 @@ class AreaControllerProvider extends ControllerProvider implements ControllerPro
 
         $controllers->get('/', function() use($app) {
 
-            // feedback management
-            $feedback = null;
-            if($app['session']->has('feedback')) {
-                $feedback = $app['session']->get('feedback');
-                $app['session']->remove('feedback');
-            }
-
             $app['database']->retrieveAreasList();
             $areasList = $app['database']->getData("areas-list");
 
             $params = array(
-                "feedback" => $feedback,
+                "feedback" => $app['feedback'],
                 "areas" => $areasList,
                 "section" => 'areas',
             );
@@ -60,20 +53,27 @@ class AreaControllerProvider extends ControllerProvider implements ControllerPro
             $neLng = $request->request->get('neLng');
 
             if(!$name || !$swLat || !$swLng || !$neLat || !$neLng) {
-                $message = "All the fields must be filled.";
+                $feedback = array(
+                    "type" => "bad",
+                    "message" => "All the fields must be filled."
+                );
             }
             else {
                 $addStatus = $app['database']->createArea($name, $rangeLvl, $swLat, $swLng, $neLat, $neLng);
                 if ($addStatus) {
-                    $message = "O";
+                    $feedback = array(
+                        "type" => "good",
+                        "message" => "Area '".$name."' has been created."
+                    );
                 } else {
-                    $message = "Area '".$name."' has been created.";
+                    $feedback = array(
+                        "type" => "bad",
+                        "message" => "Something went wrong"
+                    );
                 }
-                
-                $message = "Area '".$name."' has been created.";
             }
 
-            $app['session']->set('feedback', $message);
+            $app['session']->set('feedback', $feedback);
 
             return $app->redirect($app['url_generator']->generate('admin_areas'));
 
@@ -118,7 +118,10 @@ class AreaControllerProvider extends ControllerProvider implements ControllerPro
             $id = $request->request->get('areaID');
 
             if(!$name || !$swLat || !$swLng || !$neLat || !$neLng && !$request->request->has('remove')) {
-                $message = "All the fields must be filled.";
+                $feedback = array(
+                    "type" => "bad",
+                    "message" => "All the fields must be filled."
+                );
             }
             else {
                 $action = $app['database']->editArea($id, $name, $rangeLvl, $swLat, $swLng, $neLat, $neLng);
@@ -129,7 +132,7 @@ class AreaControllerProvider extends ControllerProvider implements ControllerPro
                     );
                 } else {                    
                     $feedback = array(
-                        "type" => "good",
+                        "type" => "bad",
                         "message" => "Ooops .. something went wrong."
                     );
                 }

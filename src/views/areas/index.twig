@@ -11,12 +11,6 @@
 
 {% block content %}
 
-{# if feedback is defined and  feedback != "" %}
-<div class="alert {% if feedback.type == "good" %}alert-success{% else %}alert-error{% endif %}">
-    {{ feedback.message }}
-</div>
-{% endif #}
-
 <h1>Manage Areas</h1>
 <a id="add-areas" class="btn btn-success pull-right" href="{{ path('admin_areas_add_form')}}">Add</a>
 <table id="areas-listing" class="table table-striped">

@@ -113,6 +113,13 @@ $app->mount('/admin/user', new GW2CBackend\Controller\UserControllerProvider($cl
 $app->mount('/admin/options', new GW2CBackend\Controller\OptionsControllerProvider($closuresForControllers));
 $app->mount('/admin/area', new GW2CBackend\Controller\AreaControllerProvider($closuresForControllers));
 
+
+$app['feedback'] = null;
+if($app['session']->has('feedback')) {
+    $app['feedback'] = $app['session']->get('feedback');
+    $app['session']->remove('feedback');
+}
+
 $app->get('/', function() use($app) {
 
     return $app['twig']->render('home.twig');
@@ -216,7 +223,7 @@ $app->get('/admin/', function() use($app) {
 
     return $app['twig']->render('admin_home.twig', array(
             'modifList' => $list,
-            'mergedModifList' => $mergedList,
+            'feedback' => $app['feedback']
         ));
 })->bind('admin');
 
@@ -228,10 +235,21 @@ $app->get('/admin/revision/archive/{revID}', function($revID) use($app) {
 })->bind('admin_revision_archive');
 
 $app->get('/admin/revision/delete/{revID}', function($revID) use($app) {
-
-   $app['database']->deleteModification($revID);
     
-   return $app->redirect('/admin/');
+    $deleteStatus = $app['database']->deleteModification($revID);
+    if($deleteStatus) {
+        $feedback = array(
+            "type" => "good",
+            "message" => "The modification #".$revID." has been deleted"
+        );
+    } else {
+        $feedback = array(
+            "type" => "good",
+            "message" => "Ooops ... something went wrong"
+        );
+    }
+    $app['session']->set('feedback', $feedback);
+    return $app->redirect('/admin/');
 })->bind('admin_revision_delete');
 
 $app->get('/admin/revision/{revID}', function($revID) use($app) {

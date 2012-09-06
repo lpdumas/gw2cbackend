@@ -912,8 +912,12 @@ class DatabaseAdapter {
     }
     
     public function deleteModification($idModification) {
-        $this->pdo->exec("DELETE FROM modification_list WHERE id = ".$idModification);
-        $this->pdo->exec("DELETE FROM modification_tag WHERE id_modification = ".$idModification);
+        $e = $this->pdo->exec("DELETE FROM modification_list WHERE id = ".$idModification);
+        if($e) {
+            return $this->pdo->exec("DELETE FROM modification_tag WHERE id_modification = ".$idModification);
+        } else {
+            return $e;
+        }
     }
 
     /**

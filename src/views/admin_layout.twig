@@ -14,6 +14,13 @@
 </style>
 {% endblock %}  
 
+{% block feedback %}
+    {% if feedback is defined and feedback.type is defined and feedback.message is defined %}
+    <div class="alert {% if feedback.type == "good" %}alert-success{% else %}alert-error{% endif %}">
+        {{ feedback.message }}
+    </div>
+    {% endif %}
+{% endblock %}
 {% block menu %}
 <div id="menu">
     <div class="navbar navbar-inverse navbar-fixed-top">
